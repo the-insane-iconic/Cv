@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resume - Anupam Yadav</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        /* Color Palette - "Modern Slate" */
+        --bg-body: #f3f4f6;
+        --bg-card: #ffffff;
+        --sidebar-bg: #f8fafc;
+        --text-dark: #1e293b;
+        --text-medium: #475569;
+        --text-light: #94a3b8;
+        --accent: #2563eb; /* Royal Blue */
+        --accent-light: #eff6ff;
+        --border-color: #e2e8f0;
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+        font-family: 'Inter', sans-serif;
+        background: var(--bg-body);
+        color: var(--text-dark);
+        margin: 0;
+        padding: 40px 20px;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    /* --- MAIN RESUME CONTAINER --- */
+    .resume-container {
+        max-width: 1000px; /* Slightly wider to accommodate 2 columns */
+        margin: 0 auto;
+        background: var(--bg-card);
+        border-radius: 12px;
+        box-shadow: var(--shadow-md);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* --- HEADER SECTION --- */
+    .header {
+        padding: 40px 50px;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        gap: 30px;
+        background: linear-gradient(to right, #ffffff, #f1f5f9);
+    }
+
+    .photo-frame {
+        width: 130px;
+        height: 130px;
+        border-radius: 50%; /* Circle looks more standard for modern resumes */
+        background-color: #ddd;
+        background-image: url('YOURPIC.jpg'); /* REPLACE WITH YOUR IMAGE */
+        background-size: cover;
+        background-position: center;
+        box-shadow: var(--shadow-sm);
+        border: 4px solid #fff;
+        flex-shrink: 0;
+    }
+
+    .header-content {
+        flex-grow: 1;
+    }
+
+    .header-content h1 {
+        font-size: 36px;
+        font-weight: 800;
+        margin: 0;
+        color: var(--text-dark);
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+    }
+
+    .role-badge {
+        display: inline-block;
+        margin-top: 8px;
+        font-size: 14px;
+        color: var(--accent);
+        font-weight: 600;
+        background: var(--accent-light);
+        padding: 4px 12px;
+        border-radius: 6px;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+    }
+
+    .contact-bar {
+        margin-top: 16px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        font-size: 13px;
+        color: var(--text-medium);
+        font-weight: 500;
+    }
+
+    .contact-bar a {
+        text-decoration: none;
+        color: var(--text-medium);
+        transition: 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .contact-bar a:hover { color: var(--accent); }
+
+    /* --- LAYOUT GRID --- */
+    .main-body {
+        display: flex;
+        flex-direction: row;
+        min-height: 800px; /* Ensures sidebar stretches */
+    }
+
+    /* --- SIDEBAR --- */
+    .sidebar {
+        width: 280px;
+        background: var(--sidebar-bg);
+        padding: 40px 30px;
+        border-right: 1px solid var(--border-color);
+        flex-shrink: 0;
+    }
+
+    /* --- MAIN CONTENT AREA --- */
+    .content {
+        flex-grow: 1;
+        padding: 40px;
+    }
+
+    /* --- TYPOGRAPHY UTILS --- */
+    h2 {
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        color: var(--text-light);
+        font-weight: 700;
+        margin-top: 0;
+        margin-bottom: 20px;
+        border-bottom: 2px solid var(--border-color); /* Adds structure */
+        padding-bottom: 8px;
+        display: inline-block;
+    }
+
+    h3 {
+        font-size: 16px;
+        font-weight: 700;
+        margin: 0 0 4px 0;
+        color: var(--text-dark);
+    }
+
+    p { margin: 0 0 10px 0; color: var(--text-medium); font-size: 14px; }
+
+    /* --- SKILL BARS & TAGS --- */
+    .skill-category { margin-bottom: 35px; }
+    
+    .skill-category-title {
+        font-size: 13px;
+        font-weight: 700;
+        margin-bottom: 8px;
+        color: var(--text-dark);
+        display: block;
+    }
+    
+    .tags-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .tag {
+        font-size: 12px;
+        background: #fff;
+        border: 1px solid var(--border-color);
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-weight: 500;
+        color: var(--text-medium);
+    }
+
+    /* --- TIMELINE ITEM (Education) --- */
+    .timeline-item {
+        border-left: 2px solid var(--border-color);
+        padding-left: 15px;
+        position: relative;
+    }
+    .timeline-item::before {
+        content: '';
+        width: 8px;
+        height: 8px;
+        background: var(--accent);
+        border-radius: 50%;
+        position: absolute;
+        left: -5px;
+        top: 5px;
+    }
+
+    /* --- PROJECT GRID (IMPROVED) --- */
+    .project-grid {
+        display: grid;
+        /* This creates 2 columns automatically if space permits */
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+        gap: 20px;
+    }
+
+    .project-card {
+        background: #fff;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 20px;
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
+    }
+
+    .project-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-hover);
+        border-color: var(--accent);
+    }
+
+    .project-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 12px;
+        flex-direction: column; /* Stack title and tech for better fit */
+        gap: 5px;
+    }
+
+    .tech-stack-mini {
+        font-size: 10px;
+        color: var(--accent);
+        background: var(--accent-light);
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    /* --- RESPONSIVE --- */
+    @media (max-width: 768px) {
+        .header {
+            flex-direction: column;
+            text-align: center;
+            padding: 30px;
+        }
+        .main-body {
+            flex-direction: column;
+        }
+        .sidebar {
+            width: 100%;
+            border-right: none;
+            border-bottom: 1px solid var(--border-color);
+            background: #fff;
+        }
+        .content { padding: 30px 20px; }
+        .contact-bar { justify-content: center; }
+        .project-grid { grid-template-columns: 1fr; }
+    }
+</style>
+</head>
+<body>
+
+<div class="resume-container">
+
+    <div class="header">
+        <div class="photo-frame"></div>
+        <div class="header-content">
+            <h1>ANUPAM YADAV</h1>
+            <span class="role-badge">Computer Science Student • AI Specialist</span>
+            
+            <div class="contact-bar">
+                <a href="#">📍 India</a>
+                <a href="mailto:anupamyadav6477@gmail.com">✉️ anupamyadav6477@gmail.com</a>
+                <a href="tel:+918707726019">📞 +91 8707726019</a>
+                <a href="https://github.com/the-insane-iconic">🔗 github.com/the-insane-iconic</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-body">
+        
+        <div class="sidebar">
+            
+            <div class="skill-category">
+                <h2>Education</h2>
+                <div class="timeline-item">
+                    <h3>B.Tech CSE</h3>
+                    <p style="font-size:13px; font-weight: 500; margin-bottom:2px;">Lovely Professional Univ.</p>
+                    <p style="font-size:12px; color:#94a3b8;">2025 – 2029</p>
+                </div>
+            </div>
+
+            <div class="skill-category">
+                <h2>Technical Skills</h2>
+                
+                <span class="skill-category-title">Languages</span>
+                <div class="tags-wrapper" style="margin-bottom:15px;">
+                    <span class="tag">Python</span>
+                    <span class="tag">JavaScript</span>
+                    <span class="tag">C++</span>
+                </div>
+
+                <span class="skill-category-title">AI & Machine Learning</span>
+                <div class="tags-wrapper" style="margin-bottom:15px;">
+                    <span class="tag">Reinforcement Learning</span>
+                    <span class="tag">TensorFlow</span>
+                    <span class="tag">DQN</span>
+                    <span class="tag">PyTorch</span>
+                </div>
+
+                <span class="skill-category-title">Web & Embedded</span>
+                <div class="tags-wrapper">
+                    <span class="tag">React</span>
+                    <span class="tag">Firebase</span>
+                    <span class="tag">ESP32</span>
+                    <span class="tag">Git</span>
+                </div>
+            </div>
+
+            <div class="skill-category">
+                <h2>Certifications</h2>
+                <div class="tags-wrapper">
+                    <span class="tag">Python for Data Science</span>
+                    <span class="tag">Intro to Deep Learning</span>
+                </div>
+            </div>
+
+            <div class="skill-category">
+                <h2>Interests</h2>
+                <div class="tags-wrapper">
+                    <span class="tag">Algo Trading</span>
+                    <span class="tag">Biomechanics</span>
+                    <span class="tag">System Design</span>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="content">
+            
+            <div style="margin-bottom: 30px;">
+                <h2>Professional Profile</h2>
+                <p>Ambitious First-Year Engineering Student with a dual focus on <strong>Software Intelligence</strong> and <strong>Hardware Integration</strong>. Already deploying full-stack applications and AI models. Passionate about building scalable, privacy-centric systems and autonomous agents.</p>
+            </div>
+
+            <div style="margin-bottom: 30px;">
+                <h2>Featured Projects</h2>
+                <div class="project-grid">
+                    
+                    <div class="project-card">
+                        <div class="project-header">
+                            <h3>3D AI Survival Agent</h3>
+                            <span class="tech-stack-mini">PYTHON / RL / PYTORCH</span>
+                        </div>
+                        <p>Designed a reinforcement learning environment where a DQN-based agent learns survival strategies autonomously. Implemented obstacle avoidance logic.</p>
+                    </div>
+
+                    <div class="project-card">
+                        <div class="project-header">
+                            <h3>"Incognito" Chat App</h3>
+                            <span class="tech-stack-mini">REACT / FIREBASE / UI</span>
+                        </div>
+                        <p>A real-time, privacy-first messaging platform. Features ephemeral message storage, anonymous login protocols, and a glass-morphism UI.</p>
+                    </div>
+
+                    <div class="project-card">
+                        <div class="project-header">
+                            <h3>E-Commerce Engine</h3>
+                            <span class="tech-stack-mini">JS / CSS3 / AUTH</span>
+                        </div>
+                        <p>Full-stack prototype featuring dynamic product rendering, secure user authentication flows, and a custom-built cart management system.</p>
+                    </div>
+
+                    <div class="project-card">
+                        <div class="project-header">
+                            <h3>Gen-AI Image Tool</h3>
+                            <span class="tech-stack-mini">API / BACKEND DEV</span>
+                        </div>
+                        <p>Current Initiative: Building a MidJourney-style prompt interface leveraging stable diffusion APIs to generate high-fidelity assets.</p>
+                    </div>
+
+                </div>
+            </div>
+            
+            <div>
+                <h2>Future Roadmap</h2>
+                <p>Currently expanding expertise in <strong>Neural Networks</strong> and <strong>Low-Level Embedded Systems</strong>. Committed to a disciplined engineering workflow to reach Senior Architect proficiency.</p>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
