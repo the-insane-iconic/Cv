@@ -38,10 +38,10 @@
               <span class="dropdown-title">Control Room</span>
               <span class="dropdown-subtitle">Site Management</span>
             </div>
-            <a href="admin.html" class="dropdown-item">
+            <button class="dropdown-item" id="open-admin-auth-btn" style="width:100%; border:none; background:none; text-align:left; cursor:pointer; font-family:inherit;">
               <i class="fa-solid fa-sliders"></i>
               <span>Admin / Site Editor</span>
-            </a>
+            </button>
           </div>
         </div>
         <div class="hamburger" id="hamburger">
@@ -222,6 +222,45 @@
           Open in New Tab <i class="fa-solid fa-arrow-up-right-from-square"></i>
         </a>
       </div>
+    </div>
+  </div>
+
+  <!-- Admin Access Verification Modal -->
+  <div id="admin-auth-modal" class="modal hidden">
+    <div class="modal-overlay" id="admin-auth-overlay"></div>
+    <div class="modal-content auth-modal-box fade-in">
+      <button class="modal-close" id="admin-auth-close" title="Close" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+      <div class="auth-modal-header">
+        <div class="auth-icon-badge">
+          <i class="fa-solid fa-lock"></i>
+        </div>
+        <h3>Control Room Access</h3>
+        <p>Enter administrator credentials to open Site Editor</p>
+      </div>
+      <form id="admin-auth-form" class="auth-modal-form" onsubmit="return false;">
+        <div class="auth-form-group">
+          <label for="admin-auth-user">Username</label>
+          <div class="auth-input-wrap">
+            <i class="fa-regular fa-user"></i>
+            <input type="text" id="admin-auth-user" placeholder="Username" autocomplete="username" required>
+          </div>
+        </div>
+        <div class="auth-form-group">
+          <label for="admin-auth-pass">Password</label>
+          <div class="auth-input-wrap">
+            <i class="fa-solid fa-key"></i>
+            <input type="password" id="admin-auth-pass" placeholder="Password" autocomplete="current-password" required>
+          </div>
+        </div>
+        <div id="admin-auth-error" class="auth-error-msg" style="display:none;">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          <span>Invalid username or password</span>
+        </div>
+        <button type="submit" id="admin-auth-submit" class="btn btn-primary btn-auth-submit">
+          <span>Enter Control Room</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </form>
     </div>
   </div>
 

@@ -55,6 +55,10 @@
         <i class="fa-solid fa-cloud-arrow-up"></i>
         <span>Save &amp; Sync</span>
       </button>
+
+      <button class="btn-icon-action" onclick="lockAdminSession()" title="Lock / Logout" style="width:34px; height:34px; border-radius:50%; background:var(--bg-card); border:1px solid var(--border-subtle); margin-left:4px;">
+        <i class="fa-solid fa-lock"></i>
+      </button>
     </div>
   </header>
 
@@ -212,6 +216,37 @@ create policy "Public write" on portfolios for all using (true);</code></pre>
         <button class="btn-dock btn-dock-primary" onclick="saveSupabaseKey()">
           <i class="fa-solid fa-link"></i> Save &amp; Connect
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── GATEKEEPER LOGIN MODAL ───────────────────────────── -->
+  <div id="admin-gatekeeper-modal" class="custom-modal-backdrop" style="display:none; z-index:10000;">
+    <div class="custom-modal-card" style="max-width:400px; text-align:center;">
+      <div style="padding:32px 28px;">
+        <div style="width:54px; height:54px; border-radius:50%; background:var(--accent-subtle); border:1px solid rgba(140,124,255,0.3); display:flex; align-items:center; justify-content:center; margin:0 auto 16px; color:var(--accent); font-size:18px; box-shadow:0 0 20px var(--accent-glow);">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <h3 style="font-size:17px; font-weight:700; color:var(--text-pure); margin-bottom:6px;">Control Room Locked</h3>
+        <p style="font-size:12.5px; color:var(--text-muted); margin-bottom:24px;">Please authenticate to access the site editor</p>
+
+        <form id="admin-gatekeeper-form" onsubmit="return false;" style="display:flex; flex-direction:column; gap:14px; text-align:left;">
+          <div class="field-group">
+            <label class="field-label">Username</label>
+            <input type="text" id="gk-user" class="field-input" placeholder="admin" autocomplete="username" required>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Password</label>
+            <input type="password" id="gk-pass" class="field-input" placeholder="admin" autocomplete="current-password" required>
+          </div>
+          <div id="gk-error" class="auth-error-msg" style="display:none; background:var(--rose-subtle); border:1px solid rgba(244,63,94,0.3); color:var(--rose); padding:8px 12px; border-radius:6px; font-size:12px; align-items:center; gap:8px;">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            <span>Invalid credentials</span>
+          </div>
+          <button type="submit" id="gk-submit-btn" class="btn-dock btn-dock-primary" style="width:100%; justify-content:center; padding:12px; margin-top:8px; font-size:13px;">
+            <i class="fa-solid fa-unlock"></i> Unlock Studio
+          </button>
+        </form>
       </div>
     </div>
   </div>

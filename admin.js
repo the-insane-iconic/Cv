@@ -1083,10 +1083,62 @@ window.resetToFile = async function () {
 };
 
 /* ================================================================
-   11. INITIALIZATION
+   11. GATEKEEPER AUTHENTICATION & INITIALIZATION
    ================================================================ */
 
+function checkGatekeeperAuth() {
+  const isAuth = sessionStorage.getItem('admin_authenticated') === 'true';
+  const modal = document.getElementById('admin-gatekeeper-modal');
+  const form = document.getElementById('admin-gatekeeper-form');
+  const userIn = document.getElementById('gk-user');
+  const passIn = document.getElementById('gk-pass');
+  const errBox = document.getElementById('gk-error');
+
+  if (!isAuth) {
+    if (modal) modal.style.display = 'flex';
+    if (userIn) setTimeout(() => userIn.focus(), 150);
+  } else {
+    if (modal) modal.style.display = 'none';
+  }
+
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const u = (userIn ? userIn.value : '').trim();
+      const p = (passIn ? passIn.value : '').trim();
+
+      if (u === 'admin' && p === 'admin') {
+        sessionStorage.setItem('admin_authenticated', 'true');
+        if (errBox) errBox.style.display = 'none';
+        if (modal) modal.style.display = 'none';
+        toast('Welcome to Control Room', 'success');
+      } else {
+        if (errBox) {
+          errBox.style.display = 'flex';
+        }
+        if (passIn) {
+          passIn.value = '';
+          passIn.focus();
+        }
+      }
+    });
+  }
+}
+
+window.lockAdminSession = function() {
+  sessionStorage.removeItem('admin_authenticated');
+  const modal = document.getElementById('admin-gatekeeper-modal');
+  if (modal) modal.style.display = 'flex';
+  const userIn = document.getElementById('gk-user');
+  const passIn = document.getElementById('gk-pass');
+  if (userIn) userIn.value = '';
+  if (passIn) passIn.value = '';
+  toast('Control Room session locked', 'info');
+};
+
 async function init() {
+  checkGatekeeperAuth();
+
   try {
     DATA = await loadData();
   } catch (err) {
@@ -1118,3 +1170,4 @@ async function init() {
 }
 
 init();
+

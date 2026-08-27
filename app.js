@@ -44,9 +44,44 @@ window.initApp = function () {
   window.addEventListener('scroll', handleScroll, { passive: true });
   handleScroll();
 
-  /* ---------- Profile Dropdown Menu ---------- */
+  /* ---------- Profile Dropdown Menu & Admin Auth Popup ---------- */
   const profileDropdown = document.getElementById('profile-dropdown-wrapper');
   const profileBtn = document.getElementById('nav-profile-btn');
+  const openAdminBtn = document.getElementById('open-admin-auth-btn');
+  const authModal = document.getElementById('admin-auth-modal');
+  const authClose = document.getElementById('admin-auth-close');
+  const authOverlay = document.getElementById('admin-auth-overlay');
+  const authForm = document.getElementById('admin-auth-form');
+  const authUserInput = document.getElementById('admin-auth-user');
+  const authPassInput = document.getElementById('admin-auth-pass');
+  const authError = document.getElementById('admin-auth-error');
+
+  function openAdminAuthModal() {
+    if (profileDropdown) profileDropdown.classList.remove('open');
+
+    // If already authenticated in current session, jump straight to editor
+    if (sessionStorage.getItem('admin_authenticated') === 'true') {
+      window.location.href = 'admin.html';
+      return;
+    }
+
+    if (authModal) {
+      authModal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+      if (authError) authError.style.display = 'none';
+      if (authUserInput) {
+        authUserInput.value = '';
+        setTimeout(() => authUserInput.focus(), 150);
+      }
+      if (authPassInput) authPassInput.value = '';
+    }
+  }
+
+  function closeAdminAuthModal() {
+    if (!authModal) return;
+    authModal.classList.add('hidden');
+    document.body.style.overflow = '';
+  }
 
   if (profileBtn && profileDropdown) {
     profileBtn.addEventListener('click', (e) => {
@@ -57,6 +92,47 @@ window.initApp = function () {
     document.addEventListener('click', (e) => {
       if (!profileDropdown.contains(e.target)) {
         profileDropdown.classList.remove('open');
+      }
+    });
+  }
+
+  if (openAdminBtn) {
+    openAdminBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      openAdminAuthModal();
+    });
+  }
+
+  if (authClose) authClose.addEventListener('click', closeAdminAuthModal);
+  if (authOverlay) authOverlay.addEventListener('click', closeAdminAuthModal);
+
+  if (authForm) {
+    authForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const user = (authUserInput ? authUserInput.value : '').trim();
+      const pass = (authPassInput ? authPassInput.value : '').trim();
+
+      if (user === 'admin' && pass === 'admin') {
+        sessionStorage.setItem('admin_authenticated', 'true');
+        const submitBtn = document.getElementById('admin-auth-submit');
+        if (submitBtn) {
+          submitBtn.innerHTML = `<i class="fa-solid fa-check"></i> <span>Authorized...</span>`;
+          submitBtn.style.background = '#2e7d32';
+        }
+        setTimeout(() => {
+          window.location.href = 'admin.html';
+        }, 350);
+      } else {
+        if (authError) {
+          authError.style.display = 'flex';
+          authError.style.animation = 'none';
+          authError.offsetHeight; /* trigger reflow */
+          authError.style.animation = 'shake 0.3s ease';
+        }
+        if (authPassInput) {
+          authPassInput.value = '';
+          authPassInput.focus();
+        }
       }
     });
   }
