@@ -312,6 +312,7 @@ ul { list-style: none; }
   padding: 0 clamp(20px, 3.5vw, 48px);
   max-width: var(--container-w);
   margin: 0 auto;
+  position: relative;
 }
 
 .hero-content {
@@ -1732,7 +1733,7 @@ ul { list-style: none; }
   /* Hero */
   .hero {
     padding-top: 100px;
-    min-height: auto;
+    min-height: 100vh;
     padding-bottom: 80px;
   }
   .hero-cta {
@@ -1743,7 +1744,10 @@ ul { list-style: none; }
     justify-content: center;
   }
 
-  .scroll-down { display: none; }
+  .scroll-down {
+    display: block;
+    bottom: 24px;
+  }
 
   /* Skills */
   .skills-grid {
