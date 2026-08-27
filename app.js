@@ -44,6 +44,23 @@ window.initApp = function () {
   window.addEventListener('scroll', handleScroll, { passive: true });
   handleScroll();
 
+  /* ---------- Profile Dropdown Menu ---------- */
+  const profileDropdown = document.getElementById('profile-dropdown-wrapper');
+  const profileBtn = document.getElementById('nav-profile-btn');
+
+  if (profileBtn && profileDropdown) {
+    profileBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      profileDropdown.classList.toggle('open');
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!profileDropdown.contains(e.target)) {
+        profileDropdown.classList.remove('open');
+      }
+    });
+  }
+
   /* ---------- Hamburger Mobile Menu ---------- */
   const hamburger = document.getElementById('hamburger');
   const navMenu = document.getElementById('nav-menu');
