@@ -141,7 +141,7 @@ window.openSupabaseModal = function() {
   const modal = document.getElementById('supabase-modal');
   const keyInput = document.getElementById('sb-input-key');
   if (keyInput) {
-    keyInput.value = localStorage.getItem('supabase_anon_key') || '';
+    keyInput.value = window.SUPABASE_CONFIG?.anonKey || localStorage.getItem('supabase_anon_key') || '';
   }
   if (modal) modal.style.display = 'flex';
 };
@@ -172,7 +172,7 @@ function updateSupabaseStatusBadge() {
   const btn = document.getElementById('supabase-status-btn');
   const text = document.getElementById('cloud-status-text');
   if (!btn) return;
-  const key = localStorage.getItem('supabase_anon_key');
+  const key = window.SUPABASE_CONFIG?.anonKey || localStorage.getItem('supabase_anon_key');
   if (key) {
     btn.classList.add('connected');
     if (text) text.textContent = 'Cloud Connected';
