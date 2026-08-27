@@ -205,7 +205,7 @@ window.initApp = function () {
 
   setTimeout(typeEffect, 800);
 
-  /* ---------- Intersection Observer – Fade-in Sections ---------- */
+  /* ---------- Intersection Observer – Scroll-Reveal Animations ---------- */
   const observerOptions = {
     threshold: 0.12,
     rootMargin: '0px 0px -60px 0px',
@@ -215,18 +215,56 @@ window.initApp = function () {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
         entry.target.classList.add('is-visible');
+
+        // Restore progress bar widths when skill categories become visible
+        if (entry.target.classList.contains('skill-category')) {
+          entry.target.querySelectorAll('.progress-fill').forEach((bar) => {
+            const w = bar.getAttribute('data-width') || bar.style.width;
+            if (w) {
+              bar.style.setProperty('width', w, 'important');
+            }
+          });
+        }
       }
     });
   }, observerOptions);
 
+  // Observe all animatable elements
   document
     .querySelectorAll(
-      '.fade-in-section, .skill-category, .timeline-item, .project-card, .cert-card'
+      '.fade-in-section, .skill-category, .timeline-item, .project-card, .cert-card, .stat-card, .about-grid, .section-title, .contact-grid, .timeline'
     )
     .forEach((el) => {
       el.classList.remove('is-visible');
       fadeObserver.observe(el);
     });
+
+  // Store original progress bar widths before animation system collapses them
+  document.querySelectorAll('.progress-fill').forEach((bar) => {
+    const inline = bar.style.width;
+    if (inline) bar.setAttribute('data-width', inline);
+  });
+
+  /* ---------- Hero Parallax on Scroll ---------- */
+  const heroBgArt = document.querySelector('.hero-bg-art');
+  if (heroBgArt) {
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const scrollY = window.scrollY;
+          const heroH = window.innerHeight;
+          if (scrollY < heroH) {
+            const progress = scrollY / heroH;
+            heroBgArt.style.transform = `translateY(${progress * 40}px)`;
+            heroBgArt.style.opacity = 1 - progress * 0.5;
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }, { passive: true });
+  }
 
   /* ---------- Stats Counter Animation ---------- */
   const statNumbers = document.querySelectorAll('.stat-number span[data-target]');

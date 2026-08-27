@@ -1879,3 +1879,330 @@ ul { list-style: none; }
   overflow-wrap: anywhere;
 }
 
+/* ================================================================
+   ANIMATION & TRANSITION SYSTEM
+   Scroll-reveal, stagger delays, micro-interactions, parallax
+   ================================================================ */
+
+/* ---------- Keyframes ---------- */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-50px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(50px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.85); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes growWidth {
+  from { width: 0; }
+}
+
+@keyframes subtlePulse {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.04); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes heroFloat {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-12px); }
+}
+
+@keyframes drawLine {
+  from { transform: scaleY(0); }
+  to   { transform: scaleY(1); }
+}
+
+/* ---------- Hero entrance stagger ---------- */
+.hero-content .hero-greeting {
+  opacity: 0;
+  animation: fadeUp 0.7s var(--ease) 0.2s forwards;
+}
+.hero-content .hero-name {
+  opacity: 0;
+  animation: fadeUp 0.8s var(--ease) 0.35s forwards;
+}
+.hero-content .hero-roles {
+  opacity: 0;
+  animation: fadeUp 0.7s var(--ease) 0.55s forwards;
+}
+.hero-content .hero-description {
+  opacity: 0;
+  animation: fadeUp 0.7s var(--ease) 0.7s forwards;
+}
+.hero-content .hero-cta {
+  opacity: 0;
+  animation: fadeUp 0.7s var(--ease) 0.85s forwards;
+}
+.hero-content .social-links-hero {
+  opacity: 0;
+  animation: fadeUp 0.6s var(--ease) 1s forwards;
+}
+
+/* Hero background art float */
+.hero-bg-art img {
+  animation: heroFloat 8s ease-in-out infinite;
+}
+
+/* Scroll indicator bounce */
+.scroll-down {
+  animation: fadeIn 1s var(--ease) 1.3s both;
+}
+
+/* ---------- Scroll-reveal base states ---------- */
+.fade-in-section,
+.skill-category,
+.timeline-item,
+.project-card,
+.cert-card,
+.stat-card,
+.about-grid,
+.section-title,
+.contact-grid {
+  opacity: 0;
+  transform: translateY(36px);
+  transition: opacity 0.65s var(--ease), transform 0.65s var(--ease);
+}
+
+/* Revealed state */
+.fade-in-section.is-visible,
+.skill-category.is-visible,
+.timeline-item.is-visible,
+.project-card.is-visible,
+.cert-card.is-visible,
+.stat-card.is-visible,
+.about-grid.is-visible,
+.section-title.is-visible,
+.contact-grid.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---------- Staggered entrance for grid children ---------- */
+.skill-category:nth-child(1)  { transition-delay: 0s; }
+.skill-category:nth-child(2)  { transition-delay: .1s; }
+.skill-category:nth-child(3)  { transition-delay: .2s; }
+.skill-category:nth-child(4)  { transition-delay: .3s; }
+.skill-category:nth-child(5)  { transition-delay: .4s; }
+.skill-category:nth-child(6)  { transition-delay: .5s; }
+
+.project-card:nth-child(1) { transition-delay: 0s; }
+.project-card:nth-child(2) { transition-delay: .12s; }
+.project-card:nth-child(3) { transition-delay: .24s; }
+.project-card:nth-child(4) { transition-delay: .36s; }
+
+.stat-card:nth-child(1) { transition-delay: 0s; }
+.stat-card:nth-child(2) { transition-delay: .1s; }
+.stat-card:nth-child(3) { transition-delay: .15s; }
+.stat-card:nth-child(4) { transition-delay: .2s; }
+.stat-card:nth-child(5) { transition-delay: .25s; }
+
+.cert-card:nth-child(1) { transition-delay: 0s; }
+.cert-card:nth-child(2) { transition-delay: .1s; }
+.cert-card:nth-child(3) { transition-delay: .2s; }
+.cert-card:nth-child(4) { transition-delay: .3s; }
+.cert-card:nth-child(5) { transition-delay: .4s; }
+.cert-card:nth-child(6) { transition-delay: .5s; }
+
+.timeline-item:nth-child(1) { transition-delay: 0s; }
+.timeline-item:nth-child(2) { transition-delay: .15s; }
+.timeline-item:nth-child(3) { transition-delay: .3s; }
+.timeline-item:nth-child(4) { transition-delay: .45s; }
+
+/* ---------- Progress bar animation on reveal ---------- */
+.progress-fill {
+  width: 0 !important; /* Start collapsed */
+}
+.skill-category.is-visible .progress-fill {
+  transition: width 1.4s cubic-bezier(.22,1,.36,1) 0.3s;
+}
+
+/* ---------- Timeline line draw animation ---------- */
+.timeline::before {
+  transform-origin: top;
+  transform: scaleY(0);
+  transition: transform 1.2s var(--ease);
+}
+.timeline.is-visible::before {
+  transform: scaleY(1);
+}
+
+/* ---------- Card hover micro-interactions ---------- */
+.skill-category,
+.project-card,
+.stat-card,
+.cert-card,
+.timeline-content {
+  will-change: transform, box-shadow;
+}
+
+.chip {
+  transition: all .3s var(--ease);
+}
+.chip:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(21,21,21,.08);
+  border-color: var(--accent-dark);
+}
+
+.badge-role {
+  transition: all .3s var(--ease);
+}
+.badge-role:hover {
+  background: var(--accent-dark);
+  color: var(--bg);
+  border-color: var(--accent-dark);
+}
+
+.project-tech li {
+  transition: all .25s var(--ease);
+}
+.project-tech li:hover {
+  background: var(--accent-dark);
+  color: var(--bg);
+  transform: translateY(-1px);
+}
+
+/* ---------- Section title animated underline ---------- */
+.section-title span {
+  position: relative;
+  display: inline-block;
+}
+.section-title span::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 0;
+  height: 3px;
+  background: var(--accent-dark);
+  border-radius: 2px;
+  transition: width 0.8s cubic-bezier(.22,1,.36,1);
+}
+.section-title.is-visible span::after {
+  width: 60px;
+}
+
+/* ---------- Navbar link hover pill highlight ---------- */
+.nav-link {
+  position: relative;
+}
+.nav-link::before {
+  content: '';
+  position: absolute;
+  inset: -4px -12px;
+  background: var(--surface);
+  border-radius: 8px;
+  opacity: 0;
+  transform: scale(0.9);
+  transition: all .3s var(--ease);
+  z-index: -1;
+}
+.nav-link:hover::before {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ---------- Social icon hover pulse ---------- */
+.social-links-hero a:hover {
+  animation: subtlePulse 0.4s var(--ease);
+}
+
+/* ---------- Button shine effect ---------- */
+.btn-primary {
+  position: relative;
+  overflow: hidden;
+}
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%; bottom: 0;
+  width: 60%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.15), transparent);
+  transition: left .6s var(--ease);
+}
+.btn-primary:hover::after {
+  left: 120%;
+}
+
+/* ---------- Filter button active state animation ---------- */
+.filter-btn {
+  transition: all .3s var(--ease);
+}
+.filter-btn.active {
+  animation: scaleIn .3s var(--ease);
+}
+
+/* ---------- Cert card filter hidden/shown ---------- */
+.cert-card.filter-hidden {
+  opacity: 0;
+  transform: scale(0.92);
+  pointer-events: none;
+  position: absolute;
+  visibility: hidden;
+}
+
+/* ---------- About image parallax tilt ---------- */
+.about-image {
+  transition: transform 0.5s var(--ease);
+}
+.about-image:hover {
+  transform: perspective(800px) rotateY(-3deg) rotateX(2deg) scale(1.02);
+}
+
+/* ---------- Impact box hover ---------- */
+.impact-box {
+  transition: all .35s var(--ease);
+}
+.impact-box:hover {
+  transform: translateX(6px);
+  border-left-color: var(--text-primary);
+  background: rgba(232,225,214,.7);
+}
+
+/* ---------- Contact section subtle entrance ---------- */
+.contact-grid {
+  transition-delay: 0.1s;
+}
+
+/* ---------- Ambient glow float ---------- */
+.glow-1 {
+  animation: heroFloat 12s ease-in-out infinite;
+}
+.glow-2 {
+  animation: heroFloat 15s ease-in-out 3s infinite;
+}
+
+/* ---------- Prefers-reduced-motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .hero-bg-art img {
+    animation: none;
+  }
+}
+
