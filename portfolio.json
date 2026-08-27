@@ -1,0 +1,200 @@
+{
+  "site": {
+    "name": "Cryo-Byte",
+    "owner": "Anupam Yadav",
+    "theme": "Dark International"
+  },
+  "identity": {
+    "name": "Anupam Yadav",
+    "brand": "Cryo-Byte",
+    "brandSuffix": "Byte",
+    "roles": [
+      "Computer Science & Developer",
+      "Full Stack Developer",
+      "Cybersecurity Enthusiast",
+      "AI & ML Explorer"
+    ],
+    "greeting": "Hi, I'm",
+    "location": "India",
+    "tagline": "I build secure, scalable systems and explore real-world cybersecurity challenges.",
+    "profileImage": "/profile.png",
+    "resumeUrl": "#"
+  },
+  "about": {
+    "paragraphs": [
+      "I am a B.Tech CSE student at Lovely Professional University, deeply passionate about <strong>cybersecurity</strong>, <strong>full-stack development</strong>, and <strong>artificial intelligence</strong>.",
+      "My technical journey includes hands-on experience in <strong>LLM training</strong>, <strong>enterprise vulnerability assessment</strong>, and architecting robust system monitoring tools.",
+      "Driven by a strong problem-solving mindset, I am a consistent learner continually expanding my boundaries in secure software engineering and bleeding-edge technologies."
+    ],
+    "chips": [
+      { "icon": "fa-solid fa-code", "label": "200+ LeetCode" },
+      { "icon": "fa-solid fa-fire", "label": "110+ Days DSA", "class": "text-orange" }
+    ]
+  },
+  "skills": [
+    {
+      "category": "Programming",
+      "icon": "fa-solid fa-code",
+      "items": [
+        { "name": "C++", "icon": "fa-solid fa-c", "level": 90, "active": true },
+        { "name": "Python", "icon": "fa-brands fa-python", "level": 85 },
+        { "name": "JavaScript", "icon": "fa-brands fa-js", "level": 80 },
+        { "name": "Java", "icon": "fa-brands fa-java", "level": 75 }
+      ]
+    },
+    {
+      "category": "Frameworks",
+      "icon": "fa-solid fa-layer-group",
+      "items": [
+        { "name": "React", "icon": "fa-brands fa-react", "level": 85 },
+        { "name": "Node.js", "icon": "fa-brands fa-node-js", "level": 80 },
+        { "name": "HTML/CSS", "icon": "fa-brands fa-html5", "level": 95, "active": true }
+      ]
+    },
+    {
+      "category": "Cyber Tools",
+      "icon": "fa-solid fa-shield-halved",
+      "items": [
+        { "name": "Nmap & Wireshark", "icon": "fa-solid fa-network-wired", "level": 85 },
+        { "name": "Burp Suite", "icon": "fa-solid fa-bug", "level": 80 },
+        { "name": "Metasploit", "icon": "fa-solid fa-skull-crossbones", "level": 75 },
+        { "name": "Hydra & Shodan", "icon": "fa-solid fa-user-secret", "level": 80 }
+      ]
+    },
+    {
+      "category": "Platforms",
+      "icon": "fa-solid fa-terminal",
+      "items": [
+        { "name": "Linux (Kali, Ubuntu)", "icon": "fa-brands fa-linux", "level": 90, "active": true },
+        { "name": "Windows", "icon": "fa-brands fa-windows", "level": 85 },
+        { "name": "Git / GitHub", "icon": "fa-brands fa-github", "level": 85 }
+      ]
+    },
+    {
+      "category": "Soft Skills",
+      "icon": "fa-solid fa-users",
+      "items": [
+        { "name": "Communication", "icon": "fa-solid fa-comments", "level": 95 },
+        { "name": "Problem-solving", "icon": "fa-solid fa-lightbulb", "level": 90 },
+        { "name": "Teamwork", "icon": "fa-solid fa-people-group", "level": 90 },
+        { "name": "Adaptability", "icon": "fa-solid fa-arrows-spin", "level": 85 },
+        { "name": "Leadership", "icon": "fa-solid fa-chess-king", "level": 80 }
+      ]
+    }
+  ],
+  "floatingIcons": [
+    { "icon": "fa-brands fa-react", "class": "float-icon-1" },
+    { "icon": "fa-brands fa-python", "class": "float-icon-2" },
+    { "icon": "fa-brands fa-js", "class": "float-icon-3" },
+    { "icon": "fa-brands fa-linux", "class": "float-icon-4" },
+    { "icon": "fa-brands fa-html5", "class": "float-icon-5" }
+  ],
+  "experience": [
+    {
+      "title": "AI Trainer",
+      "company": "Outlier",
+      "type": "Freelance",
+      "icon": "fa-solid fa-brain",
+      "bullets": [
+        "Analyzed <span class=\"highlight-number\">1,200+</span> AI-generated responses, improving <strong class=\"highlight-text\">LLM accuracy</strong> and reasoning capabilities.",
+        "Created <span class=\"highlight-number\">1,000+</span> annotated datasets to enhance <strong class=\"highlight-text\">model intelligence</strong>.",
+        "Performed QA on <span class=\"highlight-number\">300+</span> outputs ensuring guideline compliance."
+      ],
+      "impact": "Improved real-world AI model reliability through structured evaluation.",
+      "impactIcon": "fa-solid fa-bolt"
+    },
+    {
+      "title": "Cybersecurity Intern",
+      "company": "Deloitte (Forage Simulation)",
+      "type": "Simulation",
+      "icon": "fa-solid fa-shield-halved",
+      "bullets": [
+        "Assessed <span class=\"highlight-number\">20+</span> enterprise systems identifying <strong class=\"highlight-text\">vulnerabilities</strong>.",
+        "Investigated <span class=\"highlight-number\">50+</span> security alerts using <strong class=\"highlight-text\">SOC methodologies</strong>.",
+        "Simulated cyber incidents and developed <strong class=\"highlight-text\">risk analysis</strong> reports."
+      ],
+      "impact": "Strengthened security posture through proactive threat analysis.",
+      "impactIcon": "fa-solid fa-shield-virus"
+    }
+  ],
+  "projects": [
+    {
+      "title": "Daily Challenge Bot",
+      "icon": "fa-regular fa-comments",
+      "description": "A chatbot-driven web platform designed to deliver personalized daily challenges across multiple domains.",
+      "features": [
+        "Served <strong>100+ active users</strong> with dynamic challenge generation.",
+        "Built using <strong>React + TypeScript</strong> with modular architecture.",
+        "Reduced code redundancy by <strong>30%</strong> using reusable components.",
+        "Deployed on <strong>Netlify</strong> with CI/CD ensuring high availability."
+      ],
+      "tech": ["React", "TypeScript", "JavaScript", "HTML", "CSS", "Netlify"],
+      "github": "#",
+      "demo": "#"
+    },
+    {
+      "title": "Real-Time Process Monitoring Dashboard",
+      "icon": "fa-solid fa-chart-line",
+      "description": "A system-level monitoring tool for tracking and analyzing real-time CPU and memory usage.",
+      "features": [
+        "Monitors <strong>100+</strong> system processes with live analytics.",
+        "Interactive GUI built with <strong>Tkinter/PyQt</strong>.",
+        "Implemented real-time alerts reducing anomaly detection time by <strong>40%</strong>.",
+        "Integrated data visualization for system insights."
+      ],
+      "tech": ["Python", "Psutil", "Tkinter/PyQt", "Matplotlib"],
+      "github": "#",
+      "demo": ""
+    }
+  ],
+  "stats": [
+    { "value": 110, "suffix": "+", "label": "Days DSA Streak", "icon": "fa-solid fa-fire", "iconClass": "text-orange", "featured": true },
+    { "value": 200, "suffix": "+", "label": "LeetCode Problems", "icon": "fa-solid fa-code" },
+    { "value": 50, "suffix": "+", "label": "HackerRank Solutions", "icon": "fa-brands fa-hackerrank" },
+    { "value": null, "suffix": "2nd", "label": "Runner-Up CTF", "icon": "fa-solid fa-flag", "isText": true }
+  ],
+  "certCategories": ["All", "AI", "Cybersecurity", "Networking", "Programming", "Others"],
+  "certificates": [
+    { "title": "Build Generative AI Apps and Solutions with No-Code Tools", "issuer": "Coursera", "category": "AI", "icon": "fa-solid fa-robot", "featured": false, "url": "" },
+    { "title": "C Programming Certificate", "issuer": "iamneo", "category": "Programming", "icon": "fa-solid fa-code", "featured": false, "url": "" },
+    { "title": "Entrepreneurship Learning Pathway", "issuer": "Wadhwani Foundation", "category": "Others", "icon": "fa-solid fa-lightbulb", "featured": false, "url": "" },
+    { "title": "ChatGPT-4 Prompt Engineering", "issuer": "Udemy", "category": "AI", "icon": "fa-solid fa-brain", "featured": false, "url": "" },
+    { "title": "Computational Theory – Finite Automata", "issuer": "Coursera", "category": "Programming", "icon": "fa-solid fa-gears", "featured": false, "url": "" },
+    { "title": "Computational Theory – Turing Machines", "issuer": "Coursera", "category": "Programming", "icon": "fa-solid fa-microchip", "featured": false, "url": "" },
+    { "title": "Computer Communication", "issuer": "Coursera", "category": "Networking", "icon": "fa-solid fa-network-wired", "featured": false, "url": "" },
+    { "title": "Deloitte Cybersecurity Internship", "issuer": "Deloitte", "category": "Cybersecurity", "icon": "fa-solid fa-shield-halved", "featured": true, "url": "" },
+    { "title": "Digital Systems – Logic to Processors", "issuer": "Coursera", "category": "Others", "icon": "fa-solid fa-memory", "featured": false, "url": "" },
+    { "title": "DSA Certificate", "issuer": "iamneo", "category": "Programming", "icon": "fa-solid fa-diagram-project", "featured": false, "url": "" },
+    { "title": "Fundamentals of Network Communication", "issuer": "Coursera", "category": "Networking", "icon": "fa-solid fa-wifi", "featured": false, "url": "" },
+    { "title": "Hackathon Certificate", "issuer": "Tech Fest", "category": "Programming", "icon": "fa-solid fa-trophy", "featured": false, "url": "" },
+    { "title": "Incident Response and Digital Forensics", "issuer": "Coursera", "category": "Cybersecurity", "icon": "fa-solid fa-magnifying-glass-chart", "featured": false, "url": "" },
+    { "title": "Infosys Automation Certificate", "issuer": "Infosys Springboard", "category": "Others", "icon": "fa-solid fa-bolt", "featured": false, "url": "" },
+    { "title": "Introduction to Hardware and Operating Systems", "issuer": "Coursera", "category": "Others", "icon": "fa-solid fa-server", "featured": false, "url": "" },
+    { "title": "Java Programming Certificate", "issuer": "Udemy", "category": "Programming", "icon": "fa-solid fa-mug-hot", "featured": false, "url": "" },
+    { "title": "OOPs C++ Certificate", "issuer": "iamneo", "category": "Programming", "icon": "fa-solid fa-c", "featured": false, "url": "" },
+    { "title": "Oracle Cloud Data Science Professional", "issuer": "Oracle", "category": "AI", "icon": "fa-solid fa-cloud", "featured": true, "url": "" },
+    { "title": "Oracle Cloud AI Foundations Associate", "issuer": "Oracle", "category": "AI", "icon": "fa-solid fa-cloud-meatball", "featured": true, "url": "" },
+    { "title": "Packet Switching Networks and Algorithms", "issuer": "Coursera", "category": "Networking", "icon": "fa-solid fa-route", "featured": false, "url": "" },
+    { "title": "Peer-to-Peer Protocols and LAN", "issuer": "Coursera", "category": "Networking", "icon": "fa-solid fa-sitemap", "featured": false, "url": "" },
+    { "title": "Privacy and Security in Online Social Media", "issuer": "NPTEL", "category": "Cybersecurity", "icon": "fa-solid fa-user-lock", "featured": false, "url": "" },
+    { "title": "Responsive Web Design", "issuer": "FreeCodeCamp", "category": "Programming", "icon": "fa-solid fa-laptop-code", "featured": false, "url": "" },
+    { "title": "Summer Internship Certificate (C++ + DSA)", "issuer": "Tech Internships", "category": "Programming", "icon": "fa-solid fa-file-code", "featured": false, "url": "" },
+    { "title": "TCP/IP and Advanced Topics", "issuer": "Coursera", "category": "Networking", "icon": "fa-solid fa-ethernet", "featured": false, "url": "" },
+    { "title": "The Bits and Bytes of Computer Networking", "issuer": "Coursera", "category": "Networking", "icon": "fa-solid fa-globe", "featured": false, "url": "" },
+    { "title": "Vedic Maths Certificate", "issuer": "Academy", "category": "Others", "icon": "fa-solid fa-calculator", "featured": false, "url": "" },
+    { "title": "Army Certificate", "issuer": "Indian Army", "category": "Others", "icon": "fa-solid fa-medal", "featured": false, "url": "" }
+  ],
+  "socials": {
+    "github": "https://github.com/",
+    "linkedin": "https://linkedin.com/in/",
+    "email": "anupam@example.com",
+    "leetcode": "https://leetcode.com/u/"
+  },
+  "contact": {
+    "heading": "Let's Connect",
+    "body": "Whether you have a question about cybersecurity, AI, or full-stack web development, my inbox is always open.",
+    "phone": "+91 000-000-0000",
+    "formAction": ""
+  },
+  "footer": "Cryo-Byte"
+}

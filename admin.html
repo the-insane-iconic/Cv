@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Site Editor — Control Room</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+  <!-- ── HEADER ─────────────────────────────────────────────── -->
+  <header class="admin-header">
+    <div class="admin-brand">
+      <i class="fa-solid fa-bolt" style="color:var(--accent);"></i>
+      <span class="brand-name" id="admin-brand-name">Portfolio</span>
+      <span class="brand-sep">/</span>
+      <span class="brand-tag">SITE EDITOR</span>
+    </div>
+
+    <div class="header-actions">
+      <button class="btn btn-outline btn-sm" onclick="openSupabaseModal()" id="supabase-status-btn" style="font-family:var(--font-mono);font-size:11px;">
+        <i class="fa-solid fa-database"></i> Supabase Setup
+      </button>
+      <a href="index.html" target="_blank" class="preview-link" title="Open public site">
+        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+        Preview Site
+      </a>
+    </div>
+  </header>
+
+  <!-- ── SIDEBAR ────────────────────────────────────────────── -->
+  <aside class="admin-sidebar">
+    <ul class="sidebar-nav" id="sidebar-nav">
+      <!-- Built by admin.js -->
+    </ul>
+  </aside>
+
+  <!-- ── MAIN CONTENT ───────────────────────────────────────── -->
+  <main class="admin-main">
+    <div id="editor-container">
+      <!-- All sections rendered by admin.js -->
+      <div style="padding: 48px 0; text-align: center; color: var(--text-muted);">
+        <i class="fa-solid fa-circle-notch fa-spin" style="font-size:24px;"></i>
+        <p style="margin-top:12px;font-family:var(--font-mono);font-size:13px;">Loading content...</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- ── FOOTER BAR ─────────────────────────────────────────── -->
+  <div class="admin-footer-bar">
+    <div class="footer-left">
+      <span class="status-dot saved" id="status-dot"></span>
+      <span id="status-text">All changes saved</span>
+    </div>
+
+    <div class="footer-right">
+      <button class="btn btn-ghost btn-sm" onclick="resetToFile()" title="Reset to portfolio.json on disk">
+        <i class="fa-solid fa-rotate-left"></i> Reset
+      </button>
+      <button class="btn btn-outline btn-sm" onclick="importJSON()">
+        <i class="fa-solid fa-file-import"></i> Import JSON
+      </button>
+      <button class="btn btn-outline btn-sm" onclick="exportJSON()">
+        <i class="fa-solid fa-file-export"></i> Export JSON
+      </button>
+      <button class="btn btn-primary btn-sm" onclick="saveData()">
+        <i class="fa-solid fa-floppy-disk"></i> Save & Sync
+      </button>
+    </div>
+  </div>
+
+  <!-- ── SUPABASE CONFIG MODAL ──────────────────────────────── -->
+  <div id="supabase-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); backdrop-filter:blur(8px); z-index:9999; align-items:center; justify-content:center;">
+    <div style="background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-lg); padding:28px; width:90%; max-width:540px; box-shadow:var(--shadow-lg);">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <h3 style="font-size:15px; font-weight:600; color:var(--text-primary);"><i class="fa-solid fa-database" style="color:var(--accent); margin-right:8px;"></i> Supabase Cloud Settings</h3>
+        <button onclick="closeSupabaseModal()" class="btn btn-ghost btn-sm" style="padding:4px 8px;"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="field-group" style="margin-bottom:16px;">
+        <label class="field-label">Project URL</label>
+        <input type="text" class="field-input" id="sb-input-url" value="https://eikxrpaakhhmpgtjrlhq.supabase.co" readonly style="opacity:0.8; cursor:not-allowed;">
+      </div>
+
+      <div class="field-group" style="margin-bottom:16px;">
+        <label class="field-label">Anon (Public) API Key</label>
+        <input type="password" class="field-input" id="sb-input-key" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." style="font-family:var(--font-mono); font-size:12px;">
+        <div class="field-hint">Find this in Supabase Dashboard → Settings (⚙️) → API → Project API keys → anon / public</div>
+      </div>
+
+      <div style="background:var(--bg-input); border:1px solid var(--border); border-radius:var(--radius-sm); padding:12px; font-size:12px; color:var(--text-secondary); margin-bottom:20px; line-height:1.5;">
+        <strong style="color:var(--text-primary);">⚡ SQL Setup snippet:</strong><br>
+        Run this SQL query once in your Supabase SQL Editor:
+        <textarea readonly style="width:100%; height:75px; background:var(--bg-base); border:1px solid var(--border); color:var(--accent); font-family:var(--font-mono); font-size:10px; margin-top:6px; padding:6px; border-radius:4px; outline:none;" onclick="this.select()">create table if not exists portfolios (
+  id text primary key,
+  content jsonb not null,
+  updated_at timestamp with time zone default timezone('utc'::text, now())
+);
+alter table portfolios enable row level security;
+create policy "Public read" on portfolios for select using (true);
+create policy "Public write" on portfolios for all using (true);</textarea>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:8px;">
+        <button class="btn btn-ghost btn-sm" onclick="closeSupabaseModal()">Cancel</button>
+        <button class="btn btn-primary btn-sm" onclick="saveSupabaseKey()">Connect & Save Key</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TOAST CONTAINER ────────────────────────────────────── -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Supabase Cloud Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>
