@@ -172,6 +172,8 @@
     const skills = d.skills || [];
     toggleSectionVisibility('skills', d.sectionVisibility?.skills !== false && skills.length > 0);
 
+    grid.setAttribute('data-count', skills.length);
+
     grid.innerHTML = skills.map((cat, ci) => {
       const delay = (ci % 3) * 0.15;
       const items = (cat.items || []).map(sk => `
@@ -228,6 +230,8 @@
 
     const projs = d.projects || [];
     toggleSectionVisibility('projects', d.sectionVisibility?.projects !== false && projs.length > 0);
+
+    grid.setAttribute('data-count', projs.length);
 
     grid.innerHTML = projs.map((proj, i) => {
       const delay = (i + 1) * 0.15;
