@@ -12,6 +12,16 @@
 
   /* ---- 1. Load data from Supabase / localStorage / portfolio.json ---- */
   async function loadData() {
+    let fileData = null;
+    try {
+      const res = await fetch('./portfolio.json?t=' + Date.now(), { cache: 'no-store' });
+      if (res.ok) {
+        fileData = await res.json();
+      }
+    } catch (e) {
+      console.warn('[File Fetch Warning]', e);
+    }
+
     let localData = null;
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
@@ -37,13 +47,29 @@
       }
     }
 
-    if (localData) return localData;
+    // Merge file updates with localStorage if local cache is stale or missing new fields
+    if (localData && fileData) {
+      const merged = { ...fileData, ...localData };
+      if (fileData.projects && (!localData.projects || localData.projects.some((p, i) => !p.images && fileData.projects[i]?.images))) {
+        merged.projects = fileData.projects;
+      }
+      if (fileData.experience && (!localData.experience || localData.experience.length !== fileData.experience.length)) {
+        merged.experience = fileData.experience;
+      }
+      if (fileData.identity && fileData.identity.profileImages && (!localData.identity || !localData.identity.profileImages)) {
+        merged.identity = { ...(localData.identity || {}), profileImages: fileData.identity.profileImages };
+      }
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
+      return merged;
+    }
 
-    // Fallback to local portfolio.json file
-    const res = await fetch('./portfolio.json');
-    const data = await res.json();
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-    return data;
+    if (fileData) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(fileData));
+      return fileData;
+    }
+
+    if (localData) return localData;
+    return {};
   }
 
   /* ---- 2. Helpers ---------------------------------------------- */
