@@ -17,7 +17,12 @@
     "greeting": "Hi, I'm",
     "location": "India",
     "tagline": "I build secure, scalable systems and explore real-world cybersecurity challenges.",
-    "profileImage": "/profile.png",
+    "profileImage": "ChatGPT Image Aug 27, 2026, 01_14_36 PM.png",
+    "profileImages": [
+      "ChatGPT Image Aug 27, 2026, 01_14_36 PM.png",
+      "ChatGPT Image Aug 27, 2026, 11_51_55 PM.png",
+      "Gemini_Generated_Image_epiuvuepiuvuepiu.png"
+    ],
     "resumeUrl": "#"
   },
   "about": {
@@ -121,6 +126,10 @@
     {
       "title": "Daily Challenge Bot",
       "icon": "fa-regular fa-comments",
+      "images": [
+        "ChatGPT Image Aug 27, 2026, 01_14_36 PM.png",
+        "ChatGPT Image Aug 27, 2026, 11_51_55 PM.png"
+      ],
       "description": "A chatbot-driven web platform designed to deliver personalized daily challenges across multiple domains.",
       "features": [
         "Served <strong>100+ active users</strong> with dynamic challenge generation.",
@@ -135,6 +144,9 @@
     {
       "title": "Real-Time Process Monitoring Dashboard",
       "icon": "fa-solid fa-chart-line",
+      "images": [
+        "Gemini_Generated_Image_epiuvuepiuvuepiu.png"
+      ],
       "description": "A system-level monitoring tool for tracking and analyzing real-time CPU and memory usage.",
       "features": [
         "Monitors <strong>100+</strong> system processes with live analytics.",

@@ -148,14 +148,73 @@
       (chips ? `<div class="about-stats-chips">${chips}</div>` : '') +
       resumeBtn;
 
-    const img = document.querySelector('.profile-img');
-    if (img) {
-      img.src = d.identity?.profileImage || '/profile.png';
-      img.alt = `${esc(d.identity?.name || 'Profile')} Profile`;
-      img.onerror = function () {
-        this.src = `https://via.placeholder.com/300?text=${encodeURIComponent((d.identity?.name || 'User').split(' ')[0])}`;
-      };
+    // Render rolling slot machine profile image reel
+    const mount = document.getElementById('about-image-mount');
+    if (!mount) return;
+
+    const images = (d.identity?.profileImages && d.identity.profileImages.length > 0)
+      ? d.identity.profileImages
+      : [d.identity?.profileImage || 'profile.png'];
+
+    const slidesHtml = images.map((imgSrc, idx) => `
+      <div class="slot-reel-slide${idx === 0 ? ' active' : ''}" data-index="${idx}">
+        <img src="${esc(imgSrc)}" alt="${esc(d.identity?.name || 'Profile')} - Image ${idx + 1}" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x500?text=Profile+Photo';">
+      </div>
+    `).join('');
+
+    mount.innerHTML = `
+      <div class="slot-machine-container" id="about-slot-machine">
+        <div class="slot-machine-vignette-top"></div>
+        <div class="slot-machine-vignette-bottom"></div>
+        <div class="slot-machine-frame-border"></div>
+
+        <div class="slot-reel-track" id="slot-reel-track">
+          ${slidesHtml}
+        </div>
+
+        <div class="slot-machine-badge">
+          <i class="fa-solid fa-arrows-rotate slot-spin-icon"></i>
+          <span class="slot-reel-text" id="slot-reel-text">1 / ${images.length}</span>
+        </div>
+      </div>
+    `;
+
+    initAboutSlotMachine(images.length);
+  }
+
+  function initAboutSlotMachine(totalCount) {
+    if (totalCount <= 1) return;
+    if (window._slotReelTimer) clearInterval(window._slotReelTimer);
+
+    const container = document.getElementById('about-slot-machine');
+    const track = document.getElementById('slot-reel-track');
+    const badgeText = document.getElementById('slot-reel-text');
+    if (!container || !track) return;
+
+    let currentIndex = 0;
+    let isHovered = false;
+
+    container.addEventListener('mouseenter', () => { isHovered = true; });
+    container.addEventListener('mouseleave', () => { isHovered = false; });
+
+    function spinReel() {
+      if (isHovered) return;
+      currentIndex = (currentIndex + 1) % totalCount;
+
+      track.style.transform = `translateY(-${currentIndex * 100}%)`;
+
+      const slides = track.querySelectorAll('.slot-reel-slide');
+      slides.forEach((s, i) => {
+        s.classList.toggle('active', i === currentIndex);
+      });
+
+      if (badgeText) {
+        badgeText.textContent = `${currentIndex + 1} / ${totalCount}`;
+      }
     }
+
+    // Auto spin every 1.8 seconds (1800ms)
+    window._slotReelTimer = setInterval(spinReel, 1800);
   }
 
   function renderSkills(d) {
@@ -242,8 +301,47 @@
       const demoLink = proj.demo
         ? `<a href="${esc(proj.demo)}" target="_blank" rel="noopener noreferrer" aria-label="Live Demo"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>` : '';
 
+      // Process image(s) for the top of the card
+      const images = Array.isArray(proj.images)
+        ? proj.images.filter(Boolean)
+        : (proj.image ? [proj.image] : []);
+
+      let mediaHtml = '';
+      if (images.length > 0) {
+        const isMultiple = images.length > 1;
+        const slidesHtml = images.map((imgSrc, idx) => `
+          <img src="${esc(imgSrc)}" alt="${esc(proj.title)} - Preview ${idx + 1}" class="carousel-slide${idx === 0 ? ' active' : ''}" data-index="${idx}" onerror="this.onerror=null; this.src='https://via.placeholder.com/600x340?text=Project+Preview';">
+        `).join('');
+
+        const arrowsHtml = isMultiple ? `
+          <button class="carousel-arrow prev-btn" aria-label="Previous Image" onclick="changeProjectImage(this, -1)">
+            <i class="fa-solid fa-chevron-left"></i>
+          </button>
+          <button class="carousel-arrow next-btn" aria-label="Next Image" onclick="changeProjectImage(this, 1)">
+            <i class="fa-solid fa-chevron-right"></i>
+          </button>
+        ` : '';
+
+        const dotsHtml = isMultiple ? `
+          <div class="carousel-dots">
+            ${images.map((_, idx) => `<span class="carousel-dot${idx === 0 ? ' active' : ''}" onclick="setProjectImage(this, ${idx})"></span>`).join('')}
+          </div>
+        ` : '';
+
+        mediaHtml = `
+          <div class="project-media-wrapper${isMultiple ? ' has-multiple' : ''}" data-active-index="0">
+            <div class="carousel-track">
+              ${slidesHtml}
+            </div>
+            ${arrowsHtml}
+            ${dotsHtml}
+          </div>
+        `;
+      }
+
       return `
       <div class="project-card" style="transition-delay:${delay}s;">
+        ${mediaHtml}
         <div class="project-content">
           <div class="folder-icon"><i class="${esc(proj.icon)}"></i></div>
           <h3 class="project-title">${esc(proj.title)}</h3>
@@ -259,6 +357,46 @@
       </div>`;
     }).join('');
   }
+
+  /* Global project image carousel controllers */
+  window.changeProjectImage = function(btn, dir) {
+    const wrapper = btn.closest('.project-media-wrapper');
+    if (!wrapper) return;
+    const slides = wrapper.querySelectorAll('.carousel-slide');
+    const dots = wrapper.querySelectorAll('.carousel-dot');
+    if (!slides.length) return;
+
+    let currentIndex = parseInt(wrapper.getAttribute('data-active-index') || '0', 10);
+    let newIndex = currentIndex + dir;
+    if (newIndex < 0) newIndex = slides.length - 1;
+    if (newIndex >= slides.length) newIndex = 0;
+
+    wrapper.setAttribute('data-active-index', newIndex);
+
+    slides.forEach((slide, idx) => {
+      slide.classList.toggle('active', idx === newIndex);
+    });
+    dots.forEach((dot, idx) => {
+      dot.classList.toggle('active', idx === newIndex);
+    });
+  };
+
+  window.setProjectImage = function(dot, targetIndex) {
+    const wrapper = dot.closest('.project-media-wrapper');
+    if (!wrapper) return;
+    const slides = wrapper.querySelectorAll('.carousel-slide');
+    const dots = wrapper.querySelectorAll('.carousel-dot');
+    if (!slides.length) return;
+
+    wrapper.setAttribute('data-active-index', targetIndex);
+
+    slides.forEach((slide, idx) => {
+      slide.classList.toggle('active', idx === targetIndex);
+    });
+    dots.forEach((d, idx) => {
+      d.classList.toggle('active', idx === targetIndex);
+    });
+  };
 
   function renderStats(d) {
     const grid = document.querySelector('.stats-grid');

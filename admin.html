@@ -33,8 +33,11 @@
 
     <!-- Search in Topbar -->
     <div class="topbar-search">
-      <i class="fa-solid fa-magnifying-glass search-icon"></i>
-      <input type="text" id="admin-global-search" placeholder="Search any skill, project, cert, or text (Ctrl+K)..." autocomplete="off">
+      <i class="fa-solid fa-magnifying-glass search-icon" id="admin-search-btn" style="cursor:pointer;" title="Click to search"></i>
+      <input type="text" id="admin-global-search" placeholder="Search skills, projects, certs... (Press Enter)" autocomplete="off">
+      <button type="button" id="admin-search-clear-btn" style="display:none; background:none; border:none; color:var(--text-muted); cursor:pointer; padding:0 6px; font-size:12px;" title="Clear search">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
       <kbd class="search-kbd">⌘K</kbd>
     </div>
 

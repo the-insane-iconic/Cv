@@ -590,42 +590,124 @@ ul { list-style: none; }
 .about-image-wrapper {
   display: flex;
   justify-content: center;
+  align-items: center;
 }
-.about-image {
+
+/* ================================================================
+   ABOUT ME ROLLING SLOT MACHINE REEL
+   ================================================================ */
+.slot-machine-container {
   position: relative;
   width: 100%;
   max-width: 360px;
-  aspect-ratio: 4/5;
-  border-radius: 14px;
+  aspect-ratio: 4 / 5;
+  border-radius: 20px;
   overflow: hidden;
-}
-.about-image::before {
-  content: '';
-  position: absolute;
-  inset: -4px;
+  background: var(--surface);
   border: 2px solid var(--border);
-  border-radius: 14px;
-  z-index: 0;
+  box-shadow: 0 12px 40px rgba(21, 21, 21, 0.12),
+              inset 0 0 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.4s var(--ease);
 }
-.profile-img {
-  width: 100%; height: 100%;
-  object-fit: cover;
-  filter: grayscale(70%) contrast(1.05);
-  transition: filter .6s var(--ease);
-  border-radius: 12px;
-  position: relative;
-  z-index: 1;
+
+.slot-machine-container:hover {
+  border-color: var(--accent-dark);
+  box-shadow: 0 16px 48px rgba(21, 21, 21, 0.22),
+              0 0 24px rgba(166, 154, 135, 0.25);
+  transform: translateY(-4px);
 }
-.about-image:hover .profile-img {
-  filter: grayscale(0%) contrast(1);
+
+/* Vignettes for 3D slot reel depth effect */
+.slot-machine-vignette-top {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 60px;
+  background: linear-gradient(180deg, rgba(21, 21, 21, 0.45) 0%, transparent 100%);
+  z-index: 5;
+  pointer-events: none;
 }
-.about-overlay {
+
+.slot-machine-vignette-bottom {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 70px;
+  background: linear-gradient(0deg, rgba(21, 21, 21, 0.6) 0%, transparent 100%);
+  z-index: 5;
+  pointer-events: none;
+}
+
+.slot-machine-frame-border {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, transparent 50%, rgba(21,21,21,.25));
-  z-index: 2;
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  border-radius: 18px;
+  z-index: 6;
   pointer-events: none;
-  border-radius: 12px;
+}
+
+/* Vertical Reel Track */
+.slot-reel-track {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.75s cubic-bezier(0.34, 1.45, 0.64, 1);
+}
+
+.slot-reel-slide {
+  width: 100%;
+  height: 100%;
+  flex: 0 0 100%;
+  position: relative;
+  overflow: hidden;
+  filter: grayscale(40%) blur(1px);
+  transform: scale(0.95);
+  opacity: 0.7;
+  transition: filter 0.6s var(--ease), transform 0.6s var(--ease), opacity 0.6s var(--ease);
+}
+
+.slot-reel-slide.active {
+  filter: grayscale(0%) blur(0px);
+  transform: scale(1);
+  opacity: 1;
+}
+
+.slot-reel-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Slot Machine Badge at Bottom */
+.slot-machine-badge {
+  position: absolute;
+  bottom: 14px;
+  right: 14px;
+  z-index: 7;
+  background: rgba(21, 21, 21, 0.75);
+  backdrop-filter: blur(8px);
+  color: var(--white);
+  padding: 6px 14px;
+  border-radius: 100px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+}
+
+.slot-spin-icon {
+  color: var(--accent-light);
+  animation: slotSpinGlow 3s linear infinite;
+}
+
+@keyframes slotSpinGlow {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 /* ================================================================
@@ -955,6 +1037,105 @@ ul { list-style: none; }
   box-shadow: var(--shadow-hover);
   transform: translateY(-6px);
   border-color: var(--accent-light);
+}
+
+/* Project Card Image Carousel Header */
+.project-media-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: var(--surface);
+  overflow: hidden;
+  border-bottom: 1px solid var(--border);
+}
+
+.carousel-track {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.carousel-slide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.4s var(--ease);
+  pointer-events: none;
+}
+
+.carousel-slide.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Side Navigation Arrows for Multi-image projects */
+.carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(21, 21, 21, 0.65);
+  backdrop-filter: blur(4px);
+  color: var(--white);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  cursor: pointer;
+  z-index: 5;
+  transition: all 0.25s var(--ease);
+  opacity: 0.85;
+}
+
+.carousel-arrow:hover {
+  background: var(--text-primary);
+  color: var(--bg);
+  opacity: 1;
+  transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-arrow.prev-btn {
+  left: 10px;
+}
+
+.carousel-arrow.next-btn {
+  right: 10px;
+}
+
+/* Dot Indicators */
+.carousel-dots {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  z-index: 5;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 4px 8px;
+  border-radius: 100px;
+  backdrop-filter: blur(4px);
+}
+
+.carousel-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: all 0.25s var(--ease);
+}
+
+.carousel-dot.active {
+  background: var(--white);
+  width: 14px;
+  border-radius: 4px;
 }
 
 .project-content {

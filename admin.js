@@ -414,42 +414,59 @@ function renderIdentitySection() {
       <button class="btn-icon-action danger" onclick="removeRole(${i})" title="Remove"><i class="fa-solid fa-trash"></i></button>
     </div>`).join('');
 
-  return makeSection('identity',
-    'fa-solid fa-id-card',
-    'Identity & Hero',
-    'name · brand logo · typing roles · avatar',
-    '',
-    `<div class="field-row">
-      ${field('Full Name', textInput('identity.name', id.name, 'Anupam Yadav'))}
-      ${field('Brand / Navbar Name', textInput('identity.brand', id.brand, 'Cryo-Byte'))}
-    </div>
-    <div class="field-row">
-      ${field('Logo Suffix (colored accent)', textInput('identity.brandSuffix', id.brandSuffix, 'Byte'), 'Part of name highlighted in logo')}
-      ${field('Location', textInput('identity.location', id.location, 'India'))}
-    </div>
-    <div class="field-row single">
-      ${field('Hero Greeting', textInput('identity.greeting', id.greeting, "Hi, I'm"))}
-    </div>
-    <div class="field-row single">
-      ${field('Tagline / Hero Description', textArea('identity.tagline', id.tagline, 2))}
-    </div>
-    <div class="field-divider"></div>
-    <div class="field-label" style="margin-bottom:8px;">TYPING ANIMATION ROLES</div>
-    <div class="array-list">${rolesHtml}</div>
-    <button class="add-item-btn" onclick="addRole()"><i class="fa-solid fa-plus"></i> Add Typing Role</button>
-    <div class="field-divider"></div>
-    <div class="field-row">
-      <div class="field-group">
-        <label class="field-label">Profile Image URL</label>
-        <div class="image-input-wrap">
-          <img src="${esc(id.profileImage || '/profile.png')}" class="avatar-preview-box" id="avatar-preview-img" onerror="this.src='https://via.placeholder.com/100?text=Avatar'">
-          <input type="text" class="field-input" value="${esc(id.profileImage)}" placeholder="/profile.png or https://..." oninput="setPath('identity.profileImage', this.value); document.getElementById('avatar-preview-img').src=this.value;">
-        </div>
+    const profileImagesArr = (Array.isArray(id.profileImages) && id.profileImages.length > 0)
+      ? id.profileImages
+      : (id.profileImage ? [id.profileImage] : []);
+    const profileImagesVal = profileImagesArr.join('\n');
+
+    const profilePreviews = profileImagesArr.map(img => `
+      <div style="width:55px; height:65px; border-radius:6px; overflow:hidden; border:1px solid var(--border-subtle); background:var(--bg-card);">
+        <img src="${esc(img)}" alt="Reel Preview" style="width:100%; height:100%; object-fit:cover;" onerror="this.onerror=null; this.src='https://via.placeholder.com/60x70?text=No+Img';">
       </div>
-      ${field('Resume File URL', urlInput('identity.resumeUrl', id.resumeUrl), 'Google Drive, PDF, or CDN link')}
-    </div>`
-  );
+    `).join('');
+
+    return makeSection('identity',
+      'fa-solid fa-id-card',
+      'Identity & Hero',
+      'personal brand · typing animation roles · profile reel images',
+      `${id.name || 'Hero'}`,
+      `<div class="field-row">
+        ${field('Full Name', textInput('identity.name', id.name))}
+        ${field('Greeting Text', textInput('identity.greeting', id.greeting))}
+      </div>
+      <div class="field-row">
+        ${field('Brand Prefix', textInput('identity.brand', id.brand), 'e.g. Cryo-Byte')}
+        ${field('Brand Suffix (Styled)', textInput('identity.brandSuffix', id.brandSuffix), 'e.g. Byte')}
+      </div>
+      <div class="field-row single">
+        ${field('Tagline / Hero Description', textArea('identity.tagline', id.tagline, 2))}
+      </div>
+      <div class="field-divider"></div>
+      <div class="field-label" style="margin-bottom:8px;">TYPING ANIMATION ROLES</div>
+      <div class="array-list">${rolesHtml}</div>
+      <button class="add-item-btn" onclick="addRole()"><i class="fa-solid fa-plus"></i> Add Typing Role</button>
+      <div class="field-divider"></div>
+      <div class="field-row single">
+        ${field('About Me Profile Reel Images (Slot Machine Reel — 1 per line)', `
+          <textarea class="field-textarea" rows="3" placeholder="profile1.png&#10;profile2.png" oninput="updateProfileImages(this.value)">${esc(profileImagesVal)}</textarea>
+          <span class="field-hint" style="display:block; margin-top:4px; font-size:11px; color:var(--text-muted);">
+            Enter multiple image URLs or file names (one per line) to power the vertical rolling slot machine reel in About Me. Spins every 1.8s!
+          </span>
+          ${profilePreviews ? `<div style="display:flex; gap:8px; margin-top:8px; flex-wrap:wrap;">${profilePreviews}</div>` : ''}
+        `)}
+      </div>
+      <div class="field-row">
+        ${field('Resume File URL', urlInput('identity.resumeUrl', id.resumeUrl), 'Google Drive, PDF, or CDN link')}
+      </div>`
+    );
 }
+
+window.updateProfileImages = function (val) {
+  const arr = val.split(/[\n,]/).map(s => s.trim()).filter(Boolean);
+  DATA.identity.profileImages = arr;
+  if (arr.length > 0) DATA.identity.profileImage = arr[0];
+  markDirty();
+};
 
 window.addRole = function () {
   DATA.identity.roles = DATA.identity.roles || [];
@@ -631,6 +648,17 @@ function renderProjectsSection() {
   const projs = DATA.projects || [];
 
   const html = projs.map((proj, i) => {
+    const imagesArr = Array.isArray(proj.images)
+      ? proj.images
+      : (proj.image ? [proj.image] : []);
+    const imagesVal = imagesArr.join('\n');
+
+    const imagePreviews = imagesArr.map(img => `
+      <div class="admin-img-thumb" style="width:70px; height:45px; border-radius:6px; overflow:hidden; border:1px solid var(--border-subtle); background:var(--bg-card); position:relative;">
+        <img src="${esc(img)}" alt="Preview" style="width:100%; height:100%; object-fit:cover;" onerror="this.onerror=null; this.src='https://via.placeholder.com/100x60?text=No+Img';">
+      </div>
+    `).join('');
+
     const features = (proj.features || []).map((f, fi) => `
       <div class="array-item">
         <textarea class="field-textarea" rows="1" oninput="DATA.projects[${i}].features[${fi}]=this.value; markDirty()">${esc(f)}</textarea>
@@ -648,7 +676,7 @@ function renderProjectsSection() {
       <div class="list-item-header" onclick="toggleListItem('proj-${i}')">
         <i class="${esc(proj.icon)}" style="color:var(--accent);width:16px;text-align:center;"></i>
         <span class="list-item-title">${esc(proj.title)}</span>
-        <span class="list-item-meta">${(proj.tech||[]).slice(0,3).join(', ')}</span>
+        <span class="list-item-meta">${imagesArr.length} Image${imagesArr.length === 1 ? '' : 's'} · ${(proj.tech||[]).slice(0,2).join(', ')}</span>
         <div class="list-item-actions">
           <button class="btn-icon-action" onclick="event.stopPropagation(); moveItem('projects', ${i}, -1)"><i class="fa-solid fa-chevron-up"></i></button>
           <button class="btn-icon-action" onclick="event.stopPropagation(); moveItem('projects', ${i}, 1)"><i class="fa-solid fa-chevron-down"></i></button>
@@ -659,6 +687,13 @@ function renderProjectsSection() {
         <div class="field-row">
           ${field('Project Title', `<input type="text" class="field-input" value="${esc(proj.title)}" oninput="DATA.projects[${i}].title=this.value; markDirty()">`)}
           ${field('Card Icon', `<input type="text" class="field-input" value="${esc(proj.icon)}" placeholder="fa-solid fa-chart-line" oninput="DATA.projects[${i}].icon=this.value; markDirty()">`)}
+        </div>
+        <div class="field-row single">
+          ${field('Project Images (URLs or File Paths — 1 per line)', `
+            <textarea class="field-textarea" rows="2" placeholder="image1.png&#10;image2.png" oninput="updateProjectImages(${i}, this.value)">${esc(imagesVal)}</textarea>
+            <span class="field-hint" style="display:block; margin-top:4px; font-size:11px; color:var(--text-muted);">Enter multiple image paths/URLs (one per line) to enable the side-arrow image slider on the project card.</span>
+            ${imagePreviews ? `<div style="display:flex; gap:8px; margin-top:8px; flex-wrap:wrap;">${imagePreviews}</div>` : ''}
+          `)}
         </div>
         <div class="field-row single">
           ${field('Short Summary', `<textarea class="field-textarea" rows="2" oninput="DATA.projects[${i}].description=this.value; markDirty()">${esc(proj.description)}</textarea>`)}
@@ -684,12 +719,18 @@ function renderProjectsSection() {
   return makeSection('projects',
     'fa-solid fa-folder',
     'Projects Grid',
-    'featured project cards with live links & tech tags',
+    'featured project cards with image carousels, live links & tech tags',
     `${projs.length} Projects`,
     `<div class="list-items">${html}</div>
-    <button class="add-item-btn" onclick="DATA.projects.push({title:'New Web Project',icon:'fa-solid fa-laptop-code',description:'',features:[],tech:['React','Node.js'],github:'',demo:''}); markDirty(); renderEditor()"><i class="fa-solid fa-plus"></i> Add Project Card</button>`
+    <button class="add-item-btn" onclick="DATA.projects.push({title:'New Web Project',icon:'fa-solid fa-laptop-code',images:[],description:'',features:[],tech:['React','Node.js'],github:'',demo:''}); markDirty(); renderEditor()"><i class="fa-solid fa-plus"></i> Add Project Card</button>`
   );
 }
+
+window.updateProjectImages = function (pi, val) {
+  const arr = val.split(/[\n,]/).map(s => s.trim()).filter(Boolean);
+  DATA.projects[pi].images = arr;
+  markDirty();
+};
 
 window.addTech = function (pi) {
   const input = document.getElementById(`tech-add-${pi}`);
@@ -973,20 +1014,71 @@ function setupSectionScrollObserver() {
 
 function setupSearchAndShortcuts() {
   const searchInput = document.getElementById('admin-global-search');
+  const searchBtn = document.getElementById('admin-search-btn');
+  const clearBtn = document.getElementById('admin-search-clear-btn');
+
+  function performSearch() {
+    if (!searchInput) return;
+    const q = searchInput.value.toLowerCase().trim();
+    const sections = document.querySelectorAll('.editor-section');
+    
+    if (clearBtn) {
+      clearBtn.style.display = q ? 'inline-block' : 'none';
+    }
+
+    sections.forEach(sec => {
+      const text = sec.innerText.toLowerCase();
+      if (!q || text.includes(q)) {
+        sec.style.display = '';
+        if (q) sec.classList.add('open');
+      } else {
+        sec.style.display = 'none';
+      }
+    });
+  }
+
+  function clearSearch() {
+    if (!searchInput) return;
+    searchInput.value = '';
+    performSearch();
+  }
+
   if (searchInput) {
-    searchInput.addEventListener('input', (e) => {
-      const q = e.target.value.toLowerCase().trim();
-      const sections = document.querySelectorAll('.editor-section');
-      
-      sections.forEach(sec => {
-        const text = sec.innerText.toLowerCase();
-        if (!q || text.includes(q)) {
-          sec.style.display = '';
-          if (q) sec.classList.add('open');
-        } else {
-          sec.style.display = 'none';
-        }
-      });
+    // Reset value on setup so browser cached text does not auto-filter
+    searchInput.value = '';
+
+    // Execute search ONLY when user presses Enter key
+    searchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        performSearch();
+      }
+    });
+
+    // Show/hide clear button on input, but do NOT auto-execute search
+    searchInput.addEventListener('input', () => {
+      const val = searchInput.value.trim();
+      if (clearBtn) {
+        clearBtn.style.display = val ? 'inline-block' : 'none';
+      }
+      // If user deletes all text manually, reset section visibility
+      if (!val) {
+        performSearch();
+      }
+    });
+  }
+
+  if (searchBtn) {
+    searchBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      performSearch();
+    });
+  }
+
+  if (clearBtn) {
+    clearBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      clearSearch();
     });
   }
 
@@ -998,10 +1090,13 @@ function setupSearchAndShortcuts() {
     }
     if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
       e.preventDefault();
-      const s = document.getElementById('admin-global-search');
-      if (s) { s.focus(); s.select(); }
+      if (searchInput) { searchInput.focus(); searchInput.select(); }
     }
     if (e.key === 'Escape') {
+      if (searchInput && document.activeElement === searchInput) {
+        clearSearch();
+        searchInput.blur();
+      }
       closeSupabaseModal();
       closeMobileSidebar();
     }
