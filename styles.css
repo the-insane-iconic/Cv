@@ -100,6 +100,63 @@ html {
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(90, 69, 255, 0.45) rgba(240, 238, 252, 0.4);
+}
+
+[data-theme="dark"] html,
+body.dark-mode {
+  scrollbar-color: rgba(90, 69, 255, 0.45) rgba(16, 12, 34, 0.5);
+}
+
+html.lenis, html.lenis body {
+  height: auto;
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* Custom Sleek Glassmorphic Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(240, 238, 252, 0.4);
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-track,
+body.dark-mode ::-webkit-scrollbar-track {
+  background: rgba(16, 12, 34, 0.5);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(90, 69, 255, 0.5) 0%, rgba(139, 92, 246, 0.5) 100%);
+  border-radius: 999px;
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #5A45FF 0%, #8B5CF6 100%);
 }
 
 body {
@@ -108,6 +165,10 @@ body {
   background: var(--bg);
   line-height: 1.7;
   overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
   position: relative;
   transition: background 0.4s var(--ease), color 0.4s var(--ease);
 }
@@ -141,13 +202,22 @@ ul { list-style: none; }
   opacity: .2;
 }
 
-/* ---------- Ambient Violet Lighting Glows ---------- */
-.ambient-glow {
+/* ---------- Ambient Violet Lighting Glows (Contained) ---------- */
+.ambient-glow-wrapper {
   position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.ambient-glow {
+  position: absolute;
   border-radius: 50%;
   filter: blur(140px);
   pointer-events: none;
-  z-index: -1;
   opacity: .18;
 }
 .glow-1 {
