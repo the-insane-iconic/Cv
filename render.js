@@ -115,11 +115,29 @@
 
   function renderHero(d) {
     const id = d.identity || {};
-    setText('.hero-greeting', id.greeting || "Hi, I'm");
-    setText('.hero-name', id.name || '');
-    setText('.hero-description', id.tagline || '');
+    setText('.hero-greeting', id.greeting || "H I , &nbsp; I ' M");
 
-    const resumeBtn = document.querySelector('.hero-cta .btn-outline');
+    const rolePill = document.getElementById('hero-pill-role');
+    if (rolePill) {
+      rolePill.textContent = (id.roles && id.roles[0]) ? id.roles[0] : 'Computer Science & Developer';
+    }
+
+    const nameEl = document.querySelector('.hero-name');
+    if (nameEl) {
+      const full = (id.name || 'Anupam Yadav').trim();
+      const parts = full.split(' ');
+      if (parts.length > 1) {
+        const first = parts.slice(0, -1).join(' ');
+        const last = parts[parts.length - 1];
+        nameEl.innerHTML = `${esc(first)} <span class="hero-name-last">${esc(last)}<span class="dot-accent">.</span></span>`;
+      } else {
+        nameEl.innerHTML = `${esc(full)}<span class="dot-accent">.</span>`;
+      }
+    }
+
+    setText('.hero-description', id.tagline || 'I build secure, scalable systems and explore real-world cybersecurity challenges.');
+
+    const resumeBtn = document.querySelector('.btn-hero-resume') || document.querySelector('.hero-cta .btn-outline');
     if (resumeBtn) {
       if (id.resumeUrl) {
         resumeBtn.href = id.resumeUrl;

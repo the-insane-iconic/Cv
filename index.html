@@ -6,7 +6,7 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="styles.css">
   <!-- app.js exposes window.initApp(); render.js calls it after populating the DOM -->
@@ -19,16 +19,19 @@
   <nav class="navbar scrolled" id="navbar">
     <div class="nav-container">
       <!-- Populated by render.js -->
-      <a href="#hero" class="nav-logo" id="nav-logo">Portfolio</a>
+      <a href="#hero" class="nav-logo" id="nav-logo">Cryo<span>-Byte</span></a>
       <div class="nav-menu" id="nav-menu">
         <a href="#about" class="nav-link">About</a>
         <a href="#skills" class="nav-link">Skills</a>
-        <a href="#experience" class="nav-link">Experience</a>
+        <a href="#experience" class="nav-link active">Experience</a>
         <a href="#projects" class="nav-link">Projects</a>
         <a href="#achievements" class="nav-link">Achievements</a>
         <a href="#contact" class="nav-link">Contact</a>
       </div>
       <div class="nav-actions">
+        <button class="nav-theme-btn" id="nav-theme-btn" title="Toggle Theme" aria-label="Toggle Dark/Light Mode">
+          <i class="fa-solid fa-moon"></i>
+        </button>
         <div class="profile-dropdown-wrapper" id="profile-dropdown-wrapper">
           <button class="nav-profile-btn" id="nav-profile-btn" title="Site Options" aria-label="Profile / Admin Menu">
             <i class="fa-solid fa-user"></i>
@@ -52,36 +55,64 @@
   </nav>
 
   <main>
-    <!-- Ambient Studio Lighting Effects -->
+    <!-- Ambient Violet Studio Lighting Effects -->
     <div class="ambient-glow glow-1"></div>
     <div class="ambient-glow glow-2"></div>
+    <div class="ambient-glow glow-3"></div>
 
     <!-- Hero Section -->
     <section id="hero" class="hero">
-      <!-- Background Art (Gemini Generated) -->
+      <!-- Background Art (Dual Theme Editorial Arch) -->
       <div class="hero-bg-art">
-        <img src="Gemini_Generated_Image_epiuvuepiuvuepiu.png" alt="Editorial Arch Architecture">
+        <img src="ChatGPT Image Aug 28, 2026, 04_44_49 PM.png" alt="Editorial Arch Light Theme" class="hero-img-light">
+        <img src="ChatGPT Image Aug 28, 2026, 04_29_58 PM.png" alt="Editorial Arch Dark Theme" class="hero-img-dark">
+        <!-- Floating Glass Card -->
+        <div class="hero-floating-card">
+          <div class="floating-code-icon">&lt;/&gt;</div>
+          <p>Turning ideas into secure and impactful solutions.</p>
+        </div>
+        <!-- Decorative Dot Grid -->
+        <div class="hero-dot-grid"></div>
       </div>
 
       <div class="hero-content">
-        <!-- Populated by render.js -->
-        <p class="hero-greeting fade-up delay-100"></p>
-        <h1 class="hero-name fade-up delay-200"></h1>
-        <h2 class="hero-roles fade-up delay-300">
-          <span class="role typing-text"></span><span class="typing-cursor">&nbsp;</span>
-        </h2>
-        <p class="hero-description fade-up delay-400"></p>
-        <div class="hero-cta fade-up delay-500">
-          <a href="#projects" class="btn btn-primary">View Projects</a>
-          <a href="#" target="_blank" rel="noopener noreferrer" class="btn btn-outline">
-            <i class="fa-solid fa-file-pdf"></i> View/Download Resume
+        <!-- Role Pill Badge -->
+        <div class="hero-role-pill fade-up delay-100">
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+          <span id="hero-pill-role">Computer Science &amp; Developer</span>
+        </div>
+
+        <p class="hero-greeting fade-up delay-150">H I , &nbsp; I ' M</p>
+
+        <!-- Main Name with Stylized Dot & Brush Stroke -->
+        <div class="hero-name-wrapper fade-up delay-200">
+          <h1 class="hero-name">Anupam <span class="hero-name-last">Yadav<span class="dot-accent">.</span></span></h1>
+          <svg class="hero-brush-stroke" viewBox="0 0 280 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 14C50 6 180 2 276 10C210 12 90 15 8 16" stroke="url(#brushGradient)" stroke-width="6" stroke-linecap="round"/>
+            <defs>
+              <linearGradient id="brushGradient" x1="4" y1="10" x2="276" y2="10" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#8C7AFF" stop-opacity="0.8"/>
+                <stop offset="0.5" stop-color="#C5BCFF" stop-opacity="0.9"/>
+                <stop offset="1" stop-color="#5A45FF" stop-opacity="0.3"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+
+        <p class="hero-description fade-up delay-300"></p>
+
+        <div class="hero-cta fade-up delay-400">
+          <a href="#projects" class="btn btn-primary btn-hero-primary"><i class="fa-solid fa-rocket"></i> View Projects</a>
+          <a href="#" target="_blank" rel="noopener noreferrer" class="btn btn-glass btn-hero-resume">
+            <i class="fa-regular fa-file-lines"></i> View/Download Resume
           </a>
         </div>
-        <div class="social-links-hero fade-up delay-600">
+
+        <div class="social-links-hero fade-up delay-500">
           <!-- Populated by render.js -->
         </div>
       </div>
-      <a href="#about" class="scroll-down fade-up delay-800" title="Scroll down" aria-label="Scroll down">
+      <a href="#about" class="scroll-down fade-up delay-600" title="Scroll down" aria-label="Scroll down">
         <div class="mouse"></div>
       </a>
     </section>

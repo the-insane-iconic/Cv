@@ -44,6 +44,26 @@ window.initApp = function () {
   window.addEventListener('scroll', handleScroll, { passive: true });
   handleScroll();
 
+  /* ---------- Theme Toggle (Dark / Light) ---------- */
+  const themeBtn = document.getElementById('nav-theme-btn');
+  const savedTheme = localStorage.getItem('portfolio_theme') || 'light';
+  if (savedTheme === 'dark') {
+    document.body.classList.add('dark-mode');
+    document.documentElement.setAttribute('data-theme', 'dark');
+    if (themeBtn) themeBtn.innerHTML = '<i class="fa-solid fa-sun"></i>';
+  } else {
+    document.documentElement.setAttribute('data-theme', 'light');
+  }
+
+  if (themeBtn) {
+    themeBtn.addEventListener('click', () => {
+      const isDark = document.body.classList.toggle('dark-mode');
+      document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+      localStorage.setItem('portfolio_theme', isDark ? 'dark' : 'light');
+      themeBtn.innerHTML = isDark ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>';
+    });
+  }
+
   /* ---------- Profile Dropdown Menu & Admin Auth Popup ---------- */
   const profileDropdown = document.getElementById('profile-dropdown-wrapper');
   const profileBtn = document.getElementById('nav-profile-btn');
