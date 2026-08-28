@@ -55,6 +55,12 @@
             if (fileData.certificates) {
               dbData.certificates = fileData.certificates;
             }
+            if (fileData.socials) {
+              dbData.socials = fileData.socials;
+            }
+            if (fileData.contact) {
+              dbData.contact = fileData.contact;
+            }
           }
           localStorage.setItem(STORAGE_KEY, JSON.stringify(dbData));
           return dbData;
@@ -81,6 +87,12 @@
       }
       if (fileData.certificates) {
         merged.certificates = fileData.certificates;
+      }
+      if (fileData.socials) {
+        merged.socials = fileData.socials;
+      }
+      if (fileData.contact) {
+        merged.contact = fileData.contact;
       }
       localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
       return merged;

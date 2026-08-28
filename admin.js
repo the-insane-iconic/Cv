@@ -66,6 +66,12 @@ async function loadData() {
           if (fileData.certificates) {
             dbData.certificates = fileData.certificates;
           }
+          if (fileData.socials) {
+            dbData.socials = fileData.socials;
+          }
+          if (fileData.contact) {
+            dbData.contact = fileData.contact;
+          }
         }
         localStorage.setItem(STORAGE_KEY, JSON.stringify(dbData, null, 2));
         return dbData;
@@ -92,6 +98,12 @@ async function loadData() {
     }
     if (fileData.certificates) {
       merged.certificates = fileData.certificates;
+    }
+    if (fileData.socials) {
+      merged.socials = fileData.socials;
+    }
+    if (fileData.contact) {
+      merged.contact = fileData.contact;
     }
     localStorage.setItem(STORAGE_KEY, JSON.stringify(merged, null, 2));
     return merged;

@@ -240,15 +240,15 @@
     { "title": "Hackathon Certificate", "issuer": "Tech Fest", "category": "Programming", "icon": "fa-solid fa-trophy", "featured": false, "url": "" }
   ],
   "socials": {
-    "github": "https://github.com/",
-    "linkedin": "https://linkedin.com/in/",
-    "email": "anupam@example.com",
-    "leetcode": "https://leetcode.com/u/"
+    "github": "https://github.com/the-insane-iconic",
+    "linkedin": "https://www.linkedin.com/in/ansh-ydv",
+    "email": "anupamyadav6477@gmail.com",
+    "leetcode": "https://leetcode.com/u/ZSiFPFw1Gd/"
   },
   "contact": {
     "heading": "Let's Connect",
     "body": "Whether you have a question about cybersecurity, AI, or full-stack web development, my inbox is always open.",
-    "phone": "+91 000-000-0000",
+    "phone": "+91 8707726019",
     "formAction": ""
   },
   "footer": "Cryo-Byte"
