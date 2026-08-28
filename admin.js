@@ -49,8 +49,26 @@ async function loadData() {
         .single();
 
       if (!error && data && data.content) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(data.content, null, 2));
-        return data.content;
+        const dbData = data.content;
+        if (fileData) {
+          if (fileData.projects && (!dbData.projects || dbData.projects.length < fileData.projects.length || !dbData.projects[0]?.type)) {
+            dbData.projects = fileData.projects;
+          }
+          if (fileData.experience && (!dbData.experience || dbData.experience.length !== fileData.experience.length)) {
+            dbData.experience = fileData.experience;
+          }
+          if (fileData.identity && fileData.identity.profileImages) {
+            dbData.identity = { ...(dbData.identity || {}), profileImages: fileData.identity.profileImages };
+          }
+          if (fileData.about) {
+            dbData.about = fileData.about;
+          }
+          if (fileData.certificates) {
+            dbData.certificates = fileData.certificates;
+          }
+        }
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(dbData, null, 2));
+        return dbData;
       }
     } catch (err) {
       console.warn('[Supabase Sync Warning]', err.message);
@@ -60,7 +78,7 @@ async function loadData() {
   // Merge file updates with localStorage if local cache is missing new fields
   if (localData && fileData) {
     const merged = { ...fileData, ...localData };
-    if (fileData.projects && (!localData.projects || localData.projects.some((p, i) => !p.images && fileData.projects[i]?.images))) {
+    if (fileData.projects && (!localData.projects || localData.projects.length < fileData.projects.length || !localData.projects[0]?.type)) {
       merged.projects = fileData.projects;
     }
     if (fileData.experience && (!localData.experience || localData.experience.length !== fileData.experience.length)) {
@@ -68,6 +86,12 @@ async function loadData() {
     }
     if (fileData.identity && fileData.identity.profileImages && (!localData.identity || !localData.identity.profileImages)) {
       merged.identity = { ...(localData.identity || {}), profileImages: fileData.identity.profileImages };
+    }
+    if (fileData.about) {
+      merged.about = fileData.about;
+    }
+    if (fileData.certificates) {
+      merged.certificates = fileData.certificates;
     }
     localStorage.setItem(STORAGE_KEY, JSON.stringify(merged, null, 2));
     return merged;
@@ -683,35 +707,35 @@ function renderProjectsSection() {
   const projs = DATA.projects || [];
 
   const html = projs.map((proj, i) => {
-    const imagesArr = Array.isArray(proj.images)
-      ? proj.images
-      : (proj.image ? [proj.image] : []);
-    const imagesVal = imagesArr.join('\n');
-
-    const imagePreviews = imagesArr.map(img => `
-      <div class="admin-img-thumb" style="width:70px; height:45px; border-radius:6px; overflow:hidden; border:1px solid var(--border-subtle); background:var(--bg-card); position:relative;">
-        <img src="${esc(img)}" alt="Preview" style="width:100%; height:100%; object-fit:cover;" onerror="this.onerror=null; this.src='https://via.placeholder.com/100x60?text=No+Img';">
-      </div>
-    `).join('');
-
-    const features = (proj.features || []).map((f, fi) => `
-      <div class="array-item">
-        <textarea class="field-textarea" rows="1" oninput="DATA.projects[${i}].features[${fi}]=this.value; markDirty()">${esc(f)}</textarea>
-        <button class="btn-icon-action danger" onclick="DATA.projects[${i}].features.splice(${fi},1); markDirty(); renderEditor()"><i class="fa-solid fa-trash"></i></button>
-      </div>`).join('');
-
     const techTags = (proj.tech || []).map((t, ti) => `
       <span class="tag-item">
         ${esc(t)}
         <span class="tag-remove" onclick="DATA.projects[${i}].tech.splice(${ti},1); markDirty(); renderEditor()">✕</span>
       </span>`).join('');
 
+    // Normalize stats array
+    let stats = proj.stats || [];
+    if (!Array.isArray(stats)) stats = [];
+    const statsHtml = stats.map((st, si) => {
+      const sVal = (typeof st === 'object' && st !== null) ? (st.val || st.value || '') : (Array.isArray(st) ? st[0] : String(st));
+      const sLbl = (typeof st === 'object' && st !== null) ? (st.lbl || st.label || '') : (Array.isArray(st) ? st[1] : '');
+      const sIcon = (typeof st === 'object' && st !== null) ? (st.icon || 'gauge') : 'gauge';
+
+      return `
+      <div class="array-item" style="display:grid; grid-template-columns: 80px 1fr 1fr 34px; gap:8px; align-items:center; margin-bottom:6px;">
+        <input type="text" class="field-input" placeholder="Icon" value="${esc(sIcon)}" oninput="updateProjectStat(${i}, ${si}, 'icon', this.value)">
+        <input type="text" class="field-input" placeholder="Value (e.g. 100+)" value="${esc(sVal)}" oninput="updateProjectStat(${i}, ${si}, 'val', this.value)">
+        <input type="text" class="field-input" placeholder="Label (e.g. Processes)" value="${esc(sLbl)}" oninput="updateProjectStat(${i}, ${si}, 'lbl', this.value)">
+        <button class="btn-icon-action danger" onclick="removeProjectStat(${i}, ${si})"><i class="fa-solid fa-trash"></i></button>
+      </div>`;
+    }).join('');
+
     return `
     <div class="list-item">
       <div class="list-item-header" onclick="toggleListItem('proj-${i}')">
-        <i class="${esc(proj.icon)}" style="color:var(--accent);width:16px;text-align:center;"></i>
+        <i class="fa-solid fa-folder-open" style="color:var(--accent);width:16px;text-align:center;"></i>
         <span class="list-item-title">${esc(proj.title)}</span>
-        <span class="list-item-meta">${imagesArr.length} Image${imagesArr.length === 1 ? '' : 's'} · ${(proj.tech||[]).slice(0,2).join(', ')}</span>
+        <span class="list-item-meta">${esc(proj.typeLabel || proj.type || 'WEB APP')} · ${(proj.tech||[]).slice(0,2).join(', ')}</span>
         <div class="list-item-actions">
           <button class="btn-icon-action" onclick="event.stopPropagation(); moveItem('projects', ${i}, -1)"><i class="fa-solid fa-chevron-up"></i></button>
           <button class="btn-icon-action" onclick="event.stopPropagation(); moveItem('projects', ${i}, 1)"><i class="fa-solid fa-chevron-down"></i></button>
@@ -721,13 +745,18 @@ function renderProjectsSection() {
       <div class="list-item-body" id="proj-${i}">
         <div class="field-row">
           ${field('Project Title', `<input type="text" class="field-input" value="${esc(proj.title)}" oninput="DATA.projects[${i}].title=this.value; markDirty()">`)}
-          ${field('Card Icon', `<input type="text" class="field-input" value="${esc(proj.icon)}" placeholder="fa-solid fa-chart-line" oninput="DATA.projects[${i}].icon=this.value; markDirty()">`)}
+          ${field('Category (Filter)', `
+            <select class="field-input" onchange="DATA.projects[${i}].type=this.value; DATA.projects[${i}].typeLabel=this.options[this.selectedIndex].text.toUpperCase(); markDirty(); renderEditor()">
+              <option value="web" ${proj.type === 'web' ? 'selected' : ''}>Web App</option>
+              <option value="hardware" ${proj.type === 'hardware' ? 'selected' : ''}>Hardware</option>
+              <option value="tool" ${proj.type === 'tool' ? 'selected' : ''}>Tool</option>
+            </select>
+          `)}
         </div>
-        <div class="field-row single">
-          ${field('Project Images (URLs or File Paths — 1 per line)', `
-            <textarea class="field-textarea" rows="2" placeholder="image1.png&#10;image2.png" oninput="updateProjectImages(${i}, this.value)">${esc(imagesVal)}</textarea>
-            <span class="field-hint" style="display:block; margin-top:4px; font-size:11px; color:var(--text-muted);">Enter multiple image paths/URLs (one per line) to enable the side-arrow image slider on the project card.</span>
-            ${imagePreviews ? `<div style="display:flex; gap:8px; margin-top:8px; flex-wrap:wrap;">${imagePreviews}</div>` : ''}
+        <div class="field-row">
+          ${field('Type Badge Label', `<input type="text" class="field-input" value="${esc(proj.typeLabel || (proj.type ? proj.type.toUpperCase() : 'WEB APP'))}" oninput="DATA.projects[${i}].typeLabel=this.value; markDirty()">`)}
+          ${field('Cover Image URL / Path', `
+            <input type="text" class="field-input" value="${esc(proj.image || '')}" placeholder="https://... or image.png" oninput="DATA.projects[${i}].image=this.value; markDirty()">
           `)}
         </div>
         <div class="field-row single">
@@ -737,14 +766,14 @@ function renderProjectsSection() {
           ${field('GitHub Repository URL', `<input type="url" class="field-input" value="${esc(proj.github||'')}" placeholder="https://github.com/..." oninput="DATA.projects[${i}].github=this.value; markDirty()">`)}
           ${field('Live Demo URL', `<input type="url" class="field-input" value="${esc(proj.demo||'')}" placeholder="https://..." oninput="DATA.projects[${i}].demo=this.value; markDirty()">`)}
         </div>
-        <div class="field-label" style="margin-bottom:8px;">KEY HIGHLIGHTS</div>
-        <div class="array-list">${features}</div>
-        <button class="add-item-btn" onclick="DATA.projects[${i}].features.push('Key architecture feature...'); markDirty(); renderEditor()"><i class="fa-solid fa-plus"></i> Add Highlight</button>
+        <div class="field-label" style="margin-bottom:8px;">QUICK METRICS / STATS (3 Columns)</div>
+        <div class="array-list">${statsHtml}</div>
+        <button class="add-item-btn" onclick="addProjectStat(${i})"><i class="fa-solid fa-plus"></i> Add Metric</button>
         <div class="field-divider"></div>
         <div class="field-label" style="margin-bottom:8px;">TECHNOLOGY TAGS</div>
         <div class="tag-list">${techTags}</div>
         <div class="tag-add-row">
-          <input type="text" class="field-input" id="tech-add-${i}" placeholder="Add technology tag..." onkeydown="if(event.key==='Enter'){event.preventDefault(); addTech(${i});}">
+          <input type="text" class="field-input" id="tech-add-${i}" placeholder="Add technology tag (e.g. React)..." onkeydown="if(event.key==='Enter'){event.preventDefault(); addTech(${i});}">
           <button class="btn-dock btn-dock-secondary" onclick="addTech(${i})"><i class="fa-solid fa-plus"></i> Add Tag</button>
         </div>
       </div>
@@ -754,12 +783,40 @@ function renderProjectsSection() {
   return makeSection('projects',
     'fa-solid fa-folder',
     'Projects Grid',
-    'featured project cards with image carousels, live links & tech tags',
+    'featured project cards with filters, 3-metric stats & tech tags',
     `${projs.length} Projects`,
     `<div class="list-items">${html}</div>
-    <button class="add-item-btn" onclick="DATA.projects.push({title:'New Web Project',icon:'fa-solid fa-laptop-code',images:[],description:'',features:[],tech:['React','Node.js'],github:'',demo:''}); markDirty(); renderEditor()"><i class="fa-solid fa-plus"></i> Add Project Card</button>`
+    <button class="add-item-btn" onclick="DATA.projects.push({title:'New Project',type:'web',typeLabel:'WEB APP',image:'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80',description:'Short project description here...',stats:[{icon:'gauge',val:'100+',lbl:'Users'},{icon:'zap',val:'Fast',lbl:'Performance'},{icon:'activity',val:'Live',lbl:'Status'}],tech:['React','TypeScript'],github:'https://github.com/',demo:'https://github.com/'}); markDirty(); renderEditor()"><i class="fa-solid fa-plus"></i> Add Project Card</button>`
   );
 }
+
+window.updateProjectStat = function (pi, si, key, val) {
+  if (!DATA.projects[pi].stats) DATA.projects[pi].stats = [];
+  let s = DATA.projects[pi].stats[si];
+  if (Array.isArray(s)) {
+    s = { val: s[0] || '', lbl: s[1] || '', icon: 'gauge' };
+    DATA.projects[pi].stats[si] = s;
+  } else if (typeof s !== 'object' || s === null) {
+    s = { val: String(s), lbl: '', icon: 'gauge' };
+    DATA.projects[pi].stats[si] = s;
+  }
+  s[key] = val;
+  markDirty();
+};
+
+window.addProjectStat = function (pi) {
+  if (!DATA.projects[pi].stats) DATA.projects[pi].stats = [];
+  DATA.projects[pi].stats.push({ icon: 'gauge', val: 'New', lbl: 'Metric' });
+  markDirty();
+  renderEditor();
+};
+
+window.removeProjectStat = function (pi, si) {
+  if (!DATA.projects[pi].stats) return;
+  DATA.projects[pi].stats.splice(si, 1);
+  markDirty();
+  renderEditor();
+};
 
 window.updateProjectImages = function (pi, val) {
   const arr = val.split(/[\n,]/).map(s => s.trim()).filter(Boolean);

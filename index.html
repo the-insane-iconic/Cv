@@ -6,8 +6,10 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
   <link rel="stylesheet" href="styles.css">
   <!-- app.js exposes window.initApp(); render.js calls it after populating the DOM -->
   <script src="app.js"></script>
@@ -118,50 +120,352 @@
     </section>
 
     <!-- About Section -->
-    <section id="about" class="section">
+    <section id="about" class="section about-section">
       <div class="container fade-in-section is-visible">
-        <h2 class="section-title">01. <span>About Me</span></h2>
-        <div class="about-grid">
-          <!-- Populated by render.js -->
-          <div class="about-text"></div>
-          <div class="about-image-wrapper" id="about-image-mount">
-            <!-- Populated by render.js with Rolling Slot Machine Reel -->
+        <div class="about-split">
+
+          <!-- LEFT: Text Content -->
+          <div class="about-left">
+            <div class="about-eyebrow">
+              <span class="about-eyebrow-dot"></span>
+              <span>01 &mdash; About Me</span>
+            </div>
+            <!-- Populated by render.js -->
+            <div class="about-text"></div>
           </div>
+
+          <!-- RIGHT: Vertical Auto-Scroll Carousel -->
+          <div class="about-right">
+            <div class="about-carousel-track-wrapper" id="about-image-mount">
+              <!-- Fade masks for depth -->
+              <div class="about-carousel-fade about-carousel-fade--top"></div>
+              <div class="about-carousel-fade about-carousel-fade--bottom"></div>
+              <!-- Populated by render.js -->
+            </div>
+          </div>
+
         </div>
       </div>
     </section>
 
     <!-- Skills Section -->
-    <section id="skills" class="section">
+    <section id="skills" class="section skills-section">
+      <!-- Decorative Border Clouds -->
+      <img src="png%20cloud.png" alt="" class="section-cloud section-cloud--left" loading="lazy">
+      <img src="png%20cloud.png" alt="" class="section-cloud section-cloud--right" loading="lazy">
+
       <div class="container fade-in-section is-visible">
         <h2 class="section-title">02. <span>Skills &amp; Proficiency</span></h2>
         <div class="skills-wrapper relative">
-          <div class="floating-icons">
-            <!-- Populated by render.js -->
-          </div>
           <div class="skills-grid">
             <!-- Populated by render.js -->
           </div>
         </div>
       </div>
+
+      <!-- Gamma-Style Horizon Cloud Transition -->
+      <div class="skills-transition-wrapper">
+        <img src="png%20cloud.png" alt="" class="transition-cloud transition-cloud--left-back" loading="lazy">
+        <img src="png%20cloud.png" alt="" class="transition-cloud transition-cloud--left-front" loading="lazy">
+        <img src="png%20cloud.png" alt="" class="transition-cloud transition-cloud--right-back" loading="lazy">
+        <img src="png%20cloud.png" alt="" class="transition-cloud transition-cloud--right-front" loading="lazy">
+        <div class="skills-bottom-fade"></div>
+      </div>
     </section>
 
-    <!-- Experience Section -->
-    <section id="experience" class="section">
-      <div class="container fade-in-section is-visible">
-        <h2 class="section-title">03. <span>Experience</span></h2>
-        <div class="timeline">
-          <!-- Populated by render.js -->
+    <!-- =======================================================
+         EXPERIENCE SECTION (REDESIGN)
+    ======================================================== -->
+    <section class="experience-section" id="experience">
+      <!-- Atmospheric Top Transition Fade -->
+      <div class="experience-top-fade"></div>
+
+      <!-- DECORATIVE BACKGROUND -->
+      <div class="decor star star-1">✦</div>
+      <div class="decor star star-2">✦</div>
+      <div class="decor star star-3">✦</div>
+      <div class="decor star star-4">✦</div>
+      <div class="decor star star-5">✦</div>
+
+      <div class="decor orbit orbit-1"></div>
+      <div class="decor orbit orbit-2"></div>
+      <div class="decor orbit orbit-3"></div>
+
+      <div class="decor dot-grid dot-grid-1"></div>
+      <div class="decor dot-grid dot-grid-2"></div>
+
+      <img class="cloud" src="png%20cloud.png" alt="" aria-hidden="true" loading="lazy" />
+
+      <!-- MAIN -->
+      <div class="experience-container">
+        <!-- HEADER -->
+        <header class="experience-header">
+          <div class="section-number">02</div>
+          <h2 class="experience-title">Experience</h2>
+          <p class="experience-subtitle">
+            Professionally applying my skills and creating impact.
+          </p>
+
+          <!-- FILTERS -->
+          <div class="experience-filters" role="tablist" aria-label="Experience filters">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="freelance">Freelance</button>
+            <button class="filter-btn" data-filter="internship">Internship</button>
+            <button class="filter-btn" data-filter="part-time">Part-Time</button>
+          </div>
+        </header>
+
+        <!-- TIMELINE -->
+        <div class="experience-timeline">
+          <!-- Vertical line -->
+          <div class="timeline-line" aria-hidden="true"></div>
+
+          <!-- EXPERIENCE #1 -->
+          <article class="experience-item" data-type="freelance">
+            <!-- Timeline node -->
+            <div class="timeline-node">
+              <i data-lucide="brain"></i>
+            </div>
+
+            <!-- Card -->
+            <div class="experience-card">
+              <!-- LEFT SIDE -->
+              <div class="experience-main">
+                <!-- Job header -->
+                <div class="job-header">
+                  <div class="job-icon">
+                    <i data-lucide="brain-circuit"></i>
+                  </div>
+                  <div class="job-info">
+                    <h3 class="job-title">AI Trainer</h3>
+                    <div class="job-meta">
+                      <span class="company">Outlier</span>
+                      <span class="separator">•</span>
+                      <span class="employment">Freelance</span>
+                      <span class="separator">•</span>
+                      <span class="date">Jan 2024 – Present</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Current -->
+                <div class="current-badge">Current</div>
+
+                <!-- Metrics -->
+                <div class="metrics">
+                  <div class="metric">
+                    <div class="metric-icon">
+                      <i data-lucide="chart-no-axes-combined"></i>
+                    </div>
+                    <div>
+                      <strong class="metric-number">1.2K+</strong>
+                      <span class="metric-label">AI Responses Analyzed</span>
+                    </div>
+                  </div>
+
+                  <div class="metric">
+                    <div class="metric-icon">
+                      <i data-lucide="database"></i>
+                    </div>
+                    <div>
+                      <strong class="metric-number">1K+</strong>
+                      <span class="metric-label">Datasets Created</span>
+                    </div>
+                  </div>
+
+                  <div class="metric">
+                    <div class="metric-icon">
+                      <i data-lucide="badge-check"></i>
+                    </div>
+                    <div>
+                      <strong class="metric-number">300+</strong>
+                      <span class="metric-label">Outputs Reviewed</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Contributions -->
+                <div class="contributions">
+                  <div class="contribution">
+                    <i data-lucide="check"></i>
+                    Improved LLM accuracy
+                  </div>
+                  <div class="contribution">
+                    <i data-lucide="check"></i>
+                    Enhanced model intelligence
+                  </div>
+                  <div class="contribution">
+                    <i data-lucide="check"></i>
+                    Ensured quality compliance
+                  </div>
+                </div>
+              </div>
+
+              <!-- RIGHT SIDE VISUAL -->
+              <div class="experience-visual">
+                <div class="visual-orbit"></div>
+                <div class="visual-orbit visual-orbit-2"></div>
+
+                <div class="ai-stack">
+                  <div class="ai-layer"></div>
+                  <div class="ai-layer"></div>
+                  <div class="ai-layer"></div>
+                  <div class="ai-core">
+                    <span>AI</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- EXPERIENCE #2 -->
+          <article class="experience-item" data-type="internship">
+            <!-- Timeline node -->
+            <div class="timeline-node">
+              <i data-lucide="shield"></i>
+            </div>
+
+            <!-- Card -->
+            <div class="experience-card">
+              <!-- LEFT -->
+              <div class="experience-main">
+                <!-- Header -->
+                <div class="job-header">
+                  <div class="job-icon">
+                    <i data-lucide="shield-check"></i>
+                  </div>
+                  <div class="job-info">
+                    <h3 class="job-title">Cybersecurity Intern</h3>
+                    <div class="job-meta">
+                      <span class="company">Deloitte (Forage Simulation)</span>
+                      <span class="separator">•</span>
+                      <span class="employment">Simulation</span>
+                      <span class="separator">•</span>
+                      <span class="date">Dec 2023</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Metrics -->
+                <div class="metrics">
+                  <div class="metric">
+                    <div class="metric-icon">
+                      <i data-lucide="scan-search"></i>
+                    </div>
+                    <div>
+                      <strong class="metric-number">20+</strong>
+                      <span class="metric-label">Systems Assessed</span>
+                    </div>
+                  </div>
+
+                  <div class="metric">
+                    <div class="metric-icon">
+                      <i data-lucide="bell"></i>
+                    </div>
+                    <div>
+                      <strong class="metric-number">50+</strong>
+                      <span class="metric-label">Security Alerts</span>
+                    </div>
+                  </div>
+
+                  <div class="metric">
+                    <div class="metric-icon">
+                      <i data-lucide="file-text"></i>
+                    </div>
+                    <div>
+                      <strong class="metric-number">5+</strong>
+                      <span class="metric-label">Risk Reports</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Contributions -->
+                <div class="contributions">
+                  <div class="contribution">
+                    <i data-lucide="check"></i>
+                    Vulnerability Analysis
+                  </div>
+                  <div class="contribution">
+                    <i data-lucide="check"></i>
+                    SOC Investigations
+                  </div>
+                  <div class="contribution">
+                    <i data-lucide="check"></i>
+                    Incident Simulation
+                  </div>
+                </div>
+              </div>
+
+              <!-- RIGHT VISUAL -->
+              <div class="experience-visual">
+                <div class="visual-orbit"></div>
+                <div class="visual-orbit visual-orbit-2"></div>
+
+                <div class="security-visual">
+                  <div class="security-platform"></div>
+                  <div class="shield">
+                    <i data-lucide="shield-check"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <!-- COMING SOON -->
+        <div class="coming-soon">
+          <span class="coming-line"></span>
+          <span class="coming-star">✦</span>
+          <span>More coming soon...</span>
+          <span class="coming-star">✦</span>
+          <span class="coming-line right"></span>
         </div>
       </div>
     </section>
 
     <!-- Projects Section -->
-    <section id="projects" class="section">
-      <div class="container fade-in-section is-visible">
-        <h2 class="section-title">04. <span>Premium Projects</span></h2>
-        <div class="projects-grid">
-          <!-- Populated by render.js -->
+    <section class="projects-section" id="projects">
+      <!-- Decorative elements -->
+      <div class="decor star one">✦</div>
+      <div class="decor star two">✦</div>
+      <div class="decor star three">✦</div>
+
+      <div class="decor dot-grid dots-top"></div>
+      <div class="decor dot-grid dots-bottom"></div>
+
+      <div class="decor orbit one"></div>
+      <div class="decor orbit two"></div>
+
+      <div class="decor ring one"></div>
+      <div class="decor ring two"></div>
+
+      <img class="cloud" src="png%20cloud.png" alt="" loading="lazy">
+
+      <div class="projects-container">
+        <!-- HEADER & FILTERS -->
+        <div class="section-header">
+          <div class="section-title-wrap">
+            <div class="section-number">03</div>
+            <h2 class="section-title">Projects</h2>
+            <p class="section-subtitle">
+              A collection of my work across web applications and hardware systems.
+            </p>
+          </div>
+
+          <!-- FILTERS -->
+          <div class="filters">
+            <button class="filter active" data-filter="all">All</button>
+            <button class="filter" data-filter="web"><i data-lucide="globe"></i> Web Apps</button>
+            <button class="filter" data-filter="hardware"><i data-lucide="cpu"></i> Hardware</button>
+            <button class="filter" data-filter="tool"><i data-lucide="wrench"></i> Tools</button>
+          </div>
+        </div>
+
+        <!-- PROJECTS GRID -->
+        <div class="project-grid" id="projectGrid"></div>
+
+        <div class="no-results" id="noResults">
+          No projects in this category.
         </div>
       </div>
     </section>
@@ -193,40 +497,174 @@
       </div>
     </section>
 
-    <!-- Contact Section -->
+    <!-- =======================================================
+         CONTACT SECTION (HARMONIZED GLASSMORPHISM)
+    ======================================================== -->
     <section id="contact" class="section contact-section">
-      <div class="container fade-in-section is-visible">
-        <h2 class="section-title">06. <span>Get In Touch</span></h2>
+      <!-- Decorative Atmospheric Ambient Elements -->
+      <div class="decor star star-1">✦</div>
+      <div class="decor star star-2">✦</div>
+      <div class="decor star star-3">✦</div>
+      <div class="contact-ambient-glow glow-1"></div>
+      <div class="contact-ambient-glow glow-2"></div>
+      <div class="contact-ambient-glow glow-3"></div>
 
-        <div class="contact-grid">
-          <div class="contact-info-block fade-in">
-            <!-- Populated by render.js -->
-            <h3>Let's Connect</h3>
-            <p></p>
-            <div class="contact-details mt-6">
-              <!-- Populated by render.js -->
+      <div class="contact-container">
+        <!-- HEADER -->
+        <div class="contact-header">
+          <div class="badge contact-badge">
+            🤝 Let's Collaborate
+            <div class="dot"></div>
+          </div>
+
+          <h2 class="contact-main-title">
+            Let's <span>Connect</span>
+          </h2>
+
+          <p class="contact-subtitle">
+            I'm always open to discussing new projects, creative ideas, AI/ML opportunities, or collaborations.
+          </p>
+        </div>
+
+        <div class="contact-wrapper">
+          <!-- LEFT: Platform Connect Cards -->
+          <div class="connect-box glass">
+            <div class="box-head">
+              <h3>Let's Connect 👋</h3>
+              <p>Find me on these platforms or reach out directly.</p>
+            </div>
+
+            <div class="contact-grid">
+              <a href="mailto:anupam@example.com" class="contact-card" id="contact-card-email">
+                <div class="left">
+                  <div class="icon">✉</div>
+                  <div class="card-info">
+                    <h4>Email</h4>
+                    <span class="card-val" id="contact-val-email">anupam@example.com</span>
+                  </div>
+                </div>
+                <div class="arrow">→</div>
+              </a>
+
+              <a href="tel:+910000000000" class="contact-card" id="contact-card-phone">
+                <div class="left">
+                  <div class="icon">📞</div>
+                  <div class="card-info">
+                    <h4>Phone</h4>
+                    <span class="card-val" id="contact-val-phone">+91 00000 00000</span>
+                  </div>
+                </div>
+                <div class="arrow">→</div>
+              </a>
+
+              <a href="#" target="_blank" rel="noopener noreferrer" class="contact-card" id="contact-card-linkedin">
+                <div class="left">
+                  <div class="icon">in</div>
+                  <div class="card-info">
+                    <h4>LinkedIn</h4>
+                    <span class="card-val" id="contact-val-linkedin">LinkedIn Profile</span>
+                  </div>
+                </div>
+                <div class="arrow">→</div>
+              </a>
+
+              <a href="#" target="_blank" rel="noopener noreferrer" class="contact-card" id="contact-card-github">
+                <div class="left">
+                  <div class="icon">⌘</div>
+                  <div class="card-info">
+                    <h4>GitHub</h4>
+                    <span class="card-val" id="contact-val-github">GitHub Profile</span>
+                  </div>
+                </div>
+                <div class="arrow">→</div>
+              </a>
+
+              <a href="#" target="_blank" rel="noopener noreferrer" class="contact-card" id="contact-card-leetcode">
+                <div class="left">
+                  <div class="icon">&lt;/&gt;</div>
+                  <div class="card-info">
+                    <h4>LeetCode</h4>
+                    <span class="card-val" id="contact-val-leetcode">LeetCode Profile</span>
+                  </div>
+                </div>
+                <div class="arrow">→</div>
+              </a>
+
+              <a href="#" target="_blank" rel="noopener noreferrer" class="contact-card" id="contact-card-resume">
+                <div class="left">
+                  <div class="icon">📄</div>
+                  <div class="card-info">
+                    <h4>Resume</h4>
+                    <span class="card-val" id="contact-val-resume">View Resume</span>
+                  </div>
+                </div>
+                <div class="arrow">→</div>
+              </a>
             </div>
           </div>
 
-          <div class="contact-form-wrapper fade-in delay-200">
+          <!-- RIGHT: Interactive Contact Form -->
+          <div class="form-box glass">
+            <div class="box-head">
+              <h3>Send a Message ✈</h3>
+              <p>Fill out the form below and I'll get back to you soon.</p>
+            </div>
+
             <form class="contact-form" method="post" enctype="text/plain">
-              <div class="form-group">
-                <label for="name">Name</label>
-                <input type="text" id="name" name="name" placeholder="John Doe" required="">
+              <div class="form-grid">
+                <div class="input-box">
+                  <input type="text" name="name" placeholder="Your Name" required>
+                </div>
+                <div class="input-box">
+                  <input type="email" name="email" placeholder="Your Email" required>
+                </div>
               </div>
-              <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" placeholder="john@example.com" required="">
+
+              <div class="input-box full">
+                <input type="text" name="subject" placeholder="Subject">
               </div>
-              <div class="form-group">
-                <label for="message">Message</label>
-                <textarea id="message" name="message" rows="4" placeholder="Hello..." required=""></textarea>
+
+              <div class="input-box full">
+                <textarea name="message" placeholder="Your Message" required></textarea>
               </div>
-              <button type="submit" class="btn btn-primary btn-submit">Send Message <i class="fa-solid fa-paper-plane"></i></button>
+
+              <button type="submit" class="contact-submit-btn">
+                <span>Send Message</span> ✈
+              </button>
+
+              <div class="secure">
+                🔒 Your information is safe and secure.
+              </div>
             </form>
           </div>
         </div>
 
+        <!-- BOTTOM: Value Proposition / Feature Bar -->
+        <div class="features glass">
+          <div class="feature">
+            <div class="feature-icon">🧠</div>
+            <div>
+              <h4>AI & ML Solutions</h4>
+              <p>Building intelligent models and data-driven solutions.</p>
+            </div>
+          </div>
+
+          <div class="feature">
+            <div class="feature-icon">📊</div>
+            <div>
+              <h4>Data-Driven Approach</h4>
+              <p>Turning complex data into actionable insights.</p>
+            </div>
+          </div>
+
+          <div class="feature">
+            <div class="feature-icon">💡</div>
+            <div>
+              <h4>Innovation Focused</h4>
+              <p>Always exploring new techniques and technologies.</p>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   </main>

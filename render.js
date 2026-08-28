@@ -27,7 +27,6 @@
     if (stored) {
       try { localData = JSON.parse(stored); } catch (e) { /* continue */ }
     }
-
     // Attempt to fetch from Supabase if initialized
     const sb = window.getSupabaseClient ? window.getSupabaseClient() : null;
     if (sb) {
@@ -39,8 +38,26 @@
           .single();
 
         if (!error && data && data.content) {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(data.content));
-          return data.content;
+          const dbData = data.content;
+          if (fileData) {
+            if (fileData.projects && (!dbData.projects || dbData.projects.length < fileData.projects.length || !dbData.projects[0]?.type)) {
+              dbData.projects = fileData.projects;
+            }
+            if (fileData.experience && (!dbData.experience || dbData.experience.length !== fileData.experience.length)) {
+              dbData.experience = fileData.experience;
+            }
+            if (fileData.identity && fileData.identity.profileImages) {
+              dbData.identity = { ...(dbData.identity || {}), profileImages: fileData.identity.profileImages };
+            }
+            if (fileData.about) {
+              dbData.about = fileData.about;
+            }
+            if (fileData.certificates) {
+              dbData.certificates = fileData.certificates;
+            }
+          }
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(dbData));
+          return dbData;
         }
       } catch (err) {
         console.warn('[Supabase Fetch Warning]', err.message);
@@ -50,14 +67,20 @@
     // Merge file updates with localStorage if local cache is stale or missing new fields
     if (localData && fileData) {
       const merged = { ...fileData, ...localData };
-      if (fileData.projects && (!localData.projects || localData.projects.some((p, i) => !p.images && fileData.projects[i]?.images))) {
+      if (fileData.projects && (!localData.projects || localData.projects.length < fileData.projects.length || !localData.projects[0]?.type)) {
         merged.projects = fileData.projects;
       }
       if (fileData.experience && (!localData.experience || localData.experience.length !== fileData.experience.length)) {
         merged.experience = fileData.experience;
       }
-      if (fileData.identity && fileData.identity.profileImages && (!localData.identity || !localData.identity.profileImages)) {
+      if (fileData.identity && fileData.identity.profileImages) {
         merged.identity = { ...(localData.identity || {}), profileImages: fileData.identity.profileImages };
+      }
+      if (fileData.about) {
+        merged.about = fileData.about;
+      }
+      if (fileData.certificates) {
+        merged.certificates = fileData.certificates;
       }
       localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
       return merged;
@@ -98,7 +121,7 @@
     document.title = `${esc(name)} | Portfolio`;
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc && d.identity?.roles) {
-      metaDesc.setAttribute('content', `${esc(name)} — ${d.identity.roles.join(', ')}.`);
+      metaDesc.setAttribute('content', `${name} — ${d.identity.roles.join(', ')}`);
     }
   }
 
@@ -115,6 +138,8 @@
 
   function renderHero(d) {
     const id = d.identity || {};
+    toggleSectionVisibility('hero', d.sectionVisibility?.hero !== false);
+
     setText('.hero-greeting', id.greeting || "H I , &nbsp; I ' M");
 
     const rolePill = document.getElementById('hero-pill-role');
@@ -152,6 +177,14 @@
       heroSocials.innerHTML = buildSocialLinks(d.socials);
     }
 
+    // Highlight active skills if present
+    const badges = document.querySelectorAll('.hero-badge');
+    badges.forEach((b, i) => {
+      if (id.badges && id.badges[i]) {
+        b.textContent = id.badges[i];
+      }
+    });
+
     window.PORTFOLIO_ROLES = id.roles || [];
   }
 
@@ -184,81 +217,163 @@
     ).join('');
 
     const resumeUrl = d.identity?.resumeUrl || '';
-    const resumeBtn = resumeUrl ? `<a href="${esc(resumeUrl)}" target="_blank" rel="noopener noreferrer" class="btn btn-primary mt-4">
-      <i class="fa-solid fa-file-pdf"></i> View/Download Resume
-    </a>` : '';
+    const actionBtns = `
+      <div class="about-actions" style="display:flex; gap:12px; flex-wrap:wrap; margin-top:16px;">
+        ${resumeUrl ? `<a href="${esc(resumeUrl)}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+          <i class="fa-solid fa-file-pdf"></i> View Resume
+        </a>` : ''}
+        <a href="#projects" class="btn btn-glass">
+          <i class="fa-solid fa-arrow-right"></i> Explore Work
+        </a>
+      </div>`;
 
     textEl.innerHTML = paras +
       (chips ? `<div class="about-stats-chips">${chips}</div>` : '') +
-      resumeBtn;
+      actionBtns;
 
-    // Render rolling slot machine profile image reel
+    // Render Gamma-style vertical auto-scroll card carousel
     const mount = document.getElementById('about-image-mount');
     if (!mount) return;
 
-    const images = (d.identity?.profileImages && d.identity.profileImages.length > 0)
+    const SAMPLE_IMAGES = [
+      'https://picsum.photos/id/1018/1000/600',
+      'https://picsum.photos/id/1025/1000/600',
+      'https://picsum.photos/id/1043/1000/600',
+      'https://picsum.photos/id/1062/1000/600',
+      'https://picsum.photos/id/1081/1000/600'
+    ];
+
+    let rawImages = (d.identity?.profileImages && d.identity.profileImages.length > 0)
       ? d.identity.profileImages
-      : [d.identity?.profileImage || 'profile.png'];
+      : (d.identity?.profileImage ? [d.identity.profileImage] : []);
 
-    const slidesHtml = images.map((imgSrc, idx) => `
-      <div class="slot-reel-slide${idx === 0 ? ' active' : ''}" data-index="${idx}">
-        <img src="${esc(imgSrc)}" alt="${esc(d.identity?.name || 'Profile')} - Image ${idx + 1}" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x500?text=Profile+Photo';">
-      </div>
-    `).join('');
+    let images = rawImages.filter(img => img && (
+      img.startsWith('http') || 
+      img.startsWith('data:') || 
+      img.includes('/') || 
+      /\.(png|jpg|jpeg|webp)/i.test(img)
+    ));
+    if (images.length === 0) {
+      images = SAMPLE_IMAGES;
+    }
 
-    mount.innerHTML = `
-      <div class="slot-machine-container" id="about-slot-machine">
-        <div class="slot-machine-vignette-top"></div>
-        <div class="slot-machine-vignette-bottom"></div>
-        <div class="slot-machine-frame-border"></div>
+    // Vibrant gradient + icon cards
+    const CARD_THEMES = [
+      { gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', icon: 'fa-solid fa-shield-halved', label: 'Cybersecurity' },
+      { gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)', icon: 'fa-solid fa-brain', label: 'AI & ML' },
+      { gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)', icon: 'fa-solid fa-code', label: 'Full-Stack Dev' },
+      { gradient: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)', icon: 'fa-solid fa-database', label: 'Systems' },
+      { gradient: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)', icon: 'fa-solid fa-rocket', label: 'Innovation' },
+    ];
 
-        <div class="slot-reel-track" id="slot-reel-track">
-          ${slidesHtml}
-        </div>
+    const baseCount = images.length;
 
-        <div class="slot-machine-badge">
-          <i class="fa-solid fa-arrows-rotate slot-spin-icon"></i>
-          <span class="slot-reel-text" id="slot-reel-text">1 / ${images.length}</span>
-        </div>
-      </div>
-    `;
+    // Triple-duplicate for seamless infinite scroll
+    const allCards = [...Array(baseCount), ...Array(baseCount), ...Array(baseCount)].map((_, idx) => {
+      const srcIdx = idx % baseCount;
+      const theme = CARD_THEMES[srcIdx % CARD_THEMES.length];
+      const imgSrc = images.length > 0 ? images[srcIdx] : null;
+      return { imgSrc, theme };
+    });
 
-    initAboutSlotMachine(images.length);
+    // Eagerly preload all images so every upcoming card is already waiting in memory
+    images.forEach(src => {
+      if (src) {
+        const pre = new Image();
+        pre.src = src;
+      }
+    });
+
+    const cardsHtml = allCards.map(({ imgSrc, theme }, idx) => {
+      const imgTag = imgSrc
+        ? `<img src="${esc(imgSrc)}" alt="Portfolio Showcase" loading="eager" decoding="sync" onerror="this.remove();">` 
+        : '';
+      return `
+        <div class="about-carousel-card" data-index="${idx}" style="background:${theme.gradient};">
+          ${imgTag}
+          <div class="about-card-bg-icon">
+            <i class="${theme.icon}"></i>
+            <span>${theme.label}</span>
+          </div>
+        </div>`;
+    }).join('');
+
+    // Clear old track content but keep the fade masks (already in HTML)
+    const existingFades = Array.from(mount.querySelectorAll('.about-carousel-fade'));
+    mount.innerHTML = '';
+    existingFades.forEach(f => mount.appendChild(f));
+
+    const track = document.createElement('div');
+    track.className = 'about-carousel-track';
+    track.id = 'about-carousel-track';
+    track.innerHTML = cardsHtml;
+    mount.appendChild(track);
+
+    initAboutCarousel(baseCount);
   }
 
-  function initAboutSlotMachine(totalCount) {
-    if (totalCount <= 1) return;
-    if (window._slotReelTimer) clearInterval(window._slotReelTimer);
+  function initAboutCarousel(baseCount) {
+    if (window._aboutCarouselTimer) {
+      clearInterval(window._aboutCarouselTimer);
+      window._aboutCarouselTimer = null;
+    }
 
-    const container = document.getElementById('about-slot-machine');
-    const track = document.getElementById('slot-reel-track');
-    const badgeText = document.getElementById('slot-reel-text');
-    if (!container || !track) return;
+    const track = document.getElementById('about-carousel-track');
+    const wrapper = track ? track.closest('.about-carousel-track-wrapper') : null;
+    if (!track || !wrapper) return;
+
+    const cards = track.querySelectorAll('.about-carousel-card');
+    if (!cards.length) return;
+
+    const GAP = 24;
+    function getStep() {
+      const card = track.querySelector('.about-carousel-card');
+      return (card ? card.offsetHeight : 420) + GAP;
+    }
 
     let currentIndex = 0;
-    let isHovered = false;
 
-    container.addEventListener('mouseenter', () => { isHovered = true; });
-    container.addEventListener('mouseleave', () => { isHovered = false; });
-
-    function spinReel() {
-      if (isHovered) return;
-      currentIndex = (currentIndex + 1) % totalCount;
-
-      track.style.transform = `translateY(-${currentIndex * 100}%)`;
-
-      const slides = track.querySelectorAll('.slot-reel-slide');
-      slides.forEach((s, i) => {
-        s.classList.toggle('active', i === currentIndex);
+    function setFocused(idx) {
+      cards.forEach((c, i) => {
+        if (i === idx) {
+          c.classList.add('is-focused');
+        } else {
+          c.classList.remove('is-focused');
+        }
       });
+    }
 
-      if (badgeText) {
-        badgeText.textContent = `${currentIndex + 1} / ${totalCount}`;
+    // Initialize: Center card at step 0 is index 1
+    setFocused(1);
+
+    let isPaused = false;
+    wrapper.addEventListener('mouseenter', () => { isPaused = true; });
+    wrapper.addEventListener('mouseleave', () => { isPaused = false; });
+
+    function rollNext() {
+      if (isPaused) return;
+
+      currentIndex++;
+      const step = getStep();
+      const offset = currentIndex * step;
+
+      track.style.transition = 'transform 0.85s cubic-bezier(0.33, 1, 0.68, 1)';
+      track.style.transform = `translateY(-${offset}px)`;
+      setFocused(currentIndex + 1);
+
+      // When we reach the end of the second set (baseCount * 2), smoothly reset back to first set (baseCount) after animation finishes
+      if (currentIndex >= baseCount * 2) {
+        setTimeout(() => {
+          track.style.transition = 'none';
+          currentIndex = baseCount;
+          track.style.transform = `translateY(-${currentIndex * step}px)`;
+          setFocused(currentIndex + 1);
+          void track.offsetHeight; // force reflow
+        }, 900);
       }
     }
 
-    // Auto spin every 1.8 seconds (1800ms)
-    window._slotReelTimer = setInterval(spinReel, 1800);
+    window._aboutCarouselTimer = setInterval(rollNext, 2400);
   }
 
   function renderSkills(d) {
@@ -298,155 +413,154 @@
   }
 
   function renderExperience(d) {
-    const timeline = document.querySelector('.timeline');
-    if (!timeline) return;
+    const sec = document.getElementById('experience');
+    if (!sec) return;
 
-    const exp = d.experience || [];
-    toggleSectionVisibility('experience', d.sectionVisibility?.experience !== false && exp.length > 0);
+    toggleSectionVisibility('experience', d.sectionVisibility?.experience !== false);
 
-    timeline.innerHTML = exp.map((e, i) => {
-      const delay = (i + 1) * 0.15;
-      const bullets = (e.bullets || []).map(b => `<li>${b}</li>`).join('');
-      const isDark = e.darkNode === true || (e.darkNode === undefined && i === 1);
+    const filterButtons = sec.querySelectorAll('.experience-filters .filter-btn');
+    const experienceItems = sec.querySelectorAll('.experience-item');
 
-      return `
-      <div class="timeline-item${isDark ? ' dark-node' : ''}" style="transition-delay:${delay}s;">
-        <div class="timeline-icon">
-          <i class="${esc(e.icon || 'fa-solid fa-briefcase')}"></i>
-        </div>
-        <div class="timeline-content">
-          <div class="timeline-header">
-            <h3>${esc(e.title)}</h3>
-            <h4>
-              <span>${esc(e.company)}</span>
-              ${e.type ? `<span class="badge-role">${esc(e.type)}</span>` : ''}
-            </h4>
-          </div>
-          <ul class="experience-list">${bullets}</ul>
-          ${e.impact ? `
-          <div class="impact-box">
-            <i class="${esc(e.impactIcon || 'fa-solid fa-bolt')}"></i>
-            <p><strong>Impact:</strong> ${e.impact}</p>
-          </div>` : ''}
-        </div>
-      </div>`;
-    }).join('');
+    filterButtons.forEach(button => {
+      button.onclick = () => {
+        const filter = button.dataset.filter;
+        filterButtons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+
+        experienceItems.forEach(item => {
+          const type = item.dataset.type;
+          if (filter === 'all' || type === filter) {
+            item.classList.remove('hidden');
+          } else {
+            item.classList.add('hidden');
+          }
+        });
+      };
+    });
+
+    if (window.lucide) {
+      lucide.createIcons();
+    }
   }
 
   function renderProjects(d) {
-    const grid = document.querySelector('.projects-grid');
+    const grid = document.getElementById('projectGrid');
+    const noResults = document.getElementById('noResults');
     if (!grid) return;
 
     const projs = d.projects || [];
     toggleSectionVisibility('projects', d.sectionVisibility?.projects !== false && projs.length > 0);
 
-    grid.setAttribute('data-count', projs.length);
+    function typeIcon(type) {
+      if (type === 'hardware') return 'cpu';
+      if (type === 'tool') return 'wrench';
+      return 'globe';
+    }
 
-    grid.innerHTML = projs.map((proj, i) => {
-      const delay = (i + 1) * 0.15;
-      const features = (proj.features || []).map(f => `<li>${f}</li>`).join('');
-      const tech = (proj.tech || []).map(t => `<li>${esc(t)}</li>`).join('');
-      const githubLink = proj.github
-        ? `<a href="${esc(proj.github)}" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>` : '';
-      const demoLink = proj.demo
-        ? `<a href="${esc(proj.demo)}" target="_blank" rel="noopener noreferrer" aria-label="Live Demo"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>` : '';
+    function defaultStatIcon(idx) {
+      const icons = ['gauge', 'zap', 'activity', 'layers', 'book-open', 'bot', 'cloud', 'shield-check', 'wifi-off', 'radar', 'navigation', 'battery-charging', 'trending-up', 'wifi', 'bell', 'users', 'bar-chart-3', 'target'];
+      return icons[idx % icons.length];
+    }
 
-      // Process image(s) for the top of the card
-      const images = Array.isArray(proj.images)
-        ? proj.images.filter(Boolean)
-        : (proj.image ? [proj.image] : []);
+    function renderFiltered(filter = 'all') {
+      grid.innerHTML = '';
+      const filtered = filter === 'all'
+        ? projs
+        : projs.filter(p => (p.type || '').toLowerCase() === filter.toLowerCase());
 
-      let mediaHtml = '';
-      if (images.length > 0) {
-        const isMultiple = images.length > 1;
-        const slidesHtml = images.map((imgSrc, idx) => `
-          <img src="${esc(imgSrc)}" alt="${esc(proj.title)} - Preview ${idx + 1}" class="carousel-slide${idx === 0 ? ' active' : ''}" data-index="${idx}" onerror="this.onerror=null; this.src='https://via.placeholder.com/600x340?text=Project+Preview';">
+      if (!filtered.length) {
+        if (noResults) noResults.style.display = 'block';
+        return;
+      }
+      if (noResults) noResults.style.display = 'none';
+
+      filtered.forEach((project, index) => {
+        const card = document.createElement('article');
+        card.className = 'project-card';
+        card.style.animationDelay = `${index * 60}ms`;
+
+        // Normalize stats
+        let statsList = [];
+        if (Array.isArray(project.stats)) {
+          statsList = project.stats.map((s, sIdx) => {
+            if (Array.isArray(s)) {
+              return { val: s[0], lbl: s[1], icon: defaultStatIcon(sIdx) };
+            } else if (typeof s === 'object' && s !== null) {
+              return { val: s.value || s.val || '', lbl: s.label || s.lbl || '', icon: s.icon || defaultStatIcon(sIdx) };
+            }
+            return { val: String(s), lbl: '', icon: defaultStatIcon(sIdx) };
+          });
+        }
+
+        const statsHtml = statsList.map(stat => `
+          <div class="stat-item">
+            <i data-lucide="${esc(stat.icon)}" class="stat-icon"></i>
+            <div class="stat-item-text">
+              <strong>${esc(stat.val)}</strong>
+              <span>${esc(stat.lbl)}</span>
+            </div>
+          </div>
         `).join('');
 
-        const arrowsHtml = isMultiple ? `
-          <button class="carousel-arrow prev-btn" aria-label="Previous Image" onclick="changeProjectImage(this, -1)">
-            <i class="fa-solid fa-chevron-left"></i>
-          </button>
-          <button class="carousel-arrow next-btn" aria-label="Next Image" onclick="changeProjectImage(this, 1)">
-            <i class="fa-solid fa-chevron-right"></i>
-          </button>
-        ` : '';
+        const techHtml = Array.isArray(project.tech) ? project.tech.map(tech => `
+          <span class="tech">${esc(tech)}</span>
+        `).join('') : '';
 
-        const dotsHtml = isMultiple ? `
-          <div class="carousel-dots">
-            ${images.map((_, idx) => `<span class="carousel-dot${idx === 0 ? ' active' : ''}" onclick="setProjectImage(this, ${idx})"></span>`).join('')}
-          </div>
-        ` : '';
+        const githubLink = project.github
+          ? `<a class="action-icon-link" href="${esc(project.github)}" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><i data-lucide="github"></i></a>`
+          : '';
 
-        mediaHtml = `
-          <div class="project-media-wrapper${isMultiple ? ' has-multiple' : ''}" data-active-index="0">
-            <div class="carousel-track">
-              ${slidesHtml}
+        const demoLink = project.demo
+          ? `<a class="action-icon-link" href="${esc(project.demo)}" target="_blank" rel="noopener noreferrer" aria-label="Live Demo"><i data-lucide="external-link"></i></a>`
+          : '';
+
+        card.innerHTML = `
+          <div class="project-image">
+            <img src="${esc(project.image)}" alt="${esc(project.title)}" loading="lazy" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80';">
+            <div class="project-type">
+              <i data-lucide="${typeIcon(project.type)}"></i>
+              ${esc(project.typeLabel || (project.type ? project.type.toUpperCase() : 'WEB APP'))}
             </div>
-            ${arrowsHtml}
-            ${dotsHtml}
+          </div>
+
+          <div class="project-body">
+            <h3 class="project-title">${esc(project.title)}</h3>
+            <p class="project-description">${esc(project.description)}</p>
+
+            ${statsHtml ? `<div class="project-stats">${statsHtml}</div>` : ''}
+
+            <div class="card-footer">
+              <div class="tech-stack">
+                ${techHtml}
+              </div>
+              <div class="project-actions">
+                ${githubLink}
+                ${demoLink}
+              </div>
+            </div>
           </div>
         `;
+
+        grid.appendChild(card);
+      });
+
+      if (window.lucide) {
+        lucide.createIcons();
       }
+    }
 
-      return `
-      <div class="project-card" style="transition-delay:${delay}s;">
-        ${mediaHtml}
-        <div class="project-content">
-          <div class="folder-icon"><i class="${esc(proj.icon)}"></i></div>
-          <h3 class="project-title">${esc(proj.title)}</h3>
-          <div class="project-description">
-            <p>${esc(proj.description)}</p>
-            ${features ? `<ul class="project-features">${features}</ul>` : ''}
-          </div>
-          <div class="bottom-card">
-            <ul class="project-tech">${tech}</ul>
-            <div class="project-links">${githubLink}${demoLink}</div>
-          </div>
-        </div>
-      </div>`;
-    }).join('');
+    // Bind filter buttons
+    const filterButtons = document.querySelectorAll('.filters .filter');
+    filterButtons.forEach(button => {
+      button.onclick = () => {
+        filterButtons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        renderFiltered(button.dataset.filter);
+      };
+    });
+
+    renderFiltered('all');
   }
-
-  /* Global project image carousel controllers */
-  window.changeProjectImage = function(btn, dir) {
-    const wrapper = btn.closest('.project-media-wrapper');
-    if (!wrapper) return;
-    const slides = wrapper.querySelectorAll('.carousel-slide');
-    const dots = wrapper.querySelectorAll('.carousel-dot');
-    if (!slides.length) return;
-
-    let currentIndex = parseInt(wrapper.getAttribute('data-active-index') || '0', 10);
-    let newIndex = currentIndex + dir;
-    if (newIndex < 0) newIndex = slides.length - 1;
-    if (newIndex >= slides.length) newIndex = 0;
-
-    wrapper.setAttribute('data-active-index', newIndex);
-
-    slides.forEach((slide, idx) => {
-      slide.classList.toggle('active', idx === newIndex);
-    });
-    dots.forEach((dot, idx) => {
-      dot.classList.toggle('active', idx === newIndex);
-    });
-  };
-
-  window.setProjectImage = function(dot, targetIndex) {
-    const wrapper = dot.closest('.project-media-wrapper');
-    if (!wrapper) return;
-    const slides = wrapper.querySelectorAll('.carousel-slide');
-    const dots = wrapper.querySelectorAll('.carousel-dot');
-    if (!slides.length) return;
-
-    wrapper.setAttribute('data-active-index', targetIndex);
-
-    slides.forEach((slide, idx) => {
-      slide.classList.toggle('active', idx === targetIndex);
-    });
-    dots.forEach((d, idx) => {
-      d.classList.toggle('active', idx === targetIndex);
-    });
-  };
 
   function renderStats(d) {
     const grid = document.querySelector('.stats-grid');
@@ -514,47 +628,85 @@
   function renderContact(d) {
     const ct = d.contact || {};
     const socials = d.socials || {};
+    const id = d.identity || {};
 
     toggleSectionVisibility('contact', d.sectionVisibility?.contact !== false);
 
-    const heading = document.querySelector('.contact-info-block h3');
-    if (heading) heading.textContent = ct.heading || "Let's Connect";
-
-    const body = document.querySelector('.contact-info-block > p');
-    if (body) body.textContent = ct.body || '';
-
-    const details = document.querySelector('.contact-details');
-    if (details) {
-      const links = [
-        socials.email
-          ? `<a href="mailto:${esc(socials.email)}" class="contact-line">
-              <div class="contact-icon"><i class="fa-solid fa-envelope"></i></div>
-              <span>${esc(socials.email)}</span>
-            </a>` : '',
-        ct.phone
-          ? `<a href="tel:${esc(ct.phone.replace(/\s/g,''))}" class="contact-line">
-              <div class="contact-icon"><i class="fa-solid fa-phone"></i></div>
-              <span>${esc(ct.phone)}</span>
-            </a>` : '',
-        socials.linkedin
-          ? `<a href="${esc(socials.linkedin)}" target="_blank" rel="noopener noreferrer" class="contact-line">
-              <div class="contact-icon"><i class="fa-brands fa-linkedin"></i></div>
-              <span>LinkedIn Profile</span>
-            </a>` : '',
-        socials.github
-          ? `<a href="${esc(socials.github)}" target="_blank" rel="noopener noreferrer" class="contact-line">
-              <div class="contact-icon"><i class="fa-brands fa-github"></i></div>
-              <span>GitHub Portfolio</span>
-            </a>` : '',
-        socials.leetcode
-          ? `<a href="${esc(socials.leetcode)}" target="_blank" rel="noopener noreferrer" class="contact-line">
-              <div class="contact-icon"><i class="fa-solid fa-code"></i></div>
-              <span>LeetCode Profile</span>
-            </a>` : '',
-      ].filter(Boolean).join('');
-      details.innerHTML = links;
+    // Email card
+    const emailCard = document.getElementById('contact-card-email');
+    const emailVal = document.getElementById('contact-val-email');
+    if (emailCard && socials.email) {
+      emailCard.href = `mailto:${socials.email}`;
+      if (emailVal) emailVal.textContent = socials.email;
     }
 
+    // Phone card
+    const phoneCard = document.getElementById('contact-card-phone');
+    const phoneVal = document.getElementById('contact-val-phone');
+    if (phoneCard) {
+      if (ct.phone) {
+        phoneCard.href = `tel:${ct.phone.replace(/\s/g, '')}`;
+        if (phoneVal) phoneVal.textContent = ct.phone;
+        phoneCard.style.display = '';
+      } else {
+        phoneCard.style.display = 'none';
+      }
+    }
+
+    // LinkedIn card
+    const linkedinCard = document.getElementById('contact-card-linkedin');
+    const linkedinVal = document.getElementById('contact-val-linkedin');
+    if (linkedinCard) {
+      if (socials.linkedin) {
+        linkedinCard.href = socials.linkedin;
+        const clean = socials.linkedin.replace(/^https?:\/\/(www\.)?linkedin\.com\/in\//, '').replace(/\/$/, '');
+        if (linkedinVal) linkedinVal.textContent = clean || 'LinkedIn';
+        linkedinCard.style.display = '';
+      } else {
+        linkedinCard.style.display = 'none';
+      }
+    }
+
+    // GitHub card
+    const githubCard = document.getElementById('contact-card-github');
+    const githubVal = document.getElementById('contact-val-github');
+    if (githubCard) {
+      if (socials.github) {
+        githubCard.href = socials.github;
+        const clean = socials.github.replace(/^https?:\/\/(www\.)?github\.com\//, '').replace(/\/$/, '');
+        if (githubVal) githubVal.textContent = clean || 'GitHub';
+        githubCard.style.display = '';
+      } else {
+        githubCard.style.display = 'none';
+      }
+    }
+
+    // LeetCode card
+    const leetcodeCard = document.getElementById('contact-card-leetcode');
+    const leetcodeVal = document.getElementById('contact-val-leetcode');
+    if (leetcodeCard) {
+      if (socials.leetcode) {
+        leetcodeCard.href = socials.leetcode;
+        const clean = socials.leetcode.replace(/^https?:\/\/(www\.)?leetcode\.com\/u\//, '').replace(/\/$/, '');
+        if (leetcodeVal) leetcodeVal.textContent = clean || 'LeetCode';
+        leetcodeCard.style.display = '';
+      } else {
+        leetcodeCard.style.display = 'none';
+      }
+    }
+
+    // Resume card
+    const resumeCard = document.getElementById('contact-card-resume');
+    if (resumeCard) {
+      if (id.resumeUrl) {
+        resumeCard.href = id.resumeUrl;
+        resumeCard.style.display = '';
+      } else {
+        resumeCard.style.display = 'none';
+      }
+    }
+
+    // Form action & placeholder
     const form = document.querySelector('.contact-form');
     if (form && socials.email) {
       form.action = `mailto:${socials.email}`;

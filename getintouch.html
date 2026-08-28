@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Glassmorphism Contact Section</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+background:linear-gradient(180deg,#f7f8ff,#eef1ff);
+min-height:100vh;
+overflow-x:hidden;
+position:relative;
+color:#1f2447;
+}
+
+/* Background Decorations */
+
+body::before{
+content:'';
+position:absolute;
+width:400px;
+height:400px;
+background:radial-gradient(circle,#c8b6ff55,transparent 70%);
+top:-100px;
+left:-100px;
+border-radius:50%;
+}
+
+body::after{
+content:'';
+position:absolute;
+width:500px;
+height:500px;
+background:radial-gradient(circle,#a5b4fc33,transparent 70%);
+right:-150px;
+top:100px;
+border-radius:50%;
+}
+
+.section{
+max-width:1400px;
+margin:auto;
+padding:80px 30px;
+position:relative;
+z-index:2;
+}
+
+.badge{
+width:max-content;
+margin:auto;
+padding:12px 24px;
+background:rgba(255,255,255,.5);
+backdrop-filter:blur(20px);
+border:1px solid rgba(255,255,255,.7);
+border-radius:999px;
+font-size:15px;
+display:flex;
+gap:10px;
+align-items:center;
+box-shadow:0 10px 30px rgba(124,58,237,.08);
+}
+
+.dot{
+width:8px;
+height:8px;
+background:#22c55e;
+border-radius:50%;
+}
+
+.title{
+text-align:center;
+font-size:5rem;
+font-weight:800;
+margin-top:25px;
+line-height:1;
+}
+
+.title span{
+background:linear-gradient(90deg,#4f46e5,#8b5cf6);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+
+.subtitle{
+max-width:700px;
+margin:20px auto 60px;
+text-align:center;
+font-size:1.2rem;
+color:#667085;
+line-height:1.7;
+}
+
+/* Main Grid */
+
+.contact-wrapper{
+display:grid;
+grid-template-columns:1.1fr 1fr;
+gap:30px;
+}
+
+/* Glass Cards */
+
+.glass{
+background:rgba(255,255,255,.45);
+backdrop-filter:blur(25px);
+border:1px solid rgba(255,255,255,.8);
+box-shadow:
+0 10px 40px rgba(99,102,241,.08),
+inset 0 1px 1px rgba(255,255,255,.7);
+border-radius:32px;
+}
+
+/* Left Side */
+
+.connect-box{
+padding:35px;
+}
+
+.connect-box h2{
+font-size:2rem;
+margin-bottom:10px;
+}
+
+.connect-box p{
+color:#667085;
+margin-bottom:30px;
+}
+
+.contact-grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:18px;
+}
+
+.contact-card{
+background:rgba(255,255,255,.55);
+border:1px solid rgba(255,255,255,.8);
+border-radius:24px;
+padding:20px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+transition:.3s;
+cursor:pointer;
+}
+
+.contact-card:hover{
+transform:translateY(-6px);
+box-shadow:0 20px 35px rgba(99,102,241,.12);
+}
+
+.left{
+display:flex;
+gap:16px;
+align-items:center;
+}
+
+.icon{
+width:60px;
+height:60px;
+border-radius:18px;
+display:flex;
+justify-content:center;
+align-items:center;
+font-size:24px;
+background:#ede9fe;
+color:#6d28d9;
+}
+
+.arrow{
+width:42px;
+height:42px;
+background:white;
+border-radius:50%;
+display:flex;
+justify-content:center;
+align-items:center;
+font-size:18px;
+}
+
+.contact-card h4{
+font-size:18px;
+margin-bottom:5px;
+}
+
+.contact-card span{
+font-size:14px;
+color:#667085;
+}
+
+/* Form */
+
+.form-box{
+padding:35px;
+}
+
+.form-box h2{
+font-size:2rem;
+margin-bottom:10px;
+}
+
+.form-box p{
+color:#667085;
+margin-bottom:25px;
+}
+
+.form-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:18px;
+margin-bottom:18px;
+}
+
+.input-box{
+background:rgba(255,255,255,.55);
+border:1px solid rgba(210,215,255,.8);
+border-radius:18px;
+padding:18px;
+}
+
+.input-box input,
+.input-box textarea{
+width:100%;
+border:none;
+background:transparent;
+outline:none;
+font-size:15px;
+color:#1f2447;
+}
+
+textarea{
+resize:none;
+height:180px;
+}
+
+.full{
+margin-bottom:18px;
+}
+
+.secure{
+text-align:center;
+color:#7c7f99;
+font-size:14px;
+margin-top:20px;
+}
+
+/* Feature Bar */
+
+.features{
+margin-top:30px;
+padding:25px;
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:20px;
+}
+
+.feature{
+display:flex;
+gap:16px;
+align-items:flex-start;
+}
+
+.feature-icon{
+width:58px;
+height:58px;
+border-radius:18px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:26px;
+background:#ede9fe;
+}
+
+.feature h4{
+margin-bottom:8px;
+}
+
+.feature p{
+font-size:14px;
+color:#667085;
+line-height:1.7;
+}
+
+/* Floating Shapes */
+
+.circle{
+position:absolute;
+border-radius:50%;
+backdrop-filter:blur(20px);
+}
+
+.c1{
+width:120px;
+height:120px;
+background:#c4b5fd55;
+top:120px;
+left:-40px;
+}
+
+.c2{
+width:160px;
+height:160px;
+background:#bfdbfe55;
+right:-60px;
+top:280px;
+}
+
+.c3{
+width:100px;
+height:100px;
+background:#ddd6fe55;
+bottom:80px;
+left:-20px;
+}
+
+/* Responsive */
+
+@media(max-width:1100px){
+
+.contact-wrapper{
+grid-template-columns:1fr;
+}
+
+.title{
+font-size:4rem;
+}
+
+}
+
+@media(max-width:768px){
+
+.title{
+font-size:3rem;
+}
+
+.contact-grid,
+.form-grid,
+.features{
+grid-template-columns:1fr;
+}
+
+.section{
+padding:60px 20px;
+}
+
+}
+
+</style>
+</head>
+<body>
+
+<div class="circle c1"></div>
+<div class="circle c2"></div>
+<div class="circle c3"></div>
+
+<section class="section">
+
+<div class="badge">
+🤝 Let's Collaborate
+<div class="dot"></div>
+</div>
+
+<h1 class="title">
+Let's <span>Connect</span>
+</h1>
+
+<p class="subtitle">
+I'm always open to discussing new projects, creative ideas,
+AI/ML opportunities, or collaborations.
+</p>
+
+<div class="contact-wrapper">
+
+<!-- LEFT -->
+<div class="connect-box glass">
+
+<h2>Let's Connect 👋</h2>
+<p>Find me on these platforms or reach out directly.</p>
+
+<div class="contact-grid">
+
+<div class="contact-card">
+<div class="left">
+<div class="icon">✉</div>
+<div>
+<h4>Email</h4>
+<span>anupam@example.com</span>
+</div>
+</div>
+<div class="arrow">→</div>
+</div>
+
+<div class="contact-card">
+<div class="left">
+<div class="icon">📞</div>
+<div>
+<h4>Phone</h4>
+<span>+91 00000 00000</span>
+</div>
+</div>
+<div class="arrow">→</div>
+</div>
+
+<div class="contact-card">
+<div class="left">
+<div class="icon">in</div>
+<div>
+<h4>LinkedIn</h4>
+<span>linkedin.com/in/anupam</span>
+</div>
+</div>
+<div class="arrow">→</div>
+</div>
+
+<div class="contact-card">
+<div class="left">
+<div class="icon">⌘</div>
+<div>
+<h4>GitHub</h4>
+<span>github.com/anupam</span>
+</div>
+</div>
+<div class="arrow">→</div>
+</div>
+
+<div class="contact-card">
+<div class="left">
+<div class="icon">&lt;/&gt;</div>
+<div>
+<h4>LeetCode</h4>
+<span>leetcode.com/u/anupam</span>
+</div>
+</div>
+<div class="arrow">→</div>
+</div>
+
+<div class="contact-card">
+<div class="left">
+<div class="icon">📄</div>
+<div>
+<h4>Resume</h4>
+<span>View Resume</span>
+</div>
+</div>
+<div class="arrow">→</div>
+</div>
+
+</div>
+
+</div>
+
+<!-- RIGHT -->
+
+<div class="form-box glass">
+
+<h2>Send a Message ✈</h2>
+<p>Fill out the form below and I'll get back to you soon.</p>
+
+<div class="form-grid">
+
+<div class="input-box">
+<input type="text" placeholder="Your Name">
+</div>
+
+<div class="input-box">
+<input type="email" placeholder="Your Email">
+</div>
+
+</div>
+
+<div class="input-box full">
+<input type="text" placeholder="Subject">
+</div>
+
+<div class="input-box full">
+<textarea placeholder="Your Message"></textarea>
+</div>
+
+<div class="secure">
+🔒 Your information is safe and secure.
+</div>
+
+</div>
+
+</div>
+
+<div class="features glass">
+
+<div class="feature">
+<div class="feature-icon">🧠</div>
+<div>
+<h4>AI & ML Solutions</h4>
+<p>Building intelligent models and data-driven solutions.</p>
+</div>
+</div>
+
+<div class="feature">
+<div class="feature-icon">📊</div>
+<div>
+<h4>Data-Driven Approach</h4>
+<p>Turning complex data into actionable insights.</p>
+</div>
+</div>
+
+<div class="feature">
+<div class="feature-icon">💡</div>
+<div>
+<h4>Innovation Focused</h4>
+<p>Always exploring new techniques and technologies.</p>
+</div>
+</div>
+
+</div>
+
+</section>
+
+<script>
+
+document.querySelectorAll(".contact-card").forEach(card=>{
+card.addEventListener("mouseenter",()=>{
+card.style.transform="translateY(-8px)";
+});
+card.addEventListener("mouseleave",()=>{
+card.style.transform="translateY(0)";
+});
+});
+
+</script>
+
+</body>
+</html>
