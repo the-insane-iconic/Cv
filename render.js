@@ -261,22 +261,28 @@
     toggleSectionVisibility('experience', d.sectionVisibility?.experience !== false && exp.length > 0);
 
     timeline.innerHTML = exp.map((e, i) => {
-      const delay = i === 0 ? 0.3 : 0;
+      const delay = (i + 1) * 0.15;
       const bullets = (e.bullets || []).map(b => `<li>${b}</li>`).join('');
+      const isDark = e.darkNode === true || (e.darkNode === undefined && i === 1);
+
       return `
-      <div class="timeline-item premium-hover" style="transition-delay:${delay}s;">
-        <div class="timeline-icon"><i class="${esc(e.icon)}"></i></div>
-        <div class="timeline-content glass-card">
+      <div class="timeline-item${isDark ? ' dark-node' : ''}" style="transition-delay:${delay}s;">
+        <div class="timeline-icon">
+          <i class="${esc(e.icon || 'fa-solid fa-briefcase')}"></i>
+        </div>
+        <div class="timeline-content">
           <div class="timeline-header">
-            <div>
-              <h3>${esc(e.title)}</h3>
-              <h4>${esc(e.company)} <span class="timeline-date badge-role">${esc(e.type)}</span></h4>
-            </div>
+            <h3>${esc(e.title)}</h3>
+            <h4>
+              <span>${esc(e.company)}</span>
+              ${e.type ? `<span class="badge-role">${esc(e.type)}</span>` : ''}
+            </h4>
           </div>
           <ul class="experience-list">${bullets}</ul>
-          ${e.impact ? `<div class="impact-box">
+          ${e.impact ? `
+          <div class="impact-box">
             <i class="${esc(e.impactIcon || 'fa-solid fa-bolt')}"></i>
-            <p><strong>Impact:</strong> ${esc(e.impact)}</p>
+            <p><strong>Impact:</strong> ${e.impact}</p>
           </div>` : ''}
         </div>
       </div>`;

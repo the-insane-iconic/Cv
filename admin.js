@@ -606,29 +606,35 @@ function renderExperienceSection() {
       <div class="list-item-header" onclick="toggleListItem('exp-${i}')">
         <i class="${esc(exp.icon)}" style="color:var(--accent);width:16px;text-align:center;"></i>
         <span class="list-item-title">${esc(exp.title)} — ${esc(exp.company)}</span>
-        <span class="list-item-meta">${esc(exp.type)}</span>
+        <span class="list-item-meta">${esc(exp.type || 'Role')}</span>
         <div class="list-item-actions">
-          <button class="btn-icon-action" onclick="event.stopPropagation(); moveItem('experience', ${i}, -1)"><i class="fa-solid fa-chevron-up"></i></button>
-          <button class="btn-icon-action" onclick="event.stopPropagation(); moveItem('experience', ${i}, 1)"><i class="fa-solid fa-chevron-down"></i></button>
-          <button class="btn-icon-action danger" onclick="event.stopPropagation(); DATA.experience.splice(${i},1); markDirty(); renderEditor()"><i class="fa-solid fa-trash"></i></button>
+          <button class="btn-icon-action" onclick="event.stopPropagation(); moveItem('experience', ${i}, -1)" title="Move Up"><i class="fa-solid fa-chevron-up"></i></button>
+          <button class="btn-icon-action" onclick="event.stopPropagation(); moveItem('experience', ${i}, 1)" title="Move Down"><i class="fa-solid fa-chevron-down"></i></button>
+          <button class="btn-icon-action danger" onclick="event.stopPropagation(); DATA.experience.splice(${i},1); markDirty(); renderEditor()" title="Delete"><i class="fa-solid fa-trash"></i></button>
         </div>
       </div>
       <div class="list-item-body" id="exp-${i}">
         <div class="field-row triple">
-          ${field('Role Title', `<input type="text" class="field-input" value="${esc(exp.title)}" oninput="DATA.experience[${i}].title=this.value; markDirty()">`)}
-          ${field('Company / Org', `<input type="text" class="field-input" value="${esc(exp.company)}" oninput="DATA.experience[${i}].company=this.value; markDirty()">`)}
-          ${field('Type Badge', `<input type="text" class="field-input" value="${esc(exp.type)}" placeholder="Freelance / Simulation" oninput="DATA.experience[${i}].type=this.value; markDirty()">`)}
+          ${field('Role Title', `<input type="text" class="field-input" value="${esc(exp.title)}" placeholder="AI Trainer" oninput="DATA.experience[${i}].title=this.value; markDirty()">`)}
+          ${field('Company / Org', `<input type="text" class="field-input" value="${esc(exp.company)}" placeholder="Outlier" oninput="DATA.experience[${i}].company=this.value; markDirty()">`)}
+          ${field('Type Badge', `<input type="text" class="field-input" value="${esc(exp.type)}" placeholder="FREELANCE / SIMULATION" oninput="DATA.experience[${i}].type=this.value; markDirty()">`)}
         </div>
-        <div class="field-row">
-          ${field('Timeline Icon', `<input type="text" class="field-input" value="${esc(exp.icon)}" placeholder="fa-solid fa-brain" oninput="DATA.experience[${i}].icon=this.value; markDirty()">`)}
-          ${field('Impact Icon', `<input type="text" class="field-input" value="${esc(exp.impactIcon||'fa-solid fa-bolt')}" oninput="DATA.experience[${i}].impactIcon=this.value; markDirty()">`)}
+        <div class="field-row triple">
+          ${field('Timeline Node Icon', `<input type="text" class="field-input" value="${esc(exp.icon)}" placeholder="fa-solid fa-brain" oninput="DATA.experience[${i}].icon=this.value; markDirty()">`)}
+          ${field('Impact Icon', `<input type="text" class="field-input" value="${esc(exp.impactIcon||'fa-solid fa-bolt')}" placeholder="fa-solid fa-bolt" oninput="DATA.experience[${i}].impactIcon=this.value; markDirty()">`)}
+          ${field('Timeline Node Style', `
+            <select class="field-select" onchange="DATA.experience[${i}].darkNode=(this.value==='dark'); markDirty()">
+              <option value="light"${!exp.darkNode ? ' selected' : ''}>Light Node Circle</option>
+              <option value="dark"${exp.darkNode ? ' selected' : ''}>Dark / Solid Node Circle</option>
+            </select>
+          `)}
         </div>
         <div class="field-row single">
-          ${field('Impact Summary', `<textarea class="field-textarea" rows="2" oninput="DATA.experience[${i}].impact=this.value; markDirty()">${esc(exp.impact)}</textarea>`)}
+          ${field('Impact Summary Statement', `<textarea class="field-textarea" rows="2" placeholder="Impact statement shown in callout banner..." oninput="DATA.experience[${i}].impact=this.value; markDirty()">${esc(exp.impact)}</textarea>`)}
         </div>
-        <div class="field-label" style="margin-bottom:8px;">KEY CONTRIBUTIONS <span style="font-size:10px;font-weight:400;color:var(--text-muted);">(HTML allowed)</span></div>
+        <div class="field-label" style="margin-bottom:8px;">KEY CONTRIBUTIONS &amp; MILESTONES <span style="font-size:10px;font-weight:400;color:var(--text-muted);">(HTML allowed: &lt;strong&gt;, &lt;span class="highlight-number"&gt;)</span></div>
         <div class="array-list">${bullets}</div>
-        <button class="add-item-btn" onclick="DATA.experience[${i}].bullets.push('New key milestone...'); markDirty(); renderEditor()"><i class="fa-solid fa-plus"></i> Add Milestone</button>
+        <button class="add-item-btn" onclick="DATA.experience[${i}].bullets.push('Analyzed key milestones...'); markDirty(); renderEditor()"><i class="fa-solid fa-plus"></i> Add Milestone</button>
       </div>
     </div>`;
   }).join('');
@@ -639,7 +645,7 @@ function renderExperienceSection() {
     'roles · internships · research milestones',
     `${exps.length} Entries`,
     `<div class="list-items">${html}</div>
-    <button class="add-item-btn" onclick="DATA.experience.push({title:'Software Engineer',company:'Company Name',type:'Full-time',icon:'fa-solid fa-laptop-code',bullets:[],impact:'',impactIcon:'fa-solid fa-bolt'}); markDirty(); renderEditor()"><i class="fa-solid fa-plus"></i> Add Experience Entry</button>`
+    <button class="add-item-btn" onclick="DATA.experience.push({title:'Software Engineer',company:'Company Name',type:'FREELANCE',icon:'fa-solid fa-brain',darkNode:false,bullets:['Analyzed system performance...'],impact:'Improved system performance by 30%.',impactIcon:'fa-solid fa-bolt'}); markDirty(); renderEditor()"><i class="fa-solid fa-plus"></i> Add Experience Entry</button>`
   );
 }
 
