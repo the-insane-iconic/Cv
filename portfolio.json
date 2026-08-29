@@ -21,27 +21,38 @@
       "I turn <span class=\"hero-hl\">ambitious</span> ideas into <span class=\"hero-hl\">intelligent</span> systems that solve <span class=\"hero-hl\">meaningful, real-world</span> problems.",
       "With a <span class=\"hero-hl\">curious</span> and <span class=\"hero-hl\">experimental</span> mindset, I build, break, and refine AI/ML solutions until they’re not just impressive—but <span class=\"hero-hl\">genuinely useful</span>."
     ],
-    "profileImage": "https://picsum.photos/id/1018/1000/600",
+    "profileImage": "https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/1st.png",
     "profileImages": [
-      "https://picsum.photos/id/1018/1000/600",
-      "https://picsum.photos/id/1025/1000/600",
-      "https://picsum.photos/id/1043/1000/600",
-      "https://picsum.photos/id/1062/1000/600",
-      "https://picsum.photos/id/1081/1000/600"
+      "https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/1st.png",
+      "https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/2nd.png",
+      "https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/03.png",
+      "https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/4th.png"
     ],
     "resumeUrl": "#"
   },
   "about": {
-    "paragraphs": [
-      "I am a <strong>B.Tech CSE student</strong> at Lovely Professional University, deeply passionate about <strong>cybersecurity</strong>, <strong>full-stack development</strong>, and <strong>artificial intelligence</strong>.",
-      "My technical journey includes hands-on experience in <strong>LLM training</strong>, <strong>enterprise vulnerability assessment</strong>, and architecting robust <strong>system monitoring tools</strong>.",
-      "Driven by a strong problem-solving mindset, I am a consistent learner continually expanding my boundaries in <strong>secure software engineering</strong> and <strong>bleeding-edge technologies</strong>."
+    "eyebrow": "01 — ABOUT ME",
+    "manifesto": "A curious <span class=\"text-accent\">learner</span>.<br>A problem <span class=\"text-accent\">solver</span>.<br>A <span class=\"text-accent\">builder</span> of impactful solutions.",
+    "items": [
+      {
+        "icon": "fa-regular fa-user",
+        "text": "I'm a B.Tech CSE student at Lovely Professional University with a strong <strong class=\"about-hl\">passion for technology</strong> and innovation. I build <strong class=\"about-hl\">secure</strong>, <strong class=\"about-hl\">scalable</strong>, and <strong class=\"about-hl\">intelligent</strong> solutions that <strong class=\"about-hl\">solve real-world problems</strong>."
+      },
+      {
+        "icon": "fa-solid fa-bullseye",
+        "text": "Driven by <strong class=\"about-hl\">curiosity</strong> and a <strong class=\"about-hl\">problem-solving</strong> mindset, I continuously <strong class=\"about-hl\">learn</strong>, <strong class=\"about-hl\">adapt</strong>, and <strong class=\"about-hl\">apply</strong> my skills to create <strong class=\"about-hl\">meaningful impact</strong>."
+      },
+      {
+        "icon": "fa-solid fa-rocket",
+        "text": "<strong class=\"about-hl\">I thrive</strong> in challenging environments and enjoy turning <strong class=\"about-hl\">ideas into real-world solutions</strong> through <strong class=\"about-hl\">clean code</strong>, <strong class=\"about-hl\">strong systems</strong>, and <strong class=\"about-hl\">thoughtful design</strong>."
+      }
     ],
     "chips": [
-      { "icon": "fa-solid fa-code", "label": "250+ LeetCode" },
-      { "icon": "fa-solid fa-fire", "label": "110+ Days DSA", "class": "text-orange" },
-      { "icon": "fa-solid fa-shield-halved", "label": "Cybersecurity" },
-      { "icon": "fa-solid fa-brain", "label": "AI & LLM" }
+      { "icon": "fa-solid fa-brain", "label": "LLM Training" },
+      { "icon": "fa-solid fa-shield-halved", "label": "Enterprise Vulnerability Assessment" },
+      { "icon": "fa-solid fa-desktop", "label": "System Monitoring Tools" },
+      { "icon": "fa-solid fa-lock", "label": "Secure Software Engineering" },
+      { "icon": "fa-solid fa-code", "label": "Bleeding-edge Technologies" }
     ]
   },
   "skills": [

@@ -90,8 +90,8 @@ async function loadData() {
     if (fileData.experience && (!localData.experience || localData.experience.length !== fileData.experience.length)) {
       merged.experience = fileData.experience;
     }
-    if (fileData.identity && fileData.identity.profileImages && (!localData.identity || !localData.identity.profileImages)) {
-      merged.identity = { ...(localData.identity || {}), profileImages: fileData.identity.profileImages };
+    if (fileData.identity) {
+      merged.identity = { ...(localData.identity || {}), ...fileData.identity };
     }
     if (fileData.about) {
       merged.about = fileData.about;
@@ -563,12 +563,20 @@ window.removeRole = function (i) {
 /* ---- ABOUT ---- */
 function renderAboutSection() {
   const ab = DATA.about || {};
-  const paras = (ab.paragraphs || []).map((p, i) => `
-    <div class="array-item" style="align-items:start;">
-      <textarea class="field-textarea" rows="2" oninput="DATA.about.paragraphs[${i}]=this.value; markDirty()">${esc(p)}</textarea>
-      <button class="btn-icon-action danger" style="margin-top:6px;" onclick="DATA.about.paragraphs.splice(${i},1); markDirty(); renderEditor()">
-        <i class="fa-solid fa-trash"></i>
-      </button>
+  ab.items = ab.items || (ab.paragraphs ? ab.paragraphs.map(p => ({ icon: 'fa-regular fa-user', text: p })) : []);
+
+  const itemsHtml = (ab.items || []).map((item, i) => `
+    <div class="array-item" style="align-items:start; flex-direction:column; gap:8px; margin-bottom:12px;">
+      <div style="display:flex; gap:10px; width:100%; align-items:center;">
+        <input type="text" class="field-input" value="${esc(item.icon || '')}" placeholder="fa-regular fa-user" style="flex:0 0 160px"
+          oninput="DATA.about.items[${i}].icon=this.value; markDirty()">
+        <span style="font-size:12px; color:var(--text-muted); flex:1;">Icon (FontAwesome)</span>
+        <button class="btn-icon-action danger" onclick="DATA.about.items.splice(${i},1); markDirty(); renderEditor()">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </div>
+      <textarea class="field-textarea" rows="2" placeholder="Item description with HTML..."
+        oninput="DATA.about.items[${i}].text=this.value; markDirty()">${esc(item.text || '')}</textarea>
     </div>`).join('');
 
   const chips = (ab.chips || []).map((c, i) => `
@@ -585,11 +593,17 @@ function renderAboutSection() {
   return makeSection('about',
     'fa-solid fa-user',
     'About Me',
-    'biography paragraphs · quick stat chips',
-    `${(ab.paragraphs||[]).length} Paragraphs`,
-    `<div class="field-label" style="margin-bottom:8px;">BIO PARAGRAPHS <span style="font-size:10px;font-weight:400;color:var(--text-muted);">(HTML allowed)</span></div>
-    <div class="array-list">${paras}</div>
-    <button class="add-item-btn" onclick="DATA.about.paragraphs=DATA.about.paragraphs||[]; DATA.about.paragraphs.push('New paragraph...'); markDirty(); renderEditor()"><i class="fa-solid fa-plus"></i> Add Paragraph</button>
+    'headline manifesto · narrative items · stat chips',
+    `${(ab.items||[]).length} Feature Items`,
+    `<div class="field-group" style="margin-bottom:14px;">
+      <label class="field-label">MANIFESTO HEADLINE <span style="font-size:10px;font-weight:400;color:var(--text-muted);">(HTML allowed)</span></label>
+      <textarea class="field-textarea" rows="2" placeholder="A curious <span class='text-accent'>learner</span>..."
+        oninput="DATA.about.manifesto=this.value; markDirty()">${esc(ab.manifesto || '')}</textarea>
+    </div>
+    <div class="field-divider"></div>
+    <div class="field-label" style="margin-bottom:8px;">NARRATIVE FEATURE ITEMS <span style="font-size:10px;font-weight:400;color:var(--text-muted);">(HTML allowed)</span></div>
+    <div class="array-list">${itemsHtml}</div>
+    <button class="add-item-btn" onclick="DATA.about.items=DATA.about.items||[]; DATA.about.items.push({icon:'fa-regular fa-user', text:'New description...'}); markDirty(); renderEditor()"><i class="fa-solid fa-plus"></i> Add Item</button>
     <div class="field-divider"></div>
     <div class="field-label" style="margin-bottom:8px;">PROFILE STAT CHIPS</div>
     <div class="array-list">${chips}</div>

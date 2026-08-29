@@ -227,40 +227,67 @@
     const textEl = document.querySelector('.about-text');
     if (!textEl) return;
 
-    const hasContent = (ab.paragraphs && ab.paragraphs.length > 0) || (ab.chips && ab.chips.length > 0);
+    const hasContent = (ab.items && ab.items.length > 0) || (ab.paragraphs && ab.paragraphs.length > 0) || (ab.chips && ab.chips.length > 0);
     toggleSectionVisibility('about', d.sectionVisibility?.about !== false && hasContent);
 
-    const paras = (ab.paragraphs || []).map(p => `<p>${p}</p>`).join('');
+    // Eyebrow update if configured
+    const eyebrowEl = document.querySelector('.about-eyebrow');
+    if (eyebrowEl && ab.eyebrow) {
+      eyebrowEl.textContent = ab.eyebrow;
+    }
 
+    // Manifesto headline with vertical accent bar
+    const defaultManifesto = `A curious <span class="text-accent">learner</span>.<br>A problem <span class="text-accent">solver</span>.<br>A <span class="text-accent">builder</span> of impactful solutions.`;
+    const manifestoHtml = `
+      <div class="about-manifesto">
+        <div class="manifesto-bar"></div>
+        <h3 class="manifesto-heading">${ab.manifesto || defaultManifesto}</h3>
+      </div>`;
+
+    // Narrative list items with circle icons
+    const defaultIcons = ['fa-regular fa-user', 'fa-solid fa-bullseye', 'fa-solid fa-rocket'];
+    let itemsList = [];
+    if (Array.isArray(ab.items) && ab.items.length > 0) {
+      itemsList = ab.items;
+    } else if (Array.isArray(ab.paragraphs) && ab.paragraphs.length > 0) {
+      itemsList = ab.paragraphs.map((p, idx) => ({
+        icon: defaultIcons[idx % defaultIcons.length],
+        text: p
+      }));
+    }
+
+    const narrativeHtml = itemsList.length > 0 ? `
+      <div class="about-narrative-list">
+        ${itemsList.map(item => `
+          <div class="about-narrative-item">
+            <div class="about-item-icon">
+              <i class="${esc(item.icon || 'fa-solid fa-circle-check')}"></i>
+            </div>
+            <div class="about-item-content">
+              <p>${item.text}</p>
+            </div>
+          </div>
+        `).join('')}
+      </div>` : '';
+
+    // Chips
     const chips = (ab.chips || []).map(c =>
       `<span class="chip"><i class="${esc(c.icon)}${c.class ? ' ' + c.class : ''}"></i> ${esc(c.label)}</span>`
     ).join('');
 
-    const resumeUrl = d.identity?.resumeUrl || '';
-    const actionBtns = `
-      <div class="about-actions" style="display:flex; gap:12px; flex-wrap:wrap; margin-top:16px;">
-        ${resumeUrl ? `<a href="${esc(resumeUrl)}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
-          <i class="fa-solid fa-file-pdf"></i> View Resume
-        </a>` : ''}
-        <a href="#projects" class="btn btn-glass">
-          <i class="fa-solid fa-arrow-right"></i> Explore Work
-        </a>
-      </div>`;
-
-    textEl.innerHTML = paras +
-      (chips ? `<div class="about-stats-chips">${chips}</div>` : '') +
-      actionBtns;
+    textEl.innerHTML = manifestoHtml +
+      narrativeHtml +
+      (chips ? `<div class="about-stats-chips">${chips}</div>` : '');
 
     // Render Gamma-style vertical auto-scroll card carousel
     const mount = document.getElementById('about-image-mount');
     if (!mount) return;
 
     const SAMPLE_IMAGES = [
-      'https://picsum.photos/id/1018/1000/600',
-      'https://picsum.photos/id/1025/1000/600',
-      'https://picsum.photos/id/1043/1000/600',
-      'https://picsum.photos/id/1062/1000/600',
-      'https://picsum.photos/id/1081/1000/600'
+      'https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/1st.png',
+      'https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/2nd.png',
+      'https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/03.png',
+      'https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/4th.png'
     ];
 
     let rawImages = (d.identity?.profileImages && d.identity.profileImages.length > 0)
