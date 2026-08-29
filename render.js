@@ -46,8 +46,8 @@
             if (fileData.experience && (!dbData.experience || dbData.experience.length !== fileData.experience.length)) {
               dbData.experience = fileData.experience;
             }
-            if (fileData.identity && fileData.identity.profileImages) {
-              dbData.identity = { ...(dbData.identity || {}), profileImages: fileData.identity.profileImages };
+            if (fileData.identity) {
+              dbData.identity = { ...(dbData.identity || {}), ...fileData.identity };
             }
             if (fileData.about) {
               dbData.about = fileData.about;
@@ -79,8 +79,8 @@
       if (fileData.experience && (!localData.experience || localData.experience.length !== fileData.experience.length)) {
         merged.experience = fileData.experience;
       }
-      if (fileData.identity && fileData.identity.profileImages) {
-        merged.identity = { ...(localData.identity || {}), profileImages: fileData.identity.profileImages };
+      if (fileData.identity) {
+        merged.identity = { ...(localData.identity || {}), ...fileData.identity };
       }
       if (fileData.about) {
         merged.about = fileData.about;
@@ -156,23 +156,31 @@
 
     const rolePill = document.getElementById('hero-pill-role');
     if (rolePill) {
-      rolePill.textContent = (id.roles && id.roles[0]) ? id.roles[0] : 'Computer Science & Developer';
+      rolePill.textContent = (id.roles && id.roles[0]) ? id.roles[0] : 'AI/ML Engineer · Computer Science Student';
     }
 
     const nameEl = document.querySelector('.hero-name');
     if (nameEl) {
-      const full = (id.name || 'Anupam Yadav').trim();
+      const full = (id.name || 'Ansh Yadav').trim();
       const parts = full.split(' ');
+      const strokeSvg = `<svg class="hero-brush-stroke" viewBox="0 0 170 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 8C35 4 110 3 164 7C125 9 60 11 6 12" stroke="url(#brushGradient)" stroke-width="6" stroke-linecap="round"/><defs><linearGradient id="brushGradient" x1="4" y1="6" x2="164" y2="6" gradientUnits="userSpaceOnUse"><stop stop-color="#8C7AFF" stop-opacity="0.8"/><stop offset="0.5" stop-color="#C5BCFF" stop-opacity="0.9"/><stop offset="1" stop-color="#5A45FF" stop-opacity="0.3"/></linearGradient></defs></svg>`;
       if (parts.length > 1) {
         const first = parts.slice(0, -1).join(' ');
         const last = parts[parts.length - 1];
-        nameEl.innerHTML = `${esc(first)} <span class="hero-name-last">${esc(last)}<span class="dot-accent">.</span></span>`;
+        nameEl.innerHTML = `<span class="hero-name-first">${esc(first)}${strokeSvg}</span> <span class="hero-name-last">${esc(last)}<span class="dot-accent">.</span></span>`;
       } else {
-        nameEl.innerHTML = `${esc(full)}<span class="dot-accent">.</span>`;
+        nameEl.innerHTML = `<span class="hero-name-first">${esc(full)}${strokeSvg}</span><span class="dot-accent">.</span>`;
       }
     }
 
-    setText('.hero-description', id.tagline || 'I build secure, scalable systems and explore real-world cybersecurity challenges.');
+    const descEl = document.querySelector('.hero-description');
+    if (descEl) {
+      if (id.introParagraphs && Array.isArray(id.introParagraphs) && id.introParagraphs.length > 0) {
+        descEl.innerHTML = id.introParagraphs.map(p => `<p class="hero-intro-p">${p}</p>`).join('');
+      } else if (id.tagline) {
+        descEl.innerHTML = `<p class="hero-intro-p">${id.tagline}</p>`;
+      }
+    }
 
     const resumeBtn = document.querySelector('.btn-hero-resume') || document.querySelector('.hero-cta .btn-outline');
     if (resumeBtn) {

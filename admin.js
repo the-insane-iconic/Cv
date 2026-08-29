@@ -504,7 +504,15 @@ function renderIdentitySection() {
         ${field('Brand Suffix (Styled)', textInput('identity.brandSuffix', id.brandSuffix), 'e.g. Byte')}
       </div>
       <div class="field-row single">
-        ${field('Tagline / Hero Description', textArea('identity.tagline', id.tagline, 2))}
+        ${field('Hero Introduction Paragraphs (HTML supported, 1 per line)', `
+          <textarea class="field-textarea" rows="3" placeholder="Paragraph 1&#10;Paragraph 2" oninput="updateIntroParagraphs(this.value)">${esc((id.introParagraphs || []).join('\n'))}</textarea>
+          <span class="field-hint" style="display:block; margin-top:4px; font-size:11px; color:var(--text-muted);">
+            Tip: Use &lt;span class="hero-hl"&gt;keyword&lt;/span&gt; to create vibrant purple keyword accents.
+          </span>
+        `)}
+      </div>
+      <div class="field-row single">
+        ${field('Tagline / Fallback Description', textArea('identity.tagline', id.tagline, 2))}
       </div>
       <div class="field-divider"></div>
       <div class="field-label" style="margin-bottom:8px;">TYPING ANIMATION ROLES</div>
@@ -525,6 +533,12 @@ function renderIdentitySection() {
       </div>`
     );
 }
+
+window.updateIntroParagraphs = function (val) {
+  const arr = val.split('\n').map(s => s.trim()).filter(Boolean);
+  DATA.identity.introParagraphs = arr;
+  markDirty();
+};
 
 window.updateProfileImages = function (val) {
   const arr = val.split(/[\n,]/).map(s => s.trim()).filter(Boolean);

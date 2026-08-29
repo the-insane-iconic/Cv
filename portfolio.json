@@ -1,22 +1,26 @@
 {
   "site": {
     "name": "Cryo-Byte",
-    "owner": "Anupam Yadav",
+    "owner": "Ansh Yadav",
     "theme": "Dark International"
   },
   "identity": {
-    "name": "Anupam Yadav",
+    "name": "Ansh Yadav",
     "brand": "Cryo-Byte",
     "brandSuffix": "-Byte",
     "roles": [
-      "Computer Science & Developer",
-      "Full Stack Developer",
-      "Cybersecurity Enthusiast",
-      "AI & ML Explorer"
+      "AI/ML Engineer · Computer Science Student",
+      "AI/ML Engineer",
+      "Computer Science Student",
+      "Full Stack Developer"
     ],
     "greeting": "H I ,   I ' M",
     "location": "India",
-    "tagline": "I build secure, scalable systems and explore real-world cybersecurity challenges.",
+    "tagline": "I turn ambitious ideas into intelligent systems that solve meaningful, real-world problems.",
+    "introParagraphs": [
+      "I turn <span class=\"hero-hl\">ambitious</span> ideas into <span class=\"hero-hl\">intelligent</span> systems that solve <span class=\"hero-hl\">meaningful, real-world</span> problems.",
+      "With a <span class=\"hero-hl\">curious</span> and <span class=\"hero-hl\">experimental</span> mindset, I build, break, and refine AI/ML solutions until they’re not just impressive—but <span class=\"hero-hl\">genuinely useful</span>."
+    ],
     "profileImage": "https://picsum.photos/id/1018/1000/600",
     "profileImages": [
       "https://picsum.photos/id/1018/1000/600",
