@@ -189,14 +189,32 @@ window.initApp = function () {
   const navMenu = document.getElementById('nav-menu');
 
   if (hamburger && navMenu) {
-    hamburger.addEventListener('click', () => {
-      navMenu.classList.toggle('open');
+    hamburger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = navMenu.classList.toggle('open');
+      hamburger.classList.toggle('active', isOpen);
+      const icon = hamburger.querySelector('i');
+      if (icon) {
+        if (isOpen) {
+          icon.classList.remove('fa-bars');
+          icon.classList.add('fa-xmark');
+        } else {
+          icon.classList.remove('fa-xmark');
+          icon.classList.add('fa-bars');
+        }
+      }
     });
 
     // Close on link click
     navMenu.querySelectorAll('.nav-link').forEach((link) => {
       link.addEventListener('click', () => {
         navMenu.classList.remove('open');
+        hamburger.classList.remove('active');
+        const icon = hamburger.querySelector('i');
+        if (icon) {
+          icon.classList.remove('fa-xmark');
+          icon.classList.add('fa-bars');
+        }
       });
     });
 
@@ -204,6 +222,12 @@ window.initApp = function () {
     document.addEventListener('click', (e) => {
       if (!navMenu.contains(e.target) && !hamburger.contains(e.target)) {
         navMenu.classList.remove('open');
+        hamburger.classList.remove('active');
+        const icon = hamburger.querySelector('i');
+        if (icon) {
+          icon.classList.remove('fa-xmark');
+          icon.classList.add('fa-bars');
+        }
       }
     });
   }

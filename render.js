@@ -373,8 +373,15 @@
     if (!cards.length) return;
 
     const GAP = 24;
+    function isHorizontal() {
+      return window.innerWidth <= 900;
+    }
+
     function getStep() {
       const card = track.querySelector('.about-carousel-card');
+      if (isHorizontal()) {
+        return (card ? card.offsetWidth : 260) + 14;
+      }
       return (card ? card.offsetHeight : 420) + GAP;
     }
 
@@ -396,6 +403,8 @@
     let isPaused = false;
     wrapper.addEventListener('mouseenter', () => { isPaused = true; });
     wrapper.addEventListener('mouseleave', () => { isPaused = false; });
+    wrapper.addEventListener('touchstart', () => { isPaused = true; }, { passive: true });
+    wrapper.addEventListener('touchend', () => { isPaused = false; }, { passive: true });
 
     function rollNext() {
       if (isPaused) return;
@@ -405,7 +414,11 @@
       const offset = currentIndex * step;
 
       track.style.transition = 'transform 0.85s cubic-bezier(0.33, 1, 0.68, 1)';
-      track.style.transform = `translateY(-${offset}px)`;
+      if (isHorizontal()) {
+        track.style.transform = `translateX(-${offset}px)`;
+      } else {
+        track.style.transform = `translateY(-${offset}px)`;
+      }
       setFocused(currentIndex + 1);
 
       // When we reach the end of the second set (baseCount * 2), smoothly reset back to first set (baseCount) after animation finishes
@@ -413,12 +426,29 @@
         setTimeout(() => {
           track.style.transition = 'none';
           currentIndex = baseCount;
-          track.style.transform = `translateY(-${currentIndex * step}px)`;
+          if (isHorizontal()) {
+            track.style.transform = `translateX(-${currentIndex * step}px)`;
+          } else {
+            track.style.transform = `translateY(-${currentIndex * step}px)`;
+          }
           setFocused(currentIndex + 1);
           void track.offsetHeight; // force reflow
         }, 900);
       }
     }
+
+    // Reset transform on resize if orientation changes
+    let lastIsHoriz = isHorizontal();
+    window.addEventListener('resize', () => {
+      const currentIsHoriz = isHorizontal();
+      if (currentIsHoriz !== lastIsHoriz) {
+        lastIsHoriz = currentIsHoriz;
+        track.style.transition = 'none';
+        currentIndex = 0;
+        track.style.transform = currentIsHoriz ? 'translateX(0)' : 'translateY(0)';
+        setFocused(1);
+      }
+    });
 
     window._aboutCarouselTimer = setInterval(rollNext, 2400);
   }
