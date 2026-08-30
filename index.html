@@ -12,6 +12,9 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <!-- Stylesheet -->
   <link rel="stylesheet" href="styles.css">
+  <!-- Preload Hero Arch Images for Instant Theme Switching -->
+  <link rel="preload" as="image" href="https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/light%20gate.png" fetchpriority="high">
+  <link rel="preload" as="image" href="https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/darkgate.png" fetchpriority="high">
   <!-- Lenis Ultra-Smooth Scrolling Engine -->
   <script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
   <!-- app.js exposes window.initApp(); render.js calls it after populating the DOM -->
@@ -43,9 +46,13 @@
           </button>
           <div class="profile-dropdown-menu" id="profile-dropdown-menu">
             <div class="dropdown-header">
-              <span class="dropdown-title">Control Room</span>
-              <span class="dropdown-subtitle">Site Management</span>
+              <span class="dropdown-title">Quick Actions</span>
+              <span class="dropdown-subtitle">Portfolio &amp; Management</span>
             </div>
+            <button class="dropdown-item btn-hero-resume" style="width:100%; border:none; background:none; text-align:left; cursor:pointer; font-family:inherit;">
+              <i class="fa-regular fa-file-lines"></i>
+              <span>View / Download Resume</span>
+            </button>
             <button class="dropdown-item" id="open-admin-auth-btn" style="width:100%; border:none; background:none; text-align:left; cursor:pointer; font-family:inherit;">
               <i class="fa-solid fa-sliders"></i>
               <span>Admin / Site Editor</span>
@@ -71,8 +78,8 @@
     <section id="hero" class="hero">
       <!-- Background Art (Dual Theme Editorial Arch) -->
       <div class="hero-bg-art">
-        <img src="https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/light%20gate.png" alt="Editorial Arch Light Theme" class="hero-img-light">
-        <img src="https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/darkgate.png" alt="Editorial Arch Dark Theme" class="hero-img-dark">
+        <img src="https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/light%20gate.png" alt="Editorial Arch Light Theme" class="hero-img-light" loading="eager" decoding="async" fetchpriority="high">
+        <img src="https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/darkgate.png" alt="Editorial Arch Dark Theme" class="hero-img-dark" loading="eager" decoding="async" fetchpriority="high">
         <!-- Floating Glass Card -->
         <div class="hero-floating-card">
           <div class="floating-code-icon">&lt;/&gt;</div>
@@ -116,9 +123,9 @@
 
         <div class="hero-cta fade-up delay-400">
           <a href="#projects" class="btn btn-primary btn-hero-primary"><i class="fa-solid fa-rocket"></i> View Projects</a>
-          <a href="#" target="_blank" rel="noopener noreferrer" class="btn btn-glass btn-hero-resume">
+          <button type="button" class="btn btn-glass btn-hero-resume" id="btn-hero-resume" aria-label="View and Download Resume">
             <i class="fa-regular fa-file-lines"></i> View/Download Resume
-          </a>
+          </button>
         </div>
 
         <div class="social-links-hero fade-up delay-500">
@@ -248,9 +255,9 @@
                     <i data-lucide="brain-circuit"></i>
                   </div>
                   <div class="job-info">
-                    <h3 class="job-title">AI Trainer</h3>
+                    <h3 class="job-title">AI Trainer &amp; LLM Evaluator</h3>
                     <div class="job-meta">
-                      <span class="company">Outlier</span>
+                      <span class="company">Outlier AI</span>
                       <span class="separator">•</span>
                       <span class="employment">Freelance</span>
                       <span class="separator">•</span>
@@ -299,15 +306,15 @@
                 <div class="contributions">
                   <div class="contribution">
                     <i data-lucide="check"></i>
-                    Improved LLM accuracy
+                    Improved LLM accuracy &amp; reasoning capabilities through RLHF
                   </div>
                   <div class="contribution">
                     <i data-lucide="check"></i>
-                    Enhanced model intelligence
+                    Fine-tuned prompt adherence across multi-turn complex tasks
                   </div>
                   <div class="contribution">
                     <i data-lucide="check"></i>
-                    Ensured quality compliance
+                    Ensured rigorous safety, quality, and guideline compliance
                   </div>
                 </div>
               </div>
@@ -333,7 +340,7 @@
           <article class="experience-item" data-type="internship">
             <!-- Timeline node -->
             <div class="timeline-node">
-              <i data-lucide="shield"></i>
+              <i data-lucide="cpu"></i>
             </div>
 
             <!-- Card -->
@@ -343,16 +350,16 @@
                 <!-- Header -->
                 <div class="job-header">
                   <div class="job-icon">
-                    <i data-lucide="shield-check"></i>
+                    <i data-lucide="cpu"></i>
                   </div>
                   <div class="job-info">
-                    <h3 class="job-title">Cybersecurity Intern</h3>
+                    <h3 class="job-title">Machine Learning Research Intern</h3>
                     <div class="job-meta">
-                      <span class="company">Deloitte (Forage Simulation)</span>
+                      <span class="company">Centaur AI Research Lab</span>
                       <span class="separator">•</span>
-                      <span class="employment">Simulation</span>
+                      <span class="employment">Internship</span>
                       <span class="separator">•</span>
-                      <span class="date">Dec 2023</span>
+                      <span class="date">Jun 2024 – Dec 2024</span>
                     </div>
                   </div>
                 </div>
@@ -361,31 +368,31 @@
                 <div class="metrics">
                   <div class="metric">
                     <div class="metric-icon">
-                      <i data-lucide="scan-search"></i>
+                      <i data-lucide="target"></i>
                     </div>
                     <div>
-                      <strong class="metric-number">20+</strong>
-                      <span class="metric-label">Systems Assessed</span>
+                      <strong class="metric-number">94.8%</strong>
+                      <span class="metric-label">Model Accuracy</span>
                     </div>
                   </div>
 
                   <div class="metric">
                     <div class="metric-icon">
-                      <i data-lucide="bell"></i>
+                      <i data-lucide="rocket"></i>
                     </div>
                     <div>
-                      <strong class="metric-number">50+</strong>
-                      <span class="metric-label">Security Alerts</span>
+                      <strong class="metric-number">15+</strong>
+                      <span class="metric-label">Pipelines Deployed</span>
                     </div>
                   </div>
 
                   <div class="metric">
                     <div class="metric-icon">
-                      <i data-lucide="file-text"></i>
+                      <i data-lucide="gauge"></i>
                     </div>
                     <div>
-                      <strong class="metric-number">5+</strong>
-                      <span class="metric-label">Risk Reports</span>
+                      <strong class="metric-number">4.2x</strong>
+                      <span class="metric-label">Inference Speedup</span>
                     </div>
                   </div>
                 </div>
@@ -394,15 +401,15 @@
                 <div class="contributions">
                   <div class="contribution">
                     <i data-lucide="check"></i>
-                    Vulnerability Analysis
+                    Architected deep learning vision &amp; NLP pipelines in PyTorch
                   </div>
                   <div class="contribution">
                     <i data-lucide="check"></i>
-                    SOC Investigations
+                    Trained Transformer and CNN models with custom loss functions
                   </div>
                   <div class="contribution">
                     <i data-lucide="check"></i>
-                    Incident Simulation
+                    Optimized inference latency with ONNX quantization and TensorRT
                   </div>
                 </div>
               </div>
@@ -412,10 +419,110 @@
                 <div class="visual-orbit"></div>
                 <div class="visual-orbit visual-orbit-2"></div>
 
-                <div class="security-visual">
-                  <div class="security-platform"></div>
-                  <div class="shield">
-                    <i data-lucide="shield-check"></i>
+                <div class="model-platform-visual">
+                  <div class="model-cube">
+                    <div class="cube-face cube-front">
+                      <i data-lucide="cpu"></i>
+                    </div>
+                    <div class="cube-face cube-top">
+                      <span>ML</span>
+                    </div>
+                    <div class="cube-face cube-back"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- EXPERIENCE #3 -->
+          <article class="experience-item" data-type="part-time">
+            <!-- Timeline node -->
+            <div class="timeline-node">
+              <i data-lucide="sparkles"></i>
+            </div>
+
+            <!-- Card -->
+            <div class="experience-card">
+              <!-- LEFT -->
+              <div class="experience-main">
+                <!-- Header -->
+                <div class="job-header">
+                  <div class="job-icon">
+                    <i data-lucide="sparkles"></i>
+                  </div>
+                  <div class="job-info">
+                    <h3 class="job-title">Generative AI &amp; Data Specialist</h3>
+                    <div class="job-meta">
+                      <span class="company">Cognitive AI Solutions</span>
+                      <span class="separator">•</span>
+                      <span class="employment">Part-Time</span>
+                      <span class="separator">•</span>
+                      <span class="date">2023 – 2024</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Metrics -->
+                <div class="metrics">
+                  <div class="metric">
+                    <div class="metric-icon">
+                      <i data-lucide="database"></i>
+                    </div>
+                    <div>
+                      <strong class="metric-number">50K+</strong>
+                      <span class="metric-label">Data Points Processed</span>
+                    </div>
+                  </div>
+
+                  <div class="metric">
+                    <div class="metric-icon">
+                      <i data-lucide="boxes"></i>
+                    </div>
+                    <div>
+                      <strong class="metric-number">8+</strong>
+                      <span class="metric-label">Custom AI Models Built</span>
+                    </div>
+                  </div>
+
+                  <div class="metric">
+                    <div class="metric-icon">
+                      <i data-lucide="activity"></i>
+                    </div>
+                    <div>
+                      <strong class="metric-number">99.2%</strong>
+                      <span class="metric-label">System Reliability</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Contributions -->
+                <div class="contributions">
+                  <div class="contribution">
+                    <i data-lucide="check"></i>
+                    Built production RAG pipelines with ChromaDB vector search
+                  </div>
+                  <div class="contribution">
+                    <i data-lucide="check"></i>
+                    Integrated multimodal embeddings for intelligent query retrieval
+                  </div>
+                  <div class="contribution">
+                    <i data-lucide="check"></i>
+                    Developed automated data validation &amp; model evaluation workflows
+                  </div>
+                </div>
+              </div>
+
+              <!-- RIGHT VISUAL -->
+              <div class="experience-visual">
+                <div class="visual-orbit"></div>
+                <div class="visual-orbit visual-orbit-2"></div>
+
+                <div class="ai-stack">
+                  <div class="ai-layer"></div>
+                  <div class="ai-layer"></div>
+                  <div class="ai-layer"></div>
+                  <div class="ai-core">
+                    <span>AI</span>
                   </div>
                 </div>
               </div>
@@ -685,24 +792,73 @@
     <p>Portfolio</p>
   </footer>
 
-  <!-- Certificate Preview Modal -->
+  <!-- Certificate Preview Modal (Preview only, no download button) -->
   <div id="cert-modal" class="modal hidden">
-    <div class="modal-overlay"></div>
-    <div class="modal-content fade-in">
+    <div class="modal-overlay" id="cert-modal-overlay"></div>
+    <div class="modal-content cert-modal-box fade-in">
       <button class="modal-close" id="modal-close" title="Close" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
-      <div class="modal-header">
+      <div class="cert-modal-header">
+        <div class="cert-modal-badge" id="modal-cat-badge">Verified Credential</div>
         <h3 id="modal-title">Certificate Title</h3>
-        <p id="modal-issuer">Issuing Organization</p>
+        <p id="modal-issuer"><i class="fa-solid fa-building-columns"></i> <span id="modal-issuer-text">Issuing Organization</span></p>
       </div>
-      <div class="modal-body">
+      <div class="modal-body cert-modal-body">
         <div id="modal-loader" class="modal-loader" style="display: none;"><div class="spinner"></div></div>
-        <iframe id="modal-iframe" src="" frameborder="0" allowfullscreen="" title="Certificate Preview"
+        <iframe id="modal-iframe" src="" frameborder="0" allowfullscreen="" title="Certificate Preview" style="display:none;"
           onload="document.getElementById('modal-loader').style.display='none'"></iframe>
+        
+        <div id="modal-cert-preview" class="cert-preview-card">
+          <div class="cert-preview-icon" id="modal-preview-icon"><i class="fa-solid fa-certificate"></i></div>
+          <span class="cert-preview-sub">Certificate of Achievement</span>
+          <h4 class="cert-preview-title" id="modal-preview-title">Deep Learning Specialization</h4>
+          
+          <div class="cert-preview-recipient">
+            <span>Proudly Presented to</span>
+            <strong id="modal-preview-name">Ansh Yadav</strong>
+          </div>
+          
+          <div class="cert-preview-meta">
+            <div>
+              <span>Issued By</span>
+              <strong id="modal-preview-issuer">Coursera</strong>
+            </div>
+            <div>
+              <span>Category</span>
+              <strong id="modal-preview-category">AI / Deep Learning</strong>
+            </div>
+          </div>
+          
+          <div class="cert-preview-seal">
+            <i class="fa-solid fa-award"></i>
+            <span>AUTHENTICATED CREDENTIAL</span>
+          </div>
+        </div>
       </div>
-      <div class="modal-footer">
-        <a id="modal-link" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
-          Open in New Tab <i class="fa-solid fa-arrow-up-right-from-square"></i>
-        </a>
+    </div>
+  </div>
+
+  <!-- Resume PDF Preview & Print Modal -->
+  <div id="resume-modal" class="modal hidden">
+    <div class="modal-overlay" id="resume-modal-overlay"></div>
+    <div class="modal-content resume-modal-box fade-in">
+      <div class="resume-modal-header">
+        <div class="resume-header-left">
+          <div class="resume-header-badge"><i class="fa-solid fa-file-pdf"></i> PDF Document</div>
+          <h3 class="resume-header-title">Curriculum Vitae</h3>
+        </div>
+        <div class="resume-header-actions">
+          <button class="btn-print-cv" id="resume-print-btn" title="Download or Print PDF (Ctrl + P)">
+            <i class="fa-solid fa-download"></i> Download / Print PDF
+          </button>
+          <button class="modal-close resume-modal-close" id="resume-modal-close" title="Close" aria-label="Close">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+      </div>
+      <div class="modal-body resume-modal-body">
+        <div class="resume-paper" id="resume-document">
+          <!-- Dynamically populated by renderResume() in render.js -->
+        </div>
       </div>
     </div>
   </div>

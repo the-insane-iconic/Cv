@@ -54,8 +54,12 @@ async function loadData() {
           if (fileData.projects && (!dbData.projects || dbData.projects.length < fileData.projects.length || !dbData.projects[0]?.type)) {
             dbData.projects = fileData.projects;
           }
-          if (fileData.experience && (!dbData.experience || dbData.experience.length !== fileData.experience.length)) {
+          const hasOldCyber = dbData.experience && dbData.experience.some(e => /cybersecurity/i.test(e.title || '') || /deloitte/i.test(e.company || ''));
+          if (fileData.experience && (!dbData.experience || dbData.experience.length !== fileData.experience.length || hasOldCyber)) {
             dbData.experience = fileData.experience;
+          }
+          if (fileData.skills && fileData.skills.some(s => /ai/i.test(s.category || '')) && !dbData.skills?.some(s => /ai/i.test(s.category || ''))) {
+            dbData.skills = fileData.skills;
           }
           if (fileData.identity && fileData.identity.profileImages) {
             dbData.identity = { ...(dbData.identity || {}), profileImages: fileData.identity.profileImages };
@@ -87,8 +91,12 @@ async function loadData() {
     if (fileData.projects && (!localData.projects || localData.projects.length < fileData.projects.length || !localData.projects[0]?.type)) {
       merged.projects = fileData.projects;
     }
-    if (fileData.experience && (!localData.experience || localData.experience.length !== fileData.experience.length)) {
+    const hasOldCyber = localData.experience && localData.experience.some(e => /cybersecurity/i.test(e.title || '') || /deloitte/i.test(e.company || ''));
+    if (fileData.experience && (!localData.experience || localData.experience.length !== fileData.experience.length || hasOldCyber)) {
       merged.experience = fileData.experience;
+    }
+    if (fileData.skills && fileData.skills.some(s => /ai/i.test(s.category || '')) && !localData.skills?.some(s => /ai/i.test(s.category || ''))) {
+      merged.skills = fileData.skills;
     }
     if (fileData.identity) {
       merged.identity = { ...(localData.identity || {}), ...fileData.identity };
@@ -688,18 +696,30 @@ function renderExperienceSection() {
   const exps = DATA.experience || [];
 
   const html = exps.map((exp, i) => {
-    const bullets = (exp.bullets || []).map((b, bi) => `
+    // Normalize metrics
+    let metrics = exp.metrics || [];
+    if (!Array.isArray(metrics)) metrics = [];
+    const metricsHtml = metrics.map((m, mi) => `
+      <div class="array-item" style="display:grid; grid-template-columns: 80px 1fr 1fr 34px; gap:8px; align-items:center; margin-bottom:6px;">
+        <input type="text" class="field-input" placeholder="Icon" value="${esc(m.icon || 'chart-no-axes-combined')}" oninput="updateExperienceMetric(${i}, ${mi}, 'icon', this.value)">
+        <input type="text" class="field-input" placeholder="Number (e.g. 1.2K+)" value="${esc(m.val || m.number || m.num || '')}" oninput="updateExperienceMetric(${i}, ${mi}, 'val', this.value)">
+        <input type="text" class="field-input" placeholder="Label (e.g. AI Responses)" value="${esc(m.lbl || m.label || '')}" oninput="updateExperienceMetric(${i}, ${mi}, 'lbl', this.value)">
+        <button class="btn-icon-action danger" onclick="removeExperienceMetric(${i}, ${mi})"><i class="fa-solid fa-trash"></i></button>
+      </div>`).join('');
+
+    // Normalize contributions / bullets
+    const contribs = (exp.contributions || exp.bullets || []).map((c, ci) => `
       <div class="array-item">
-        <textarea class="field-textarea" rows="1" oninput="DATA.experience[${i}].bullets[${bi}]=this.value; markDirty()">${esc(b)}</textarea>
-        <button class="btn-icon-action danger" onclick="DATA.experience[${i}].bullets.splice(${bi},1); markDirty(); renderEditor()"><i class="fa-solid fa-trash"></i></button>
+        <input type="text" class="field-input" value="${esc(typeof c === 'string' ? c : c.text || '')}" placeholder="Contribution description..." oninput="updateExperienceContrib(${i}, ${ci}, this.value)">
+        <button class="btn-icon-action danger" onclick="removeExperienceContrib(${i}, ${ci})"><i class="fa-solid fa-trash"></i></button>
       </div>`).join('');
 
     return `
     <div class="list-item">
       <div class="list-item-header" onclick="toggleListItem('exp-${i}')">
-        <i class="${esc(exp.icon)}" style="color:var(--accent);width:16px;text-align:center;"></i>
-        <span class="list-item-title">${esc(exp.title)} — ${esc(exp.company)}</span>
-        <span class="list-item-meta">${esc(exp.type || 'Role')}</span>
+        <i class="fa-solid fa-brain" style="color:var(--accent);width:16px;text-align:center;"></i>
+        <span class="list-item-title">${esc(exp.title || 'Role')} — ${esc(exp.company || 'Company')}</span>
+        <span class="list-item-meta">${esc(exp.type || 'Freelance')} · ${esc(exp.date || 'Present')}</span>
         <div class="list-item-actions">
           <button class="btn-icon-action" onclick="event.stopPropagation(); moveItem('experience', ${i}, -1)" title="Move Up"><i class="fa-solid fa-chevron-up"></i></button>
           <button class="btn-icon-action" onclick="event.stopPropagation(); moveItem('experience', ${i}, 1)" title="Move Down"><i class="fa-solid fa-chevron-down"></i></button>
@@ -708,26 +728,42 @@ function renderExperienceSection() {
       </div>
       <div class="list-item-body" id="exp-${i}">
         <div class="field-row triple">
-          ${field('Role Title', `<input type="text" class="field-input" value="${esc(exp.title)}" placeholder="AI Trainer" oninput="DATA.experience[${i}].title=this.value; markDirty()">`)}
-          ${field('Company / Org', `<input type="text" class="field-input" value="${esc(exp.company)}" placeholder="Outlier" oninput="DATA.experience[${i}].company=this.value; markDirty()">`)}
-          ${field('Type Badge', `<input type="text" class="field-input" value="${esc(exp.type)}" placeholder="FREELANCE / SIMULATION" oninput="DATA.experience[${i}].type=this.value; markDirty()">`)}
-        </div>
-        <div class="field-row triple">
-          ${field('Timeline Node Icon', `<input type="text" class="field-input" value="${esc(exp.icon)}" placeholder="fa-solid fa-brain" oninput="DATA.experience[${i}].icon=this.value; markDirty()">`)}
-          ${field('Impact Icon', `<input type="text" class="field-input" value="${esc(exp.impactIcon||'fa-solid fa-bolt')}" placeholder="fa-solid fa-bolt" oninput="DATA.experience[${i}].impactIcon=this.value; markDirty()">`)}
-          ${field('Timeline Node Style', `
-            <select class="field-select" onchange="DATA.experience[${i}].darkNode=(this.value==='dark'); markDirty()">
-              <option value="light"${!exp.darkNode ? ' selected' : ''}>Light Node Circle</option>
-              <option value="dark"${exp.darkNode ? ' selected' : ''}>Dark / Solid Node Circle</option>
+          ${field('Role Title', `<input type="text" class="field-input" value="${esc(exp.title || '')}" placeholder="AI Trainer & LLM Evaluator" oninput="DATA.experience[${i}].title=this.value; markDirty()">`)}
+          ${field('Company / Lab', `<input type="text" class="field-input" value="${esc(exp.company || '')}" placeholder="Outlier AI" oninput="DATA.experience[${i}].company=this.value; markDirty()">`)}
+          ${field('Category (Filter)', `
+            <select class="field-input" onchange="DATA.experience[${i}].type=this.value; markDirty()">
+              <option value="Freelance" ${/freelance/i.test(exp.type || '') ? 'selected' : ''}>Freelance</option>
+              <option value="Internship" ${/intern/i.test(exp.type || '') ? 'selected' : ''}>Internship</option>
+              <option value="Part-Time" ${/part/i.test(exp.type || '') ? 'selected' : ''}>Part-Time</option>
             </select>
           `)}
         </div>
-        <div class="field-row single">
-          ${field('Impact Summary Statement', `<textarea class="field-textarea" rows="2" placeholder="Impact statement shown in callout banner..." oninput="DATA.experience[${i}].impact=this.value; markDirty()">${esc(exp.impact)}</textarea>`)}
+        <div class="field-row triple">
+          ${field('Date / Duration', `<input type="text" class="field-input" value="${esc(exp.date || '')}" placeholder="Jan 2024 – Present" oninput="DATA.experience[${i}].date=this.value; markDirty()">`)}
+          ${field('Icon Name (Lucide)', `<input type="text" class="field-input" value="${esc(exp.icon || 'brain')}" placeholder="brain, cpu, sparkles, bot" oninput="DATA.experience[${i}].icon=this.value; markDirty()">`)}
+          ${field('Visual 3D Graphic', `
+            <select class="field-input" onchange="DATA.experience[${i}].visual=this.value; markDirty()">
+              <option value="ai-stack" ${exp.visual !== 'model-visual' ? 'selected' : ''}>AI Layer Stack</option>
+              <option value="model-visual" ${exp.visual === 'model-visual' ? 'selected' : ''}>ML Model Platform</option>
+            </select>
+          `)}
         </div>
-        <div class="field-label" style="margin-bottom:8px;">KEY CONTRIBUTIONS &amp; MILESTONES <span style="font-size:10px;font-weight:400;color:var(--text-muted);">(HTML allowed: &lt;strong&gt;, &lt;span class="highlight-number"&gt;)</span></div>
-        <div class="array-list">${bullets}</div>
-        <button class="add-item-btn" onclick="DATA.experience[${i}].bullets.push('Analyzed key milestones...'); markDirty(); renderEditor()"><i class="fa-solid fa-plus"></i> Add Milestone</button>
+        <div class="field-row">
+          <div style="display:flex; align-items:center; gap:8px; margin:4px 0 12px;">
+            <input type="checkbox" id="exp-curr-${i}" ${exp.current || /present/i.test(exp.date || '') ? 'checked' : ''} onchange="DATA.experience[${i}].current=this.checked; markDirty()">
+            <label for="exp-curr-${i}" style="font-size:13px; font-weight:600; cursor:pointer; color:var(--text-main);">Show "Current" Badge</label>
+          </div>
+        </div>
+        
+        <div class="field-divider"></div>
+        <div class="field-label" style="margin-bottom:8px;">KEY METRICS &amp; STATS (3 Horizontal Cards)</div>
+        <div class="array-list">${metricsHtml}</div>
+        <button class="add-item-btn" onclick="addExperienceMetric(${i})"><i class="fa-solid fa-plus"></i> Add Metric</button>
+
+        <div class="field-divider"></div>
+        <div class="field-label" style="margin-bottom:8px;">KEY CONTRIBUTIONS &amp; BULLETS</div>
+        <div class="array-list">${contribs}</div>
+        <button class="add-item-btn" onclick="addExperienceContrib(${i})"><i class="fa-solid fa-plus"></i> Add Contribution</button>
       </div>
     </div>`;
   }).join('');
@@ -738,9 +774,87 @@ function renderExperienceSection() {
     'roles · internships · research milestones',
     `${exps.length} Entries`,
     `<div class="list-items">${html}</div>
-    <button class="add-item-btn" onclick="DATA.experience.push({title:'Software Engineer',company:'Company Name',type:'FREELANCE',icon:'fa-solid fa-brain',darkNode:false,bullets:['Analyzed system performance...'],impact:'Improved system performance by 30%.',impactIcon:'fa-solid fa-bolt'}); markDirty(); renderEditor()"><i class="fa-solid fa-plus"></i> Add Experience Entry</button>`
+    <button class="add-item-btn" onclick="addExperienceEntry()"><i class="fa-solid fa-plus"></i> Add Experience Entry</button>`
   );
 }
+
+window.updateExperienceMetric = function(expIdx, metricIdx, key, value) {
+  DATA.experience[expIdx].metrics = DATA.experience[expIdx].metrics || [];
+  if (!DATA.experience[expIdx].metrics[metricIdx]) {
+    DATA.experience[expIdx].metrics[metricIdx] = { val: '', lbl: '', icon: 'chart-no-axes-combined' };
+  }
+  DATA.experience[expIdx].metrics[metricIdx][key] = value;
+  markDirty();
+};
+
+window.addExperienceMetric = function(expIdx) {
+  DATA.experience[expIdx].metrics = DATA.experience[expIdx].metrics || [];
+  DATA.experience[expIdx].metrics.push({ val: '100+', lbl: 'New Metric', icon: 'chart-no-axes-combined' });
+  markDirty();
+  renderEditor();
+};
+
+window.removeExperienceMetric = function(expIdx, metricIdx) {
+  if (DATA.experience[expIdx].metrics) {
+    DATA.experience[expIdx].metrics.splice(metricIdx, 1);
+    markDirty();
+    renderEditor();
+  }
+};
+
+window.updateExperienceContrib = function(expIdx, contribIdx, value) {
+  if (!DATA.experience[expIdx].contributions) {
+    DATA.experience[expIdx].contributions = DATA.experience[expIdx].bullets || [];
+  }
+  DATA.experience[expIdx].contributions[contribIdx] = value;
+  DATA.experience[expIdx].bullets = DATA.experience[expIdx].contributions;
+  markDirty();
+};
+
+window.addExperienceContrib = function(expIdx) {
+  if (!DATA.experience[expIdx].contributions) {
+    DATA.experience[expIdx].contributions = DATA.experience[expIdx].bullets || [];
+  }
+  DATA.experience[expIdx].contributions.push('New key milestone achieved...');
+  DATA.experience[expIdx].bullets = DATA.experience[expIdx].contributions;
+  markDirty();
+  renderEditor();
+};
+
+window.removeExperienceContrib = function(expIdx, contribIdx) {
+  if (!DATA.experience[expIdx].contributions) {
+    DATA.experience[expIdx].contributions = DATA.experience[expIdx].bullets || [];
+  }
+  DATA.experience[expIdx].contributions.splice(contribIdx, 1);
+  DATA.experience[expIdx].bullets = DATA.experience[expIdx].contributions;
+  markDirty();
+  renderEditor();
+};
+
+window.addExperienceEntry = function() {
+  DATA.experience = DATA.experience || [];
+  DATA.experience.push({
+    title: 'AI / ML Engineer',
+    company: 'Company / Lab Name',
+    type: 'Freelance',
+    date: '2024 – Present',
+    current: true,
+    icon: 'brain',
+    jobIcon: 'brain-circuit',
+    metrics: [
+      { val: '1.2K+', lbl: 'Models Evaluated', icon: 'chart-no-axes-combined' },
+      { val: '95%', lbl: 'Accuracy Score', icon: 'target' },
+      { val: '10+', lbl: 'Pipelines Built', icon: 'rocket' }
+    ],
+    contributions: [
+      'Developed deep learning architectures and optimized training performance',
+      'Engineered scalable data processing and evaluation workflows'
+    ],
+    visual: 'ai-stack'
+  });
+  markDirty();
+  renderEditor();
+};
 
 /* ---- PROJECTS ---- */
 function renderProjectsSection() {

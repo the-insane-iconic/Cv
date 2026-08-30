@@ -43,7 +43,8 @@
             if (fileData.projects && (!dbData.projects || dbData.projects.length < fileData.projects.length || !dbData.projects[0]?.type)) {
               dbData.projects = fileData.projects;
             }
-            if (fileData.experience && (!dbData.experience || dbData.experience.length !== fileData.experience.length)) {
+            const hasOldCyber = dbData.experience && dbData.experience.some(e => /cybersecurity/i.test(e.title || '') || /deloitte/i.test(e.company || ''));
+            if (fileData.experience && (!dbData.experience || dbData.experience.length !== fileData.experience.length || hasOldCyber)) {
               dbData.experience = fileData.experience;
             }
             if (fileData.identity) {
@@ -51,6 +52,9 @@
             }
             if (fileData.about) {
               dbData.about = fileData.about;
+            }
+            if (fileData.skills && fileData.skills.some(s => /ai/i.test(s.category || '')) && !dbData.skills?.some(s => /ai/i.test(s.category || ''))) {
+              dbData.skills = fileData.skills;
             }
             if (fileData.certificates) {
               dbData.certificates = fileData.certificates;
@@ -76,8 +80,12 @@
       if (fileData.projects && (!localData.projects || localData.projects.length < fileData.projects.length || !localData.projects[0]?.type)) {
         merged.projects = fileData.projects;
       }
-      if (fileData.experience && (!localData.experience || localData.experience.length !== fileData.experience.length)) {
+      const hasOldCyber = localData.experience && localData.experience.some(e => /cybersecurity/i.test(e.title || '') || /deloitte/i.test(e.company || ''));
+      if (fileData.experience && (!localData.experience || localData.experience.length !== fileData.experience.length || hasOldCyber)) {
         merged.experience = fileData.experience;
+      }
+      if (fileData.skills && fileData.skills.some(s => /ai/i.test(s.category || '')) && !localData.skills?.some(s => /ai/i.test(s.category || ''))) {
+        merged.skills = fileData.skills;
       }
       if (fileData.identity) {
         merged.identity = { ...(localData.identity || {}), ...fileData.identity };
@@ -306,10 +314,10 @@
 
     // Vibrant gradient + icon cards
     const CARD_THEMES = [
-      { gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', icon: 'fa-solid fa-shield-halved', label: 'Cybersecurity' },
-      { gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)', icon: 'fa-solid fa-brain', label: 'AI & ML' },
+      { gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', icon: 'fa-solid fa-brain', label: 'AI & LLMs' },
+      { gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)', icon: 'fa-solid fa-microchip', label: 'Deep Learning' },
       { gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)', icon: 'fa-solid fa-code', label: 'Full-Stack Dev' },
-      { gradient: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)', icon: 'fa-solid fa-database', label: 'Systems' },
+      { gradient: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)', icon: 'fa-solid fa-database', label: 'RAG & Data' },
       { gradient: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)', icon: 'fa-solid fa-rocket', label: 'Innovation' },
     ];
 
@@ -493,20 +501,166 @@
     const sec = document.getElementById('experience');
     if (!sec) return;
 
-    toggleSectionVisibility('experience', d.sectionVisibility?.experience !== false);
+    const exps = d.experience || [];
+    toggleSectionVisibility('experience', d.sectionVisibility?.experience !== false && exps.length > 0);
 
+    const timeline = sec.querySelector('.experience-timeline');
+    if (!timeline) return;
+
+    const defaultNodeIcons = ['brain', 'cpu', 'sparkles', 'bot', 'layers', 'network'];
+
+    function cleanLucideIcon(ic) {
+      if (!ic) return 'brain';
+      return String(ic)
+        .replace(/^fa-(solid|brands|regular)\s+fa-/, '')
+        .replace(/^fa-/, '')
+        .replace(/^lucide-/, '')
+        .trim();
+    }
+
+    const itemsHtml = exps.map((exp, index) => {
+      const type = (exp.type || 'Freelance').toLowerCase().trim();
+      const nodeIcon = cleanLucideIcon(exp.icon || defaultNodeIcons[index % defaultNodeIcons.length]);
+      const jobIcon = cleanLucideIcon(exp.jobIcon || exp.icon || 'brain-circuit');
+      const isCurrent = exp.current === true || exp.isCurrent === true || (exp.date && /present/i.test(exp.date));
+
+      // Metrics normalization
+      let metricsList = [];
+      if (Array.isArray(exp.metrics) && exp.metrics.length > 0) {
+        metricsList = exp.metrics.map((m, mIdx) => {
+          if (typeof m === 'object' && m !== null) {
+            return {
+              num: m.val || m.number || m.num || m.value || '100+',
+              lbl: m.lbl || m.label || 'Metric',
+              icon: cleanLucideIcon(m.icon || (mIdx === 0 ? 'chart-no-axes-combined' : mIdx === 1 ? 'database' : 'badge-check'))
+            };
+          }
+          return { num: String(m), lbl: '', icon: 'activity' };
+        });
+      } else if (Array.isArray(exp.bullets)) {
+        metricsList = exp.bullets.slice(0, 3).map((b, bIdx) => {
+          const numMatch = String(b).match(/class=["']highlight-number["']>([^<]+)</i) || String(b).match(/(\d+[\d\.,\+kK%]*)/);
+          const num = numMatch ? numMatch[1] : (bIdx === 0 ? '1.2K+' : bIdx === 1 ? '1K+' : '300+');
+          const cleanText = String(b).replace(/<[^>]*>/g, '').trim();
+          const lbl = cleanText.length > 24 ? cleanText.substring(0, 22) + '...' : cleanText;
+          return {
+            num: num,
+            lbl: lbl,
+            icon: bIdx === 0 ? 'chart-no-axes-combined' : bIdx === 1 ? 'database' : 'badge-check'
+          };
+        });
+      }
+
+      const metricsHtml = metricsList.length > 0 ? `
+        <div class="metrics">
+          ${metricsList.map(m => `
+            <div class="metric">
+              <div class="metric-icon">
+                <i data-lucide="${esc(m.icon)}"></i>
+              </div>
+              <div>
+                <strong class="metric-number">${esc(m.num)}</strong>
+                <span class="metric-label">${esc(m.lbl)}</span>
+              </div>
+            </div>
+          `).join('')}
+        </div>` : '';
+
+      // Contributions / bullets normalization
+      let contribsList = [];
+      if (Array.isArray(exp.contributions) && exp.contributions.length > 0) {
+        contribsList = exp.contributions.map(c => (typeof c === 'string' ? c : c.text || ''));
+      } else if (Array.isArray(exp.bullets) && exp.bullets.length > 0) {
+        contribsList = exp.bullets.map(b => String(b).replace(/<[^>]*>/g, ''));
+      }
+
+      const contribsHtml = contribsList.length > 0 ? `
+        <div class="contributions">
+          ${contribsList.map(c => `
+            <div class="contribution">
+              <i data-lucide="check"></i>
+              <span>${esc(c)}</span>
+            </div>
+          `).join('')}
+        </div>` : '';
+
+      // 3D Visual graphics
+      const visualType = exp.visual || (index % 2 === 0 ? 'ai-stack' : 'model-visual');
+      let visualHtml = '';
+      if (visualType === 'model-visual') {
+        visualHtml = `
+          <div class="experience-visual">
+            <div class="visual-orbit"></div>
+            <div class="visual-orbit visual-orbit-2"></div>
+            <div class="model-platform-visual">
+              <div class="model-cube">
+                <div class="cube-face cube-front"><i data-lucide="cpu"></i></div>
+                <div class="cube-face cube-top"><span>ML</span></div>
+                <div class="cube-face cube-back"></div>
+              </div>
+            </div>
+          </div>`;
+      } else {
+        visualHtml = `
+          <div class="experience-visual">
+            <div class="visual-orbit"></div>
+            <div class="visual-orbit visual-orbit-2"></div>
+            <div class="ai-stack">
+              <div class="ai-layer"></div>
+              <div class="ai-layer"></div>
+              <div class="ai-layer"></div>
+              <div class="ai-core">
+                <span>AI</span>
+              </div>
+            </div>
+          </div>`;
+      }
+
+      return `
+        <article class="experience-item" data-type="${esc(type)}">
+          <div class="timeline-node">
+            <i data-lucide="${esc(nodeIcon)}"></i>
+          </div>
+          <div class="experience-card">
+            <div class="experience-main">
+              <div class="job-header">
+                <div class="job-icon">
+                  <i data-lucide="${esc(jobIcon)}"></i>
+                </div>
+                <div class="job-info">
+                  <h3 class="job-title">${esc(exp.title || 'Role')}</h3>
+                  <div class="job-meta">
+                    <span class="company">${esc(exp.company || '')}</span>
+                    <span class="separator">•</span>
+                    <span class="employment">${esc(exp.type || 'Freelance')}</span>
+                    ${exp.date ? `<span class="separator">•</span><span class="date">${esc(exp.date)}</span>` : ''}
+                  </div>
+                </div>
+              </div>
+              ${isCurrent ? '<div class="current-badge">Current</div>' : ''}
+              ${metricsHtml}
+              ${contribsHtml}
+            </div>
+            ${visualHtml}
+          </div>
+        </article>`;
+    }).join('');
+
+    timeline.innerHTML = `<div class="timeline-line" aria-hidden="true"></div>` + itemsHtml;
+
+    // Filter clicks
     const filterButtons = sec.querySelectorAll('.experience-filters .filter-btn');
     const experienceItems = sec.querySelectorAll('.experience-item');
 
     filterButtons.forEach(button => {
       button.onclick = () => {
-        const filter = button.dataset.filter;
+        const filter = (button.dataset.filter || 'all').toLowerCase();
         filterButtons.forEach(btn => btn.classList.remove('active'));
         button.classList.add('active');
 
         experienceItems.forEach(item => {
-          const type = item.dataset.type;
-          if (filter === 'all' || type === filter) {
+          const type = (item.dataset.type || '').toLowerCase();
+          if (filter === 'all' || type === filter || (filter === 'freelance' && type.includes('freelance')) || (filter === 'internship' && type.includes('intern')) || (filter === 'part-time' && (type.includes('part') || type.includes('contract')))) {
             item.classList.remove('hidden');
           } else {
             item.classList.add('hidden');
@@ -686,7 +840,7 @@
       const delay = (i % 12) * 0.05;
       const featured = cert.featured ? ' featured' : '';
       return `
-      <div class="cert-card fade-up${featured}" style="animation-delay:${delay}s;" data-cert-url="${esc(cert.url || '')}">
+      <div class="cert-card fade-up${featured}" style="animation-delay:${delay}s;" data-cert-url="${esc(cert.url || '')}" data-cert-title="${esc(cert.title)}" data-cert-issuer="${esc(cert.issuer)}" data-cert-category="${esc(cert.category)}" data-cert-icon="${esc(cert.icon)}">
         <div class="cert-header">
           <div class="cert-icon-lg"><i class="${esc(cert.icon)}"></i></div>
           <span class="cert-category" data-cat="${esc(cert.category)}">${esc(cert.category)}</span>
@@ -700,6 +854,135 @@
         </div>
       </div>`;
     }).join('');
+  }
+
+  function renderResume(d) {
+    const resumeEl = document.getElementById('resume-document');
+    if (!resumeEl) return;
+
+    const id = d.identity || {};
+    const socials = d.socials || {};
+    const contact = d.contact || {};
+    const skills = d.skills || [];
+    const exps = d.experience || [];
+    const projs = d.projects || [];
+    const certs = d.certificates || [];
+
+    const name = id.name || 'Ansh Yadav';
+    const roles = Array.isArray(id.roles) ? id.roles.join(' • ') : (id.roles || 'AI/ML Engineer & Full-Stack Developer');
+    const email = socials.email || 'anupamyadav6477@gmail.com';
+    const phone = contact.phone || '+91 8707726019';
+    const linkedin = socials.linkedin || 'https://www.linkedin.com/in/ansh-ydv';
+    const github = socials.github || 'https://github.com/the-insane-iconic';
+    const leetcode = socials.leetcode || 'https://leetcode.com/u/ZSiFPFw1Gd/';
+
+    // Skills breakdown
+    const skillsHtml = skills.map(cat => {
+      const names = (cat.items || []).map(it => it.name).join(', ');
+      return `<div class="resume-skill-row">
+        <strong class="resume-skill-cat">${esc(cat.category)}:</strong>
+        <span class="resume-skill-list">${esc(names)}</span>
+      </div>`;
+    }).join('');
+
+    // Experience breakdown
+    const expHtml = exps.map(exp => {
+      const contribs = (exp.contributions || exp.bullets || []).map(c => {
+        const clean = typeof c === 'string' ? c.replace(/<[^>]*>/g, '') : (c.text || '');
+        return `<li>${esc(clean)}</li>`;
+      }).join('');
+
+      return `
+      <div class="resume-item">
+        <div class="resume-item-header">
+          <div>
+            <strong class="resume-item-title">${esc(exp.title || 'Role')}</strong>
+            <span class="resume-item-company"> — ${esc(exp.company || '')}</span>
+          </div>
+          <span class="resume-item-date">${esc(exp.date || exp.type || '')}</span>
+        </div>
+        ${contribs ? `<ul class="resume-item-bullets">${contribs}</ul>` : ''}
+      </div>`;
+    }).join('');
+
+    // Projects breakdown
+    const projHtml = projs.slice(0, 3).map(p => {
+      const tech = Array.isArray(p.tech) ? p.tech.join(', ') : '';
+      return `
+      <div class="resume-item">
+        <div class="resume-item-header">
+          <div>
+            <strong class="resume-item-title">${esc(p.title)}</strong>
+            ${tech ? `<span class="resume-item-tech"> [${esc(tech)}]</span>` : ''}
+          </div>
+          ${p.typeLabel ? `<span class="resume-item-date">${esc(p.typeLabel)}</span>` : ''}
+        </div>
+        <p class="resume-item-desc">${esc(p.description)}</p>
+      </div>`;
+    }).join('');
+
+    // Certifications breakdown
+    const certHtml = certs.slice(0, 6).map(c => 
+      `<div class="resume-cert-item"><strong>${esc(c.title)}</strong> <span class="resume-cert-issuer">(${esc(c.issuer)})</span></div>`
+    ).join('');
+
+    resumeEl.innerHTML = `
+      <header class="resume-header">
+        <h1 class="resume-name">${esc(name)}</h1>
+        <div class="resume-headline">${esc(roles)}</div>
+        <div class="resume-contacts">
+          <a href="mailto:${esc(email)}"><i class="fa-regular fa-envelope"></i> ${esc(email)}</a>
+          <span>•</span>
+          <a href="tel:${esc(phone.replace(/\s/g, ''))}"><i class="fa-solid fa-phone"></i> ${esc(phone)}</a>
+          <span>•</span>
+          <a href="${esc(linkedin)}" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-linkedin"></i> LinkedIn</a>
+          <span>•</span>
+          <a href="${esc(github)}" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-github"></i> GitHub</a>
+          <span>•</span>
+          <a href="${esc(leetcode)}" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-code"></i> LeetCode</a>
+        </div>
+      </header>
+
+      <section class="resume-section">
+        <h2 class="resume-section-title">Professional Summary</h2>
+        <div class="resume-divider"></div>
+        <p class="resume-summary-p">
+          Passionate AI/ML and Computer Science Engineer specializing in Large Language Models (LLMs), deep learning, computer vision, and scalable intelligent web systems. Proven experience designing RAG architectures, model fine-tuning, latency optimization, and robust full-stack software development.
+        </p>
+      </section>
+
+      <section class="resume-section">
+        <h2 class="resume-section-title">Technical Expertise</h2>
+        <div class="resume-divider"></div>
+        <div class="resume-skills-grid">
+          ${skillsHtml}
+        </div>
+      </section>
+
+      <section class="resume-section">
+        <h2 class="resume-section-title">Professional Experience</h2>
+        <div class="resume-divider"></div>
+        <div class="resume-experience-list">
+          ${expHtml}
+        </div>
+      </section>
+
+      <section class="resume-section">
+        <h2 class="resume-section-title">Featured Projects</h2>
+        <div class="resume-divider"></div>
+        <div class="resume-projects-list">
+          ${projHtml}
+        </div>
+      </section>
+
+      <section class="resume-section">
+        <h2 class="resume-section-title">Certifications &amp; Achievements</h2>
+        <div class="resume-divider"></div>
+        <div class="resume-certs-grid">
+          ${certHtml}
+        </div>
+      </section>
+    `;
   }
 
   function renderContact(d) {
@@ -765,7 +1048,7 @@
       if (socials.leetcode) {
         leetcodeCard.href = socials.leetcode;
         const clean = socials.leetcode.replace(/^https?:\/\/(www\.)?leetcode\.com\/u\//, '').replace(/\/$/, '');
-        if (leetcodeVal) leetcodeVal.textContent = clean || 'LeetCode';
+        if (leetcodeVal) leetcodeVal.textContent = clean ? `u/${clean}` : 'LeetCode';
         leetcodeCard.style.display = '';
       } else {
         leetcodeCard.style.display = 'none';
@@ -825,6 +1108,7 @@
     renderProjects(data);
     renderStats(data);
     renderCertificates(data);
+    renderResume(data);
     renderContact(data);
     renderFooter(data);
 

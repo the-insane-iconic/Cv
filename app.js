@@ -14,33 +14,35 @@ window.initApp = function () {
   /* ---------- Lenis Ultra-Smooth Inertia Engine ---------- */
   let lenisInstance = window.lenis;
   if (typeof Lenis !== 'undefined') {
-    if (!lenisInstance) {
-      lenisInstance = new Lenis({
-        duration: 1.2,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-        orientation: 'vertical',
-        gestureOrientation: 'vertical',
-        smoothWheel: true,
-        wheelMultiplier: 0.95,
-        touchMultiplier: 1.5,
-        infinite: false,
-      });
-      window.lenis = lenisInstance;
+    if (lenisInstance && typeof lenisInstance.destroy === 'function') {
+      lenisInstance.destroy();
+    }
+    lenisInstance = new Lenis({
+      lerp: 0.085,
+      duration: 1.1,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: 'vertical',
+      gestureOrientation: 'vertical',
+      smoothWheel: true,
+      wheelMultiplier: 0.95,
+      touchMultiplier: 1.05,
+      infinite: false,
+    });
+    window.lenis = lenisInstance;
 
-      function raf(time) {
-        lenisInstance.raf(time);
-        requestAnimationFrame(raf);
-      }
+    function raf(time) {
+      lenisInstance.raf(time);
       requestAnimationFrame(raf);
     }
+    requestAnimationFrame(raf);
   }
 
   /* ---------- Navbar Scroll ---------- */
   const navbar = document.getElementById('navbar');
   const sections = document.querySelectorAll('section[id]');
 
-  function handleScroll() {
-    const scrollY = window.scrollY;
+  function handleScroll(e) {
+    const scrollY = (typeof e === 'object' && e && e.scroll !== undefined) ? e.scroll : window.scrollY;
 
     // Navbar background
     if (scrollY > 40) {
@@ -67,11 +69,12 @@ window.initApp = function () {
 
   if (lenisInstance) {
     lenisInstance.on('scroll', handleScroll);
+  } else {
+    window.addEventListener('scroll', handleScroll, { passive: true });
   }
-  window.addEventListener('scroll', handleScroll, { passive: true });
   handleScroll();
 
-  /* ---------- Theme Toggle (Dark / Light) ---------- */
+  /* ---------- Circular Ripple Theme Toggle (View Transitions API) ---------- */
   const themeBtn = document.getElementById('nav-theme-btn');
   const savedTheme = localStorage.getItem('portfolio_theme') || 'light';
   if (savedTheme === 'dark') {
@@ -82,12 +85,67 @@ window.initApp = function () {
     document.documentElement.setAttribute('data-theme', 'light');
   }
 
+  // Pre-decode opposite theme image into browser memory immediately
+  try {
+    const lightImg = new Image();
+    lightImg.src = 'https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/light%20gate.png';
+    const darkImg = new Image();
+    darkImg.src = 'https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/darkgate.png';
+  } catch (e) {}
+
   if (themeBtn) {
-    themeBtn.addEventListener('click', () => {
-      const isDark = document.body.classList.toggle('dark-mode');
-      document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
-      localStorage.setItem('portfolio_theme', isDark ? 'dark' : 'light');
-      themeBtn.innerHTML = isDark ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>';
+    themeBtn.addEventListener('click', (e) => {
+      const isDark = document.body.classList.contains('dark-mode');
+      const nextIsDark = !isDark;
+
+      const applyTheme = () => {
+        if (nextIsDark) {
+          document.body.classList.add('dark-mode');
+          document.documentElement.setAttribute('data-theme', 'dark');
+          localStorage.setItem('portfolio_theme', 'dark');
+          themeBtn.innerHTML = '<i class="fa-solid fa-sun"></i>';
+        } else {
+          document.body.classList.remove('dark-mode');
+          document.documentElement.setAttribute('data-theme', 'light');
+          localStorage.setItem('portfolio_theme', 'light');
+          themeBtn.innerHTML = '<i class="fa-solid fa-moon"></i>';
+        }
+      };
+
+      // Circular ripple reveal originating from the theme button
+      if (document.startViewTransition && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const rect = themeBtn.getBoundingClientRect();
+        const x = e.clientX || (rect.left + rect.width / 2);
+        const y = e.clientY || (rect.top + rect.height / 2);
+
+        const endRadius = Math.hypot(
+          Math.max(x, window.innerWidth - x),
+          Math.max(y, window.innerHeight - y)
+        );
+
+        const transition = document.startViewTransition(() => {
+          applyTheme();
+        });
+
+        transition.ready.then(() => {
+          const clipPath = [
+            `circle(0px at ${x}px ${y}px)`,
+            `circle(${endRadius}px at ${x}px ${y}px)`
+          ];
+          document.documentElement.animate(
+            {
+              clipPath: clipPath
+            },
+            {
+              duration: 550,
+              easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
+              pseudoElement: '::view-transition-new(root)'
+            }
+          );
+        });
+      } else {
+        applyTheme();
+      }
     });
   }
 
@@ -319,22 +377,20 @@ window.initApp = function () {
   /* ---------- Hero Parallax on Scroll ---------- */
   const heroBgArt = document.querySelector('.hero-bg-art');
   if (heroBgArt) {
-    let ticking = false;
-    window.addEventListener('scroll', () => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          const scrollY = window.scrollY;
-          const heroH = window.innerHeight;
-          if (scrollY < heroH) {
-            const progress = scrollY / heroH;
-            heroBgArt.style.transform = `translateY(${progress * 40}px)`;
-            heroBgArt.style.opacity = 1 - progress * 0.5;
-          }
-          ticking = false;
-        });
-        ticking = true;
+    const handleParallax = (e) => {
+      const scrollY = (typeof e === 'object' && e && e.scroll !== undefined) ? e.scroll : window.scrollY;
+      const heroH = window.innerHeight;
+      if (scrollY < heroH) {
+        const progress = scrollY / heroH;
+        heroBgArt.style.transform = `translate3d(0, ${(progress * 35).toFixed(1)}px, 0)`;
+        heroBgArt.style.opacity = (1 - progress * 0.45).toFixed(3);
       }
-    }, { passive: true });
+    };
+    if (lenisInstance) {
+      lenisInstance.on('scroll', handleParallax);
+    } else {
+      window.addEventListener('scroll', handleParallax, { passive: true });
+    }
   }
 
   /* ---------- Stats Counter Animation ---------- */
@@ -417,48 +473,139 @@ window.initApp = function () {
     searchInput.addEventListener('input', applyFilters);
   }
 
-  /* ---------- Certificate Modal ---------- */
-  const modal = document.getElementById('cert-modal');
-  const modalClose = document.getElementById('modal-close');
-  const modalOverlay = modal ? modal.querySelector('.modal-overlay') : null;
-  const modalTitle = document.getElementById('modal-title');
-  const modalIssuer = document.getElementById('modal-issuer');
-  const modalIframe = document.getElementById('modal-iframe');
-  const modalLink = document.getElementById('modal-link');
-  const modalLoader = document.getElementById('modal-loader');
+  /* ---------- Certificate Modal (Preview Only, No Download) ---------- */
+  const certModal = document.getElementById('cert-modal');
+  const certModalClose = document.getElementById('modal-close');
+  const certModalOverlay = document.getElementById('cert-modal-overlay') || (certModal ? certModal.querySelector('.modal-overlay') : null);
+  const certModalTitle = document.getElementById('modal-title');
+  const certModalIssuerText = document.getElementById('modal-issuer-text');
+  const certModalCatBadge = document.getElementById('modal-cat-badge');
+  const certModalIframe = document.getElementById('modal-iframe');
+  const certModalLoader = document.getElementById('modal-loader');
+  const certPreviewTitle = document.getElementById('modal-preview-title');
+  const certPreviewIssuer = document.getElementById('modal-preview-issuer');
+  const certPreviewCategory = document.getElementById('modal-preview-category');
+  const certPreviewName = document.getElementById('modal-preview-name');
+  const certPreviewIcon = document.getElementById('modal-preview-icon');
 
-  document.querySelectorAll('.view-cert-btn').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      if (!modal) return;
-      const card = btn.closest('.cert-card');
-      const title = card.querySelector('.cert-content h3')?.textContent || '';
-      const issuer =
-        card.querySelector('.cert-issuer')?.textContent?.replace(/^.*?\s/, '') || '';
-      const url = card.getAttribute('data-cert-url') || '';
+  function openCertModal(card) {
+    if (!certModal || !card) return;
+    const title = card.getAttribute('data-cert-title') || card.querySelector('.cert-content h3')?.textContent || 'Certificate';
+    const issuer = card.getAttribute('data-cert-issuer') || card.querySelector('.cert-issuer')?.textContent?.replace(/^.*?\s/, '') || 'Issuing Organization';
+    const category = card.getAttribute('data-cert-category') || card.querySelector('.cert-category')?.textContent || 'Verified Credential';
+    const icon = card.getAttribute('data-cert-icon') || 'fa-solid fa-certificate';
+    const url = card.getAttribute('data-cert-url') || '';
+    const candidateName = window.PORTFOLIO_DATA?.identity?.name || 'Ansh Yadav';
 
-      if (modalTitle) modalTitle.textContent = title;
-      if (modalIssuer) modalIssuer.textContent = issuer;
-      if (modalLoader) modalLoader.style.display = 'flex';
-      if (modalIframe) modalIframe.src = url || '';
-      if (modalLink) modalLink.href = url || '#';
+    if (certModalTitle) certModalTitle.textContent = title;
+    if (certModalIssuerText) certModalIssuerText.textContent = issuer;
+    if (certModalCatBadge) certModalCatBadge.textContent = category;
+    if (certPreviewTitle) certPreviewTitle.textContent = title;
+    if (certPreviewIssuer) certPreviewIssuer.textContent = issuer;
+    if (certPreviewCategory) certPreviewCategory.textContent = category;
+    if (certPreviewName) certPreviewName.textContent = candidateName;
+    if (certPreviewIcon) certPreviewIcon.innerHTML = `<i class="${icon}"></i>`;
 
-      modal.classList.remove('hidden');
-      document.body.style.overflow = 'hidden';
+    if (url && (url.startsWith('http') || url.includes('.pdf') || url.includes('.jpg') || url.includes('.png'))) {
+      if (certModalIframe) {
+        certModalIframe.src = url;
+        certModalIframe.style.display = 'block';
+      }
+      if (certModalLoader) certModalLoader.style.display = 'flex';
+    } else {
+      if (certModalIframe) {
+        certModalIframe.src = '';
+        certModalIframe.style.display = 'none';
+      }
+      if (certModalLoader) certModalLoader.style.display = 'none';
+    }
+
+    certModal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeCertModal() {
+    if (!certModal) return;
+    certModal.classList.add('hidden');
+    document.body.style.overflow = '';
+    if (certModalIframe) certModalIframe.src = '';
+  }
+
+  // Bind click anywhere on certificate card
+  document.addEventListener('click', (e) => {
+    const certCard = e.target.closest('.cert-card');
+    if (certCard) {
+      e.preventDefault();
+      openCertModal(certCard);
+    }
+  });
+
+  if (certModalClose) certModalClose.addEventListener('click', closeCertModal);
+  if (certModalOverlay) certModalOverlay.addEventListener('click', closeCertModal);
+
+  /* ---------- Resume PDF Preview & 1-Click Print Modal ---------- */
+  const resumeModal = document.getElementById('resume-modal');
+  const resumeModalClose = document.getElementById('resume-modal-close');
+  const resumeModalOverlay = document.getElementById('resume-modal-overlay') || (resumeModal ? resumeModal.querySelector('.modal-overlay') : null);
+  const resumePrintBtn = document.getElementById('resume-print-btn');
+
+  function openResumeModal() {
+    if (!resumeModal) return;
+    resumeModal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeResumeModal() {
+    if (!resumeModal) return;
+    resumeModal.classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+
+  // Open resume on hero button & contact card
+  const heroResumeBtn = document.getElementById('btn-hero-resume');
+  if (heroResumeBtn) {
+    heroResumeBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      openResumeModal();
+    });
+  }
+
+  const contactResumeCard = document.getElementById('contact-card-resume');
+  if (contactResumeCard) {
+    contactResumeCard.addEventListener('click', (e) => {
+      e.preventDefault();
+      openResumeModal();
+    });
+  }
+
+  document.querySelectorAll('.btn-hero-resume, [data-action="open-resume"]').forEach((el) => {
+    el.addEventListener('click', (e) => {
+      e.preventDefault();
+      openResumeModal();
     });
   });
 
-  function closeModal() {
-    if (!modal) return;
-    modal.classList.add('hidden');
-    document.body.style.overflow = '';
-    if (modalIframe) modalIframe.src = '';
+  // 1-Click Download / Open PDF CV
+  if (resumePrintBtn) {
+    resumePrintBtn.addEventListener('click', () => {
+      const resumeUrl = window.PORTFOLIO_DATA?.identity?.resumeUrl || 'https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/Anupam%20Yadav%20CV.pdf';
+      if (resumeUrl && resumeUrl !== '#') {
+        window.open(resumeUrl, '_blank');
+      } else {
+        window.print();
+      }
+    });
   }
 
-  if (modalClose) modalClose.addEventListener('click', closeModal);
-  if (modalOverlay) modalOverlay.addEventListener('click', closeModal);
+  if (resumeModalClose) resumeModalClose.addEventListener('click', closeResumeModal);
+  if (resumeModalOverlay) resumeModalOverlay.addEventListener('click', closeResumeModal);
 
+  // Global escape key to close any active modal
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeModal();
+    if (e.key === 'Escape') {
+      closeCertModal();
+      closeResumeModal();
+    }
   });
 
   /* ---------- Subtle Canvas Grain / Dot Grid ---------- */

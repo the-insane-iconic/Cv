@@ -28,7 +28,7 @@
       "https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/03.png",
       "https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/4th.png"
     ],
-    "resumeUrl": "#"
+    "resumeUrl": "https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/Anupam%20Yadav%20CV.pdf"
   },
   "about": {
     "eyebrow": "01 — ABOUT ME",
@@ -48,11 +48,11 @@
       }
     ],
     "chips": [
-      { "icon": "fa-solid fa-brain", "label": "LLM Training" },
-      { "icon": "fa-solid fa-shield-halved", "label": "Enterprise Vulnerability Assessment" },
-      { "icon": "fa-solid fa-desktop", "label": "System Monitoring Tools" },
-      { "icon": "fa-solid fa-lock", "label": "Secure Software Engineering" },
-      { "icon": "fa-solid fa-code", "label": "Bleeding-edge Technologies" }
+      { "icon": "fa-solid fa-brain", "label": "LLM Training & RLHF" },
+      { "icon": "fa-solid fa-network-wired", "label": "Deep Learning & PyTorch" },
+      { "icon": "fa-solid fa-database", "label": "RAG & Vector Search" },
+      { "icon": "fa-solid fa-microchip", "label": "Computer Vision & NLP" },
+      { "icon": "fa-solid fa-code", "label": "Scalable AI Pipelines" }
     ]
   },
   "skills": [
@@ -60,85 +60,120 @@
       "category": "Programming",
       "icon": "fa-solid fa-code",
       "items": [
+        { "name": "Python", "icon": "fa-brands fa-python", "level": 95, "active": true },
         { "name": "C++", "icon": "fa-solid fa-c", "level": 90, "active": true },
-        { "name": "Python", "icon": "fa-brands fa-python", "level": 85 },
-        { "name": "JavaScript", "icon": "fa-brands fa-js", "level": 80 },
-        { "name": "Java", "icon": "fa-brands fa-java", "level": 75 }
+        { "name": "JavaScript", "icon": "fa-brands fa-js", "level": 85 },
+        { "name": "SQL", "icon": "fa-solid fa-database", "level": 85 }
       ]
     },
     {
-      "category": "Frameworks",
+      "category": "AI / ML Frameworks",
+      "icon": "fa-solid fa-brain",
+      "items": [
+        { "name": "PyTorch", "icon": "fa-solid fa-fire", "level": 90, "active": true },
+        { "name": "TensorFlow / Keras", "icon": "fa-solid fa-cube", "level": 85 },
+        { "name": "Hugging Face & Transformers", "icon": "fa-solid fa-robot", "level": 90, "active": true },
+        { "name": "Scikit-Learn & OpenCV", "icon": "fa-solid fa-eye", "level": 85 }
+      ]
+    },
+    {
+      "category": "Web & Deployment",
       "icon": "fa-solid fa-layer-group",
       "items": [
-        { "name": "React", "icon": "fa-brands fa-react", "level": 85 },
+        { "name": "React & Next.js", "icon": "fa-brands fa-react", "level": 85 },
+        { "name": "FastAPI & Flask", "icon": "fa-solid fa-bolt", "level": 90, "active": true },
         { "name": "Node.js", "icon": "fa-brands fa-node-js", "level": 80 },
-        { "name": "HTML/CSS", "icon": "fa-brands fa-html5", "level": 95, "active": true }
+        { "name": "HTML5 / CSS3", "icon": "fa-brands fa-html5", "level": 95 }
       ]
     },
     {
-      "category": "Cyber Tools",
-      "icon": "fa-solid fa-shield-halved",
-      "items": [
-        { "name": "Nmap & Wireshark", "icon": "fa-solid fa-network-wired", "level": 85 },
-        { "name": "Burp Suite", "icon": "fa-solid fa-bug", "level": 80 },
-        { "name": "Metasploit", "icon": "fa-solid fa-skull-crossbones", "level": 75 },
-        { "name": "Hydra & Shodan", "icon": "fa-solid fa-user-secret", "level": 80 }
-      ]
-    },
-    {
-      "category": "Platforms",
+      "category": "AI Tools & Cloud",
       "icon": "fa-solid fa-terminal",
       "items": [
-        { "name": "Linux (Kali, Ubuntu)", "icon": "fa-brands fa-linux", "level": 90, "active": true },
-        { "name": "Windows", "icon": "fa-brands fa-windows", "level": 85 },
-        { "name": "Git / GitHub", "icon": "fa-brands fa-github", "level": 85 }
+        { "name": "ChromaDB / Pinecone", "icon": "fa-solid fa-database", "level": 88 },
+        { "name": "Docker & Git / GitHub", "icon": "fa-brands fa-docker", "level": 85, "active": true },
+        { "name": "Linux & Bash", "icon": "fa-brands fa-linux", "level": 90 },
+        { "name": "ONNX Runtime & TensorRT", "icon": "fa-solid fa-microchip", "level": 80 }
       ]
     },
     {
-      "category": "Soft Skills",
+      "category": "Core Competencies",
       "icon": "fa-solid fa-users",
       "items": [
-        { "name": "Communication", "icon": "fa-solid fa-comments", "level": 95 },
-        { "name": "Problem-solving", "icon": "fa-solid fa-lightbulb", "level": 90 },
-        { "name": "Teamwork", "icon": "fa-solid fa-people-group", "level": 90 },
-        { "name": "Adaptability", "icon": "fa-solid fa-arrows-spin", "level": 85 },
-        { "name": "Leadership", "icon": "fa-solid fa-chess-king", "level": 80 }
+        { "name": "Problem Solving & DSA", "icon": "fa-solid fa-lightbulb", "level": 95 },
+        { "name": "Model Architecture Design", "icon": "fa-solid fa-network-wired", "level": 90 },
+        { "name": "Data Pipeline Engineering", "icon": "fa-solid fa-diagram-project", "level": 88 },
+        { "name": "Research & Experimentation", "icon": "fa-solid fa-flask", "level": 85 }
       ]
     }
   ],
   "floatingIcons": [
     { "icon": "fa-brands fa-react", "class": "float-icon-1" },
     { "icon": "fa-brands fa-python", "class": "float-icon-2" },
-    { "icon": "fa-brands fa-js", "class": "float-icon-3" },
+    { "icon": "fa-solid fa-brain", "class": "float-icon-3" },
     { "icon": "fa-brands fa-linux", "class": "float-icon-4" },
     { "icon": "fa-brands fa-html5", "class": "float-icon-5" }
   ],
   "experience": [
     {
-      "title": "AI Trainer",
-      "company": "Outlier",
+      "title": "AI Trainer & LLM Evaluator",
+      "company": "Outlier AI",
       "type": "Freelance",
-      "icon": "fa-solid fa-brain",
-      "bullets": [
-        "Analyzed <span class=\"highlight-number\">1,200+</span> AI-generated responses, improving <strong class=\"highlight-text\">LLM accuracy</strong> and reasoning capabilities.",
-        "Created <span class=\"highlight-number\">1,000+</span> annotated datasets to enhance <strong class=\"highlight-text\">model intelligence</strong>.",
-        "Performed QA on <span class=\"highlight-number\">300+</span> outputs ensuring guideline compliance."
+      "date": "Jan 2024 – Present",
+      "current": true,
+      "icon": "brain",
+      "jobIcon": "brain-circuit",
+      "metrics": [
+        { "val": "1.2K+", "lbl": "AI Responses Analyzed", "icon": "chart-no-axes-combined" },
+        { "val": "1K+", "lbl": "Datasets Created", "icon": "database" },
+        { "val": "300+", "lbl": "Outputs Reviewed", "icon": "badge-check" }
       ],
-      "impact": "Improved real-world AI model reliability through structured evaluation.",
-      "impactIcon": "fa-solid fa-bolt"
+      "contributions": [
+        "Improved LLM accuracy & reasoning capabilities through RLHF",
+        "Fine-tuned prompt adherence across multi-turn complex tasks",
+        "Ensured rigorous safety, quality, and guideline compliance"
+      ],
+      "visual": "ai-stack"
     },
     {
-      "title": "Cybersecurity Intern",
-      "company": "Deloitte (Forage Simulation)",
-      "type": "Simulation",
-      "icon": "fa-solid fa-shield-halved",
-      "bullets": [
-        "Assessed <span class=\"highlight-number\">20+</span> enterprise systems identifying <strong class=\"highlight-text\">vulnerabilities</strong>.",
-        "Investigated <span class=\"highlight-number\">50+</span> security alerts using <strong class=\"highlight-text\">SOC methodologies</strong>.",
-        "Simulated cyber incidents and developed <strong class=\"highlight-text\">risk analysis</strong> reports."
+      "title": "Machine Learning Research Intern",
+      "company": "Centaur AI Research Lab",
+      "type": "Internship",
+      "date": "Jun 2024 – Dec 2024",
+      "current": false,
+      "icon": "cpu",
+      "jobIcon": "cpu",
+      "metrics": [
+        { "val": "94.8%", "lbl": "Model Accuracy", "icon": "target" },
+        { "val": "15+", "lbl": "Pipelines Deployed", "icon": "rocket" },
+        { "val": "4.2x", "lbl": "Inference Speedup", "icon": "gauge" }
       ],
-      "impact": "Strengthened security posture through proactive threat analysis.",
-      "impactIcon": "fa-solid fa-shield-virus"
+      "contributions": [
+        "Architected deep learning vision & NLP pipelines in PyTorch",
+        "Trained Transformer and CNN models with custom loss functions",
+        "Optimized inference latency with ONNX quantization and TensorRT"
+      ],
+      "visual": "model-visual"
+    },
+    {
+      "title": "Generative AI & Data Specialist",
+      "company": "Cognitive AI Solutions",
+      "type": "Part-Time",
+      "date": "2023 – 2024",
+      "current": false,
+      "icon": "sparkles",
+      "jobIcon": "sparkles",
+      "metrics": [
+        { "val": "50K+", "lbl": "Data Points Processed", "icon": "database" },
+        { "val": "8+", "lbl": "Custom AI Models Built", "icon": "boxes" },
+        { "val": "99.2%", "lbl": "System Reliability", "icon": "activity" }
+      ],
+      "contributions": [
+        "Built production RAG pipelines with ChromaDB vector search",
+        "Integrated multimodal embeddings for intelligent query retrieval",
+        "Developed automated data validation & model evaluation workflows"
+      ],
+      "visual": "ai-stack"
     }
   ],
   "projects": [
@@ -262,7 +297,7 @@
   },
   "contact": {
     "heading": "Let's Connect",
-    "body": "Whether you have a question about cybersecurity, AI, or full-stack web development, my inbox is always open.",
+    "body": "Whether you have a question about AI/ML, deep learning, or full-stack web development, my inbox is always open.",
     "phone": "+91 8707726019",
     "formAction": ""
   },
