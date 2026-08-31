@@ -12,8 +12,8 @@ window.SUPABASE_CONFIG = {
 window.getSupabaseClient = function() {
   if (window.supabaseClient) return window.supabaseClient;
 
-  const url = window.SUPABASE_CONFIG.url;
-  const key = window.SUPABASE_CONFIG.anonKey;
+  const url = localStorage.getItem('supabase_url') || window.SUPABASE_CONFIG.url;
+  const key = localStorage.getItem('supabase_anon_key') || window.SUPABASE_CONFIG.anonKey;
 
   if (window.supabase && url && key) {
     try {

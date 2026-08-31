@@ -149,9 +149,13 @@ window.initApp = function () {
     });
   }
 
-  /* ---------- Profile Dropdown Menu & Admin Auth Popup ---------- */
-  const profileDropdown = document.getElementById('profile-dropdown-wrapper');
+  /* ---------- Profile Zoom Modal & Admin Auth Flow ---------- */
+  const profileDropdown = document.getElementById('profile-avatar-wrapper') || document.getElementById('profile-dropdown-wrapper');
   const profileBtn = document.getElementById('nav-profile-btn');
+  const profileZoomModal = document.getElementById('profile-zoom-modal');
+  const profileZoomClose = document.getElementById('profile-zoom-close');
+  const profileZoomOverlay = document.getElementById('profile-zoom-overlay');
+  const profileZoomAdminBtn = document.getElementById('profile-zoom-admin-btn');
   const openAdminBtn = document.getElementById('open-admin-auth-btn');
   const authModal = document.getElementById('admin-auth-modal');
   const authClose = document.getElementById('admin-auth-close');
@@ -161,7 +165,22 @@ window.initApp = function () {
   const authPassInput = document.getElementById('admin-auth-pass');
   const authError = document.getElementById('admin-auth-error');
 
+  function openProfileZoomModal() {
+    if (!profileZoomModal) return;
+    profileZoomModal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeProfileZoomModal() {
+    if (!profileZoomModal) return;
+    profileZoomModal.classList.add('hidden');
+    if (!authModal || authModal.classList.contains('hidden')) {
+      document.body.style.overflow = '';
+    }
+  }
+
   function openAdminAuthModal() {
+    closeProfileZoomModal();
     if (profileDropdown) profileDropdown.classList.remove('open');
 
     // If already authenticated in current session, jump straight to editor
@@ -188,16 +207,20 @@ window.initApp = function () {
     document.body.style.overflow = '';
   }
 
-  if (profileBtn && profileDropdown) {
+  if (profileBtn) {
     profileBtn.addEventListener('click', (e) => {
       e.stopPropagation();
-      profileDropdown.classList.toggle('open');
+      openProfileZoomModal();
     });
+  }
 
-    document.addEventListener('click', (e) => {
-      if (!profileDropdown.contains(e.target)) {
-        profileDropdown.classList.remove('open');
-      }
+  if (profileZoomClose) profileZoomClose.addEventListener('click', closeProfileZoomModal);
+  if (profileZoomOverlay) profileZoomOverlay.addEventListener('click', closeProfileZoomModal);
+
+  if (profileZoomAdminBtn) {
+    profileZoomAdminBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      openAdminAuthModal();
     });
   }
 
@@ -207,6 +230,14 @@ window.initApp = function () {
       openAdminAuthModal();
     });
   }
+
+  // Close modals on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeProfileZoomModal();
+      closeAdminAuthModal();
+    }
+  });
 
   if (authClose) authClose.addEventListener('click', closeAdminAuthModal);
   if (authOverlay) authOverlay.addEventListener('click', closeAdminAuthModal);

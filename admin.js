@@ -33,6 +33,28 @@ async function loadData() {
     console.warn('[File Fetch Warning]', e);
   }
 
+  function sanitizeLegacyData(target) {
+    if (!target || !fileData) return;
+    if (Array.isArray(target.skills)) {
+      const hasLegacyCyber = target.skills.some(c => 
+        (c.category && /cyber/i.test(c.category)) ||
+        (c.items && c.items.some(it => /nmap|wireshark|burp|metasploit|hydra/i.test(it.name)))
+      );
+      if (hasLegacyCyber && fileData.skills) {
+        target.skills = fileData.skills;
+      }
+    }
+    if (Array.isArray(target.stats)) {
+      const hasLegacyStats = target.stats.some(s => 
+        /hackerrank|ctf/i.test(s.label || '') ||
+        s.value === 110 || s.value === 200
+      );
+      if (hasLegacyStats && fileData.stats) {
+        target.stats = fileData.stats;
+      }
+    }
+  }
+
   let localData = null;
   const stored = localStorage.getItem(STORAGE_KEY);
   if (stored) {
@@ -50,33 +72,15 @@ async function loadData() {
 
       if (!error && data && data.content) {
         const dbData = data.content;
+        // Merge only completely missing top-level keys from fileData (do not overwrite existing content)
         if (fileData) {
-          if (fileData.projects && (!dbData.projects || dbData.projects.length < fileData.projects.length || !dbData.projects[0]?.type)) {
-            dbData.projects = fileData.projects;
-          }
-          const hasOldCyber = dbData.experience && dbData.experience.some(e => /cybersecurity/i.test(e.title || '') || /deloitte/i.test(e.company || ''));
-          if (fileData.experience && (!dbData.experience || dbData.experience.length !== fileData.experience.length || hasOldCyber)) {
-            dbData.experience = fileData.experience;
-          }
-          if (fileData.skills && fileData.skills.some(s => /ai/i.test(s.category || '')) && !dbData.skills?.some(s => /ai/i.test(s.category || ''))) {
-            dbData.skills = fileData.skills;
-          }
-          if (fileData.identity && fileData.identity.profileImages) {
-            dbData.identity = { ...(dbData.identity || {}), profileImages: fileData.identity.profileImages };
-          }
-          if (fileData.about) {
-            dbData.about = fileData.about;
-          }
-          if (fileData.certificates) {
-            dbData.certificates = fileData.certificates;
-          }
-          if (fileData.socials) {
-            dbData.socials = fileData.socials;
-          }
-          if (fileData.contact) {
-            dbData.contact = fileData.contact;
+          for (const key of Object.keys(fileData)) {
+            if (dbData[key] === undefined) {
+              dbData[key] = fileData[key];
+            }
           }
         }
+        sanitizeLegacyData(dbData);
         localStorage.setItem(STORAGE_KEY, JSON.stringify(dbData, null, 2));
         return dbData;
       }
@@ -85,36 +89,18 @@ async function loadData() {
     }
   }
 
-  // Merge file updates with localStorage if local cache is missing new fields
-  if (localData && fileData) {
-    const merged = { ...fileData, ...localData };
-    if (fileData.projects && (!localData.projects || localData.projects.length < fileData.projects.length || !localData.projects[0]?.type)) {
-      merged.projects = fileData.projects;
+  // If localData exists, ensure all top-level keys exist from fileData
+  if (localData) {
+    if (fileData) {
+      for (const key of Object.keys(fileData)) {
+        if (localData[key] === undefined) {
+          localData[key] = fileData[key];
+        }
+      }
     }
-    const hasOldCyber = localData.experience && localData.experience.some(e => /cybersecurity/i.test(e.title || '') || /deloitte/i.test(e.company || ''));
-    if (fileData.experience && (!localData.experience || localData.experience.length !== fileData.experience.length || hasOldCyber)) {
-      merged.experience = fileData.experience;
-    }
-    if (fileData.skills && fileData.skills.some(s => /ai/i.test(s.category || '')) && !localData.skills?.some(s => /ai/i.test(s.category || ''))) {
-      merged.skills = fileData.skills;
-    }
-    if (fileData.identity) {
-      merged.identity = { ...(localData.identity || {}), ...fileData.identity };
-    }
-    if (fileData.about) {
-      merged.about = fileData.about;
-    }
-    if (fileData.certificates) {
-      merged.certificates = fileData.certificates;
-    }
-    if (fileData.socials) {
-      merged.socials = fileData.socials;
-    }
-    if (fileData.contact) {
-      merged.contact = fileData.contact;
-    }
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(merged, null, 2));
-    return merged;
+    sanitizeLegacyData(localData);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(localData, null, 2));
+    return localData;
   }
 
   if (fileData) {
@@ -122,7 +108,6 @@ async function loadData() {
     return fileData;
   }
 
-  if (localData) return localData;
   return {};
 }
 
@@ -174,10 +159,14 @@ async function saveData() {
   buildSidebar();
 }
 
+window.saveData = saveData;
+
 function markDirty() {
   isDirty = true;
   setStatus('unsaved');
 }
+
+window.markDirty = markDirty;
 
 /* ================================================================
    2. STATUS & NOTIFICATIONS
@@ -732,6 +721,7 @@ function renderExperienceSection() {
           ${field('Company / Lab', `<input type="text" class="field-input" value="${esc(exp.company || '')}" placeholder="Outlier AI" oninput="DATA.experience[${i}].company=this.value; markDirty()">`)}
           ${field('Category (Filter)', `
             <select class="field-input" onchange="DATA.experience[${i}].type=this.value; markDirty()">
+              <option value="Full-Time" ${/full/i.test(exp.type || '') ? 'selected' : ''}>Full-Time</option>
               <option value="Freelance" ${/freelance/i.test(exp.type || '') ? 'selected' : ''}>Freelance</option>
               <option value="Internship" ${/intern/i.test(exp.type || '') ? 'selected' : ''}>Internship</option>
               <option value="Part-Time" ${/part/i.test(exp.type || '') ? 'selected' : ''}>Part-Time</option>
@@ -902,6 +892,7 @@ function renderProjectsSection() {
           ${field('Category (Filter)', `
             <select class="field-input" onchange="DATA.projects[${i}].type=this.value; DATA.projects[${i}].typeLabel=this.options[this.selectedIndex].text.toUpperCase(); markDirty(); renderEditor()">
               <option value="web" ${proj.type === 'web' ? 'selected' : ''}>Web App</option>
+              <option value="ai" ${proj.type === 'ai' ? 'selected' : ''}>AI / ML</option>
               <option value="hardware" ${proj.type === 'hardware' ? 'selected' : ''}>Hardware</option>
               <option value="tool" ${proj.type === 'tool' ? 'selected' : ''}>Tool</option>
             </select>

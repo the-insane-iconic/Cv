@@ -21,9 +21,9 @@
       "I turn <span class=\"hero-hl\">ambitious</span> ideas into <span class=\"hero-hl\">intelligent</span> systems that solve <span class=\"hero-hl\">meaningful, real-world</span> problems.",
       "With a <span class=\"hero-hl\">curious</span> and <span class=\"hero-hl\">experimental</span> mindset, I build, break, and refine AI/ML solutions until they’re not just impressive—but <span class=\"hero-hl\">genuinely useful</span>."
     ],
-    "profileImage": "https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/1st.png",
+    "profileImage": "pfp.png",
     "profileImages": [
-      "https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/1st.png",
+      "pfp.png",
       "https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/2nd.png",
       "https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/03.png",
       "https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/4th.png"
@@ -57,43 +57,43 @@
   },
   "skills": [
     {
-      "category": "Programming",
+      "category": "Programming & Systems",
       "icon": "fa-solid fa-code",
       "items": [
         { "name": "Python", "icon": "fa-brands fa-python", "level": 95, "active": true },
         { "name": "C++", "icon": "fa-solid fa-c", "level": 90, "active": true },
-        { "name": "JavaScript", "icon": "fa-brands fa-js", "level": 85 },
-        { "name": "SQL", "icon": "fa-solid fa-database", "level": 85 }
+        { "name": "JavaScript / TypeScript", "icon": "fa-brands fa-js", "level": 85 },
+        { "name": "SQL & Vector DBs", "icon": "fa-solid fa-database", "level": 88 }
       ]
     },
     {
-      "category": "AI / ML Frameworks",
+      "category": "AI & Deep Learning",
       "icon": "fa-solid fa-brain",
       "items": [
-        { "name": "PyTorch", "icon": "fa-solid fa-fire", "level": 90, "active": true },
+        { "name": "PyTorch", "icon": "fa-solid fa-fire", "level": 92, "active": true },
         { "name": "TensorFlow / Keras", "icon": "fa-solid fa-cube", "level": 85 },
         { "name": "Hugging Face & Transformers", "icon": "fa-solid fa-robot", "level": 90, "active": true },
-        { "name": "Scikit-Learn & OpenCV", "icon": "fa-solid fa-eye", "level": 85 }
+        { "name": "Scikit-Learn & OpenCV", "icon": "fa-solid fa-eye", "level": 86 }
       ]
     },
     {
-      "category": "Web & Deployment",
+      "category": "Generative AI & LLMs",
+      "icon": "fa-solid fa-wand-magic-sparkles",
+      "items": [
+        { "name": "LLM Fine-Tuning & RLHF", "icon": "fa-solid fa-brain", "level": 90, "active": true },
+        { "name": "RAG & Vector Search", "icon": "fa-solid fa-database", "level": 88 },
+        { "name": "Prompt Engineering & Agents", "icon": "fa-solid fa-microchip", "level": 92 },
+        { "name": "ONNX Runtime & TensorRT", "icon": "fa-solid fa-bolt", "level": 82 }
+      ]
+    },
+    {
+      "category": "Full-Stack & Cloud MLOps",
       "icon": "fa-solid fa-layer-group",
       "items": [
+        { "name": "FastAPI & Flask APIs", "icon": "fa-solid fa-bolt", "level": 90, "active": true },
         { "name": "React & Next.js", "icon": "fa-brands fa-react", "level": 85 },
-        { "name": "FastAPI & Flask", "icon": "fa-solid fa-bolt", "level": 90, "active": true },
-        { "name": "Node.js", "icon": "fa-brands fa-node-js", "level": 80 },
-        { "name": "HTML5 / CSS3", "icon": "fa-brands fa-html5", "level": 95 }
-      ]
-    },
-    {
-      "category": "AI Tools & Cloud",
-      "icon": "fa-solid fa-terminal",
-      "items": [
-        { "name": "ChromaDB / Pinecone", "icon": "fa-solid fa-database", "level": 88 },
-        { "name": "Docker & Git / GitHub", "icon": "fa-brands fa-docker", "level": 85, "active": true },
-        { "name": "Linux & Bash", "icon": "fa-brands fa-linux", "level": 90 },
-        { "name": "ONNX Runtime & TensorRT", "icon": "fa-solid fa-microchip", "level": 80 }
+        { "name": "Docker & Git / GitHub", "icon": "fa-brands fa-docker", "level": 88, "active": true },
+        { "name": "Linux & Cloud Pipelines", "icon": "fa-brands fa-linux", "level": 90 }
       ]
     },
     {
@@ -101,7 +101,7 @@
       "icon": "fa-solid fa-users",
       "items": [
         { "name": "Problem Solving & DSA", "icon": "fa-solid fa-lightbulb", "level": 95 },
-        { "name": "Model Architecture Design", "icon": "fa-solid fa-network-wired", "level": 90 },
+        { "name": "Neural Model Architecture", "icon": "fa-solid fa-network-wired", "level": 90 },
         { "name": "Data Pipeline Engineering", "icon": "fa-solid fa-diagram-project", "level": 88 },
         { "name": "Research & Experimentation", "icon": "fa-solid fa-flask", "level": 85 }
       ]
@@ -269,10 +269,10 @@
     }
   ],
   "stats": [
-    { "value": 110, "suffix": "+", "label": "Days DSA Streak", "icon": "fa-solid fa-fire", "iconClass": "text-orange", "featured": true },
-    { "value": 200, "suffix": "+", "label": "LeetCode Problems", "icon": "fa-solid fa-code" },
-    { "value": 50, "suffix": "+", "label": "HackerRank Solutions", "icon": "fa-brands fa-hackerrank" },
-    { "value": null, "suffix": "2nd", "label": "Runner-Up CTF", "icon": "fa-solid fa-flag", "isText": true }
+    { "value": 15, "suffix": "+", "label": "Days LeetCode Streak", "icon": "fa-solid fa-fire", "iconClass": "text-orange", "featured": true },
+    { "value": 50, "suffix": "+", "label": "Problems Solved", "icon": "fa-solid fa-code" },
+    { "value": 20, "suffix": "+", "label": "GitHub Repositories", "icon": "fa-brands fa-github" },
+    { "value": null, "suffix": "2nd", "label": "Hackathon Runner-Up", "icon": "fa-solid fa-trophy", "isText": true }
   ],
   "certCategories": ["All", "AI", "Cybersecurity", "Networking", "Programming", "Others"],
   "certificates": [

@@ -20,14 +20,33 @@
       }
     } catch (e) {
       console.warn('[File Fetch Warning]', e);
+    }    function sanitizeLegacyData(target) {
+      if (!target || !fileData) return;
+      if (Array.isArray(target.skills)) {
+        const hasLegacyCyber = target.skills.some(c => 
+          (c.category && /cyber/i.test(c.category)) ||
+          (c.items && c.items.some(it => /nmap|wireshark|burp|metasploit|hydra/i.test(it.name)))
+        );
+        if (hasLegacyCyber && fileData.skills) {
+          target.skills = fileData.skills;
+        }
+      }
+      if (Array.isArray(target.stats)) {
+        const hasLegacyStats = target.stats.some(s => 
+          /hackerrank|ctf/i.test(s.label || '') ||
+          s.value === 110 || s.value === 200
+        );
+        if (hasLegacyStats && fileData.stats) {
+          target.stats = fileData.stats;
+        }
+      }
     }
 
     let localData = null;
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
       try { localData = JSON.parse(stored); } catch (e) { /* continue */ }
-    }
-    // Attempt to fetch from Supabase if initialized
+    }    // Attempt to fetch from Supabase if initialized
     const sb = window.getSupabaseClient ? window.getSupabaseClient() : null;
     if (sb) {
       try {
@@ -39,33 +58,15 @@
 
         if (!error && data && data.content) {
           const dbData = data.content;
+          // Merge missing top-level schema keys only
           if (fileData) {
-            if (fileData.projects && (!dbData.projects || dbData.projects.length < fileData.projects.length || !dbData.projects[0]?.type)) {
-              dbData.projects = fileData.projects;
-            }
-            const hasOldCyber = dbData.experience && dbData.experience.some(e => /cybersecurity/i.test(e.title || '') || /deloitte/i.test(e.company || ''));
-            if (fileData.experience && (!dbData.experience || dbData.experience.length !== fileData.experience.length || hasOldCyber)) {
-              dbData.experience = fileData.experience;
-            }
-            if (fileData.identity) {
-              dbData.identity = { ...(dbData.identity || {}), ...fileData.identity };
-            }
-            if (fileData.about) {
-              dbData.about = fileData.about;
-            }
-            if (fileData.skills && fileData.skills.some(s => /ai/i.test(s.category || '')) && !dbData.skills?.some(s => /ai/i.test(s.category || ''))) {
-              dbData.skills = fileData.skills;
-            }
-            if (fileData.certificates) {
-              dbData.certificates = fileData.certificates;
-            }
-            if (fileData.socials) {
-              dbData.socials = fileData.socials;
-            }
-            if (fileData.contact) {
-              dbData.contact = fileData.contact;
+            for (const key of Object.keys(fileData)) {
+              if (dbData[key] === undefined) {
+                dbData[key] = fileData[key];
+              }
             }
           }
+          sanitizeLegacyData(dbData);
           localStorage.setItem(STORAGE_KEY, JSON.stringify(dbData));
           return dbData;
         }
@@ -74,36 +75,18 @@
       }
     }
 
-    // Merge file updates with localStorage if local cache is stale or missing new fields
-    if (localData && fileData) {
-      const merged = { ...fileData, ...localData };
-      if (fileData.projects && (!localData.projects || localData.projects.length < fileData.projects.length || !localData.projects[0]?.type)) {
-        merged.projects = fileData.projects;
+    // Merge file updates with localStorage if local cache is missing new keys
+    if (localData) {
+      if (fileData) {
+        for (const key of Object.keys(fileData)) {
+          if (localData[key] === undefined) {
+            localData[key] = fileData[key];
+          }
+        }
       }
-      const hasOldCyber = localData.experience && localData.experience.some(e => /cybersecurity/i.test(e.title || '') || /deloitte/i.test(e.company || ''));
-      if (fileData.experience && (!localData.experience || localData.experience.length !== fileData.experience.length || hasOldCyber)) {
-        merged.experience = fileData.experience;
-      }
-      if (fileData.skills && fileData.skills.some(s => /ai/i.test(s.category || '')) && !localData.skills?.some(s => /ai/i.test(s.category || ''))) {
-        merged.skills = fileData.skills;
-      }
-      if (fileData.identity) {
-        merged.identity = { ...(localData.identity || {}), ...fileData.identity };
-      }
-      if (fileData.about) {
-        merged.about = fileData.about;
-      }
-      if (fileData.certificates) {
-        merged.certificates = fileData.certificates;
-      }
-      if (fileData.socials) {
-        merged.socials = fileData.socials;
-      }
-      if (fileData.contact) {
-        merged.contact = fileData.contact;
-      }
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
-      return merged;
+      sanitizeLegacyData(localData);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(localData));
+      return localData;
     }
 
     if (fileData) {
@@ -111,7 +94,6 @@
       return fileData;
     }
 
-    if (localData) return localData;
     return {};
   }
 
@@ -153,6 +135,34 @@
       const prefix = suffix ? brand.replace(suffix, '') : brand;
       logo.innerHTML = esc(prefix) + (suffix ? `<span>${esc(suffix)}</span>` : '');
       logo.href = '#hero';
+    }
+
+    // Dynamic Profile Avatar & Zoom Modal
+    const profileImgSrc = d.identity?.profileImage || (d.identity?.profileImages && d.identity.profileImages[0]) || 'pfp.png';
+    const navAvatar = document.getElementById('nav-profile-avatar');
+    if (navAvatar && profileImgSrc) {
+      navAvatar.src = profileImgSrc;
+    }
+    const zoomImg = document.getElementById('profile-zoom-img');
+    if (zoomImg && profileImgSrc) {
+      zoomImg.src = profileImgSrc;
+    }
+    const zoomName = document.getElementById('profile-zoom-name');
+    if (zoomName && d.identity?.name) {
+      zoomName.textContent = d.identity.name;
+    }
+    const zoomRole = document.getElementById('profile-zoom-role');
+    if (zoomRole) {
+      zoomRole.textContent = (d.identity?.roles && d.identity.roles[0]) ? d.identity.roles[0] : (d.identity?.tagline || 'AI/ML Engineer');
+    }
+    const zoomResume = document.getElementById('profile-zoom-resume-btn');
+    if (zoomResume) {
+      if (d.identity?.resumeUrl) {
+        zoomResume.href = d.identity.resumeUrl;
+        zoomResume.style.display = 'inline-flex';
+      } else {
+        zoomResume.style.display = 'none';
+      }
     }
   }
 
@@ -292,7 +302,7 @@
     if (!mount) return;
 
     const SAMPLE_IMAGES = [
-      'https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/1st.png',
+      'pfp.png',
       'https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/2nd.png',
       'https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/03.png',
       'https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/4th.png'
