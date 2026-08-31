@@ -179,7 +179,7 @@
 
     const nameEl = document.querySelector('.hero-name');
     if (nameEl) {
-      const full = (id.name || 'Ansh Yadav').trim();
+      const full = (id.name || 'Anupam Yadav').trim();
       const parts = full.split(' ');
       const strokeSvg = `<svg class="hero-brush-stroke" viewBox="0 0 170 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 8C35 4 110 3 164 7C125 9 60 11 6 12" stroke="url(#brushGradient)" stroke-width="6" stroke-linecap="round"/><defs><linearGradient id="brushGradient" x1="4" y1="6" x2="164" y2="6" gradientUnits="userSpaceOnUse"><stop stop-color="#8C7AFF" stop-opacity="0.8"/><stop offset="0.5" stop-color="#C5BCFF" stop-opacity="0.9"/><stop offset="1" stop-color="#5A45FF" stop-opacity="0.3"/></linearGradient></defs></svg>`;
       if (parts.length > 1) {
@@ -878,7 +878,7 @@
     const projs = d.projects || [];
     const certs = d.certificates || [];
 
-    const name = id.name || 'Ansh Yadav';
+    const name = id.name || 'Anupam Yadav';
     const roles = Array.isArray(id.roles) ? id.roles.join(' • ') : (id.roles || 'AI/ML Engineer & Full-Stack Developer');
     const email = socials.email || 'anupamyadav6477@gmail.com';
     const phone = contact.phone || '+91 8707726019';

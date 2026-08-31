@@ -511,13 +511,23 @@ window.initApp = function () {
   const certModalTitle = document.getElementById('modal-title');
   const certModalIssuerText = document.getElementById('modal-issuer-text');
   const certModalCatBadge = document.getElementById('modal-cat-badge');
+  const certModalImg = document.getElementById('modal-cert-img');
   const certModalIframe = document.getElementById('modal-iframe');
+  const certModalCard = document.getElementById('modal-cert-preview');
   const certModalLoader = document.getElementById('modal-loader');
+  const certModalActions = document.getElementById('modal-cert-actions');
+  const certModalExtBtn = document.getElementById('modal-cert-ext-btn');
   const certPreviewTitle = document.getElementById('modal-preview-title');
   const certPreviewIssuer = document.getElementById('modal-preview-issuer');
   const certPreviewCategory = document.getElementById('modal-preview-category');
   const certPreviewName = document.getElementById('modal-preview-name');
   const certPreviewIcon = document.getElementById('modal-preview-icon');
+
+  function isPdfDocument(url) {
+    if (!url) return false;
+    const clean = url.split('?')[0].toLowerCase();
+    return clean.endsWith('.pdf') || clean.includes('/pdf');
+  }
 
   function openCertModal(card) {
     if (!certModal || !card) return;
@@ -525,8 +535,9 @@ window.initApp = function () {
     const issuer = card.getAttribute('data-cert-issuer') || card.querySelector('.cert-issuer')?.textContent?.replace(/^.*?\s/, '') || 'Issuing Organization';
     const category = card.getAttribute('data-cert-category') || card.querySelector('.cert-category')?.textContent || 'Verified Credential';
     const icon = card.getAttribute('data-cert-icon') || 'fa-solid fa-certificate';
-    const url = card.getAttribute('data-cert-url') || '';
-    const candidateName = window.PORTFOLIO_DATA?.identity?.name || 'Ansh Yadav';
+    const rawUrl = card.getAttribute('data-cert-url') || '';
+    const url = rawUrl.trim();
+    const candidateName = window.PORTFOLIO_DATA?.identity?.name || 'Anupam Yadav';
 
     if (certModalTitle) certModalTitle.textContent = title;
     if (certModalIssuerText) certModalIssuerText.textContent = issuer;
@@ -537,18 +548,52 @@ window.initApp = function () {
     if (certPreviewName) certPreviewName.textContent = candidateName;
     if (certPreviewIcon) certPreviewIcon.innerHTML = `<i class="${icon}"></i>`;
 
-    if (url && (url.startsWith('http') || url.includes('.pdf') || url.includes('.jpg') || url.includes('.png'))) {
-      if (certModalIframe) {
-        certModalIframe.src = url;
-        certModalIframe.style.display = 'block';
+    // Reset visibility of preview elements
+    if (certModalImg) { certModalImg.style.display = 'none'; certModalImg.src = ''; }
+    if (certModalIframe) { certModalIframe.style.display = 'none'; certModalIframe.src = ''; }
+    if (certModalCard) { certModalCard.style.display = 'none'; }
+    if (certModalLoader) { certModalLoader.style.display = 'none'; }
+    if (certModalActions) { certModalActions.style.display = 'none'; }
+
+    if (url && (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('./') || url.startsWith('/') || url.startsWith('data:'))) {
+      if (certModalExtBtn) {
+        certModalExtBtn.href = url;
       }
-      if (certModalLoader) certModalLoader.style.display = 'flex';
+      if (certModalActions) {
+        certModalActions.style.display = 'flex';
+      }
+
+      if (isPdfDocument(url)) {
+        if (certModalLoader) certModalLoader.style.display = 'flex';
+        if (certModalIframe) {
+          certModalIframe.onload = () => {
+            if (certModalLoader) certModalLoader.style.display = 'none';
+            certModalIframe.style.display = 'block';
+          };
+          certModalIframe.onerror = () => {
+            if (certModalLoader) certModalLoader.style.display = 'none';
+            if (certModalCard) certModalCard.style.display = 'block';
+          };
+          certModalIframe.src = url;
+        }
+      } else {
+        // Image format or direct Supabase storage link
+        if (certModalLoader) certModalLoader.style.display = 'flex';
+        if (certModalImg) {
+          certModalImg.onload = () => {
+            if (certModalLoader) certModalLoader.style.display = 'none';
+            certModalImg.style.display = 'block';
+          };
+          certModalImg.onerror = () => {
+            if (certModalLoader) certModalLoader.style.display = 'none';
+            if (certModalCard) certModalCard.style.display = 'block';
+          };
+          certModalImg.src = url;
+        }
+      }
     } else {
-      if (certModalIframe) {
-        certModalIframe.src = '';
-        certModalIframe.style.display = 'none';
-      }
-      if (certModalLoader) certModalLoader.style.display = 'none';
+      // Fallback: stylish authentic achievement credential card
+      if (certModalCard) certModalCard.style.display = 'block';
     }
 
     certModal.classList.remove('hidden');
@@ -559,7 +604,9 @@ window.initApp = function () {
     if (!certModal) return;
     certModal.classList.add('hidden');
     document.body.style.overflow = '';
-    if (certModalIframe) certModalIframe.src = '';
+    if (certModalImg) { certModalImg.src = ''; certModalImg.style.display = 'none'; }
+    if (certModalIframe) { certModalIframe.src = ''; certModalIframe.style.display = 'none'; }
+    if (certModalLoader) certModalLoader.style.display = 'none';
   }
 
   // Bind click anywhere on certificate card
@@ -573,6 +620,18 @@ window.initApp = function () {
 
   if (certModalClose) certModalClose.addEventListener('click', closeCertModal);
   if (certModalOverlay) certModalOverlay.addEventListener('click', closeCertModal);
+
+  // Close modals on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      if (certModal && !certModal.classList.contains('hidden')) {
+        closeCertModal();
+      }
+      if (resumeModal && !resumeModal.classList.contains('hidden')) {
+        closeResumeModal();
+      }
+    }
+  });
 
   /* ---------- Resume PDF Preview & 1-Click Print Modal ---------- */
   const resumeModal = document.getElementById('resume-modal');

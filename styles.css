@@ -4230,20 +4230,25 @@ body.dark-mode .auth-input-wrap input {
    CERTIFICATE PREVIEW MODAL (NO DOWNLOAD BUTTON)
    ================================================================ */
 .cert-modal-box {
-  max-width: 660px;
-  width: 95%;
+  max-width: 860px;
+  width: 92%;
+  max-height: 90vh;
   background: var(--surface);
   border-radius: 20px;
   overflow: hidden;
   border: 1px solid var(--border);
   box-shadow: 0 25px 70px rgba(0, 0, 0, 0.55);
+  display: flex;
+  flex-direction: column;
+  position: relative;
 }
 
 .cert-modal-header {
-  padding: 24px 28px 16px;
+  padding: 20px 24px 14px;
   text-align: center;
   border-bottom: 1px solid var(--border);
   position: relative;
+  flex-shrink: 0;
 }
 
 .cert-modal-badge {
@@ -4258,18 +4263,19 @@ body.dark-mode .auth-input-wrap input {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .cert-modal-header h3 {
-  font-size: 1.35rem;
+  font-size: 1.25rem;
   font-weight: 800;
   color: var(--text-primary);
   margin-bottom: 4px;
+  line-height: 1.3;
 }
 
 .cert-modal-header p {
-  font-size: 0.88rem;
+  font-size: 0.86rem;
   color: var(--text-secondary);
   display: flex;
   align-items: center;
@@ -4278,12 +4284,97 @@ body.dark-mode .auth-input-wrap input {
 }
 
 .cert-modal-body {
-  padding: 24px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: rgba(14, 12, 27, 0.3);
+  background: rgba(14, 12, 27, 0.35);
+  overflow-y: auto;
+  max-height: calc(90vh - 90px);
+  position: relative;
+  min-height: 240px;
+  width: 100%;
+}
+
+.modal-loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 30px;
+  color: var(--accent);
+}
+
+.modal-loader .spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(98, 70, 255, 0.2);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.cert-modal-image {
+  max-width: 100%;
+  max-height: 65vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 12px;
+  border: 1px solid rgba(98, 70, 255, 0.3);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.2);
+  transition: transform 0.25s ease;
+}
+
+.cert-modal-image:hover {
+  transform: scale(1.01);
+}
+
+.cert-modal-iframe {
+  width: 100%;
+  height: 65vh;
+  border: 1px solid rgba(98, 70, 255, 0.25);
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+
+.cert-modal-actions {
+  margin-top: 16px;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.btn-cert-ext {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 20px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #ffffff;
+  background: linear-gradient(135deg, rgba(98, 70, 255, 0.85), rgba(138, 99, 255, 0.85));
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 24px;
+  text-decoration: none;
+  box-shadow: 0 4px 15px rgba(98, 70, 255, 0.3);
+  transition: all 0.25s ease;
+  backdrop-filter: blur(8px);
+}
+
+.btn-cert-ext:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(98, 70, 255, 0.5);
+  filter: brightness(1.1);
+  color: #ffffff;
 }
 
 .cert-preview-card {

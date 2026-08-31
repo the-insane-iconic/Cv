@@ -1024,6 +1024,7 @@ function renderCertificatesSection() {
     const catOptions = cats.filter(c => c !== 'All').map(c =>
       `<option value="${esc(c)}" ${cert.category === c ? 'selected' : ''}>${esc(c)}</option>`
     ).join('');
+    const hasUrl = Boolean(cert.url && cert.url.trim());
 
     return `
     <div class="list-item">
@@ -1032,6 +1033,7 @@ function renderCertificatesSection() {
         <span class="list-item-title">${esc(cert.title)}</span>
         <span class="list-item-meta">${esc(cert.issuer)} · ${esc(cert.category)}</span>
         <div class="list-item-actions">
+          ${hasUrl ? '<span class="cert-attach-pill attached" title="File URL Attached"><i class="fa-solid fa-link"></i> Attached</span>' : '<span class="cert-attach-pill none" title="No file attached">No file</span>'}
           ${cert.featured ? '<span style="font-size:10px;color:var(--amber);font-weight:700;margin-right:6px;">★ Featured</span>' : ''}
           <button class="btn-icon-action" onclick="event.stopPropagation(); moveItem('certificates', ${i}, -1)"><i class="fa-solid fa-chevron-up"></i></button>
           <button class="btn-icon-action" onclick="event.stopPropagation(); moveItem('certificates', ${i}, 1)"><i class="fa-solid fa-chevron-down"></i></button>
@@ -1047,14 +1049,38 @@ function renderCertificatesSection() {
           ${field('Category Filter', `<select class="field-select" onchange="DATA.certificates[${i}].category=this.value; markDirty()">${catOptions}</select>`)}
           ${field('Icon Class', `<input type="text" class="field-input" value="${esc(cert.icon)}" placeholder="fa-solid fa-certificate" oninput="DATA.certificates[${i}].icon=this.value; markDirty()">`)}
         </div>
-        <div class="field-row">
-          ${field('Embed / Verification URL', `<input type="url" class="field-input" value="${esc(cert.url||'')}" placeholder="https://..." oninput="DATA.certificates[${i}].url=this.value; markDirty()">`)}
-          <div class="field-group" style="justify-content:flex-end;padding-top:20px;">
-            <label class="toggle-row">
-              <input type="checkbox" class="toggle" ${cert.featured ? 'checked' : ''} onchange="DATA.certificates[${i}].featured=this.checked; markDirty(); renderEditor()">
-              <span style="font-size:12.5px;font-weight:600;color:var(--text-main);">Feature on top</span>
-            </label>
-          </div>
+        <div class="field-row single">
+          ${field('Certificate File / Supabase Storage URL', `
+            <div style="display:flex; gap:8px; align-items:center;">
+              <input type="url" class="field-input" style="flex:1;" value="${esc(cert.url||'')}" placeholder="https://...supabase.co/storage/v1/object/public/... (or PNG, JPG, PDF link)" oninput="DATA.certificates[${i}].url=this.value.trim(); markDirty()">
+            </div>
+            ${hasUrl ? `
+              <div class="cert-admin-preview-box">
+                ${(/\.(png|jpe?g|webp|svg|gif|avif)$/i.test(cert.url.split('?')[0]) || cert.url.includes('/projeect%20images/') || cert.url.includes('/project%20images/'))
+                  ? `<div class="cert-admin-thumb"><img src="${esc(cert.url)}" onerror="this.parentElement.style.display='none'"></div>`
+                  : `<div class="cert-admin-pdf-tag"><i class="fa-solid fa-file-pdf"></i> PDF / File Link</div>`
+                }
+                <div style="flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:12px; color:var(--text-secondary);">
+                  ${esc(cert.url)}
+                </div>
+                <a href="${esc(cert.url)}" target="_blank" rel="noopener noreferrer" class="btn-micro" style="text-decoration:none;" title="Test open link">
+                  <i class="fa-solid fa-arrow-up-right-from-square"></i> Test
+                </a>
+                <button class="btn-micro danger" onclick="DATA.certificates[${i}].url=''; markDirty(); renderEditor();" title="Remove URL">
+                  <i class="fa-solid fa-xmark"></i> Clear
+                </button>
+              </div>
+            ` : ''}
+            <span class="field-hint" style="display:block; margin-top:5px; font-size:11.5px; color:var(--text-muted);">
+              <i class="fa-solid fa-cloud"></i> Paste your public Supabase Storage URL or any image/PDF link. When clicked on your portfolio, this certificate preview will open immediately in the interactive preview modal.
+            </span>
+          `)}
+        </div>
+        <div class="field-row single" style="margin-top:6px;">
+          <label class="toggle-row">
+            <input type="checkbox" class="toggle" ${cert.featured ? 'checked' : ''} onchange="DATA.certificates[${i}].featured=this.checked; markDirty(); renderEditor()">
+            <span style="font-size:12.5px;font-weight:600;color:var(--text-main);">Feature on top</span>
+          </label>
         </div>
       </div>
     </div>`;
