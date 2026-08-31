@@ -21,9 +21,9 @@
       "I turn <span class=\"hero-hl\">ambitious</span> ideas into <span class=\"hero-hl\">intelligent</span> systems that solve <span class=\"hero-hl\">meaningful, real-world</span> problems.",
       "With a <span class=\"hero-hl\">curious</span> and <span class=\"hero-hl\">experimental</span> mindset, I build, break, and refine AI/ML solutions until they’re not just impressive—but <span class=\"hero-hl\">genuinely useful</span>."
     ],
-    "profileImage": "pfp.png",
+    "profileImage": "https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/1st.png",
     "profileImages": [
-      "pfp.png",
+      "https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/1st.png",
       "https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/2nd.png",
       "https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/03.png",
       "https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/4th.png"

@@ -35,19 +35,6 @@ async function loadData() {
 
   function sanitizeLegacyData(target) {
     if (!target || !fileData) return;
-    if (fileData.identity) {
-      if (!target.identity) target.identity = {};
-      if (fileData.identity.profileImage) {
-        if (!target.identity.profileImage || /1st\.png/i.test(target.identity.profileImage) || fileData.identity.profileImage === 'pfp.png') {
-          target.identity.profileImage = fileData.identity.profileImage;
-        }
-      }
-      if (Array.isArray(fileData.identity.profileImages) && fileData.identity.profileImages.length > 0) {
-        if (!Array.isArray(target.identity.profileImages) || target.identity.profileImages.some(img => /1st\.png/i.test(img)) || fileData.identity.profileImages[0] === 'pfp.png') {
-          target.identity.profileImages = fileData.identity.profileImages;
-        }
-      }
-    }
     if (Array.isArray(target.skills)) {
       const hasLegacyCyber = target.skills.some(c => 
         (c.category && /cyber/i.test(c.category)) ||

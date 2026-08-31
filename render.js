@@ -20,22 +20,8 @@
       }
     } catch (e) {
       console.warn('[File Fetch Warning]', e);
-    }
-    function sanitizeLegacyData(target) {
+    }    function sanitizeLegacyData(target) {
       if (!target || !fileData) return;
-      if (fileData.identity) {
-        if (!target.identity) target.identity = {};
-        if (fileData.identity.profileImage) {
-          if (!target.identity.profileImage || /1st\.png/i.test(target.identity.profileImage) || fileData.identity.profileImage === 'pfp.png') {
-            target.identity.profileImage = fileData.identity.profileImage;
-          }
-        }
-        if (Array.isArray(fileData.identity.profileImages) && fileData.identity.profileImages.length > 0) {
-          if (!Array.isArray(target.identity.profileImages) || target.identity.profileImages.some(img => /1st\.png/i.test(img)) || fileData.identity.profileImages[0] === 'pfp.png') {
-            target.identity.profileImages = fileData.identity.profileImages;
-          }
-        }
-      }
       if (Array.isArray(target.skills)) {
         const hasLegacyCyber = target.skills.some(c => 
           (c.category && /cyber/i.test(c.category)) ||
@@ -82,9 +68,6 @@
           }
           sanitizeLegacyData(dbData);
           localStorage.setItem(STORAGE_KEY, JSON.stringify(dbData));
-          if (dbData.identity?.profileImage === 'pfp.png' && data.content.identity?.profileImage !== 'pfp.png') {
-            sb.from('portfolios').update({ content: dbData }).eq('id', 'default').then(() => {}).catch(() => {});
-          }
           return dbData;
         }
       } catch (err) {
@@ -155,7 +138,7 @@
     }
 
     // Dynamic Profile Avatar & Zoom Modal
-    const profileImgSrc = d.identity?.profileImage || (d.identity?.profileImages && d.identity.profileImages[0]) || 'pfp.png';
+    const profileImgSrc = d.identity?.profileImage || (d.identity?.profileImages && d.identity.profileImages[0]) || '1st.png';
     const navAvatar = document.getElementById('nav-profile-avatar');
     if (navAvatar && profileImgSrc) {
       navAvatar.src = profileImgSrc;
@@ -319,7 +302,7 @@
     if (!mount) return;
 
     const SAMPLE_IMAGES = [
-      'pfp.png',
+      'https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/1st.png',
       'https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/2nd.png',
       'https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/03.png',
       'https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/4th.png'
