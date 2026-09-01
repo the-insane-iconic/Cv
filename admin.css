@@ -1421,33 +1421,127 @@ input[type="checkbox"].toggle:checked::after {
 }
 
 /* ---- RESPONSIVE ---------------------------------------------- */
+html, body.admin-body {
+  overflow-x: clip;
+  max-width: 100vw;
+  width: 100%;
+}
+
 @media (max-width: 1024px) {
   .topbar-search { display: none; }
   .admin-content-viewport { padding: 24px 20px 120px; }
+  .admin-sidebar {
+    width: 250px;
+  }
 }
 
 @media (max-width: 768px) {
+  .admin-topbar {
+    padding: 0 12px;
+    gap: 8px;
+  }
+
   .mobile-sidebar-toggle { display: flex; }
+
+  .brand-chip { display: none; }
+  .brand-title { font-size: 13.5px; }
+  .brand-badge-icon { width: 32px; height: 32px; font-size: 12px; }
+
+  .topbar-right {
+    gap: 6px;
+  }
+
+  .topbar-divider {
+    display: none;
+  }
+
+  .btn-pill {
+    padding: 6px 10px;
+    font-size: 11.5px;
+    gap: 5px;
+  }
+
+  .btn-cloud-status span:not(.cloud-pulse-dot) {
+    display: none;
+  }
+
+  .btn-preview-site span {
+    display: none;
+  }
+
   .admin-sidebar {
+    position: fixed;
+    top: var(--topbar-h);
+    left: 0;
+    bottom: 0;
+    z-index: 50;
     transform: translateX(-100%);
     box-shadow: var(--shadow-lg);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
+
   .admin-sidebar.open {
     transform: translateX(0);
   }
+
   .sidebar-backdrop {
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.6);
+    background: rgba(0, 0, 0, 0.7);
     backdrop-filter: blur(4px);
     z-index: 45;
   }
+
   .sidebar-backdrop.active { display: block; }
-  .admin-content-viewport { margin-left: 0; }
+  .admin-content-viewport { margin-left: 0; padding: 18px 12px 110px; }
   
   .dock-shortcut-hint { display: none; }
-  .admin-action-dock { width: calc(100% - 24px); bottom: 12px; }
-  .btn-dock { padding: 8px 12px; font-size: 11.5px; }
-  .field-row, .field-row.triple { grid-template-columns: 1fr; }
+  .admin-action-dock {
+    width: calc(100% - 20px);
+    bottom: 10px;
+    padding: 6px 10px;
+    gap: 6px;
+  }
+
+  .btn-dock {
+    padding: 8px 10px;
+    font-size: 11px;
+    gap: 5px;
+  }
+
+  .field-row,
+  .field-row.triple {
+    grid-template-columns: 1fr;
+  }
+
+  .editor-card {
+    padding: 16px 14px;
+    border-radius: var(--radius-md);
+  }
+
+  .modal-card {
+    width: 95%;
+    max-width: 95vw;
+    margin: 10px;
+  }
+
+  .modal-card-body {
+    padding: 16px;
+  }
 }
+
+@media (max-width: 480px) {
+  .btn-save-primary span {
+    font-size: 11px;
+  }
+
+  .btn-dock span {
+    font-size: 10.5px;
+  }
+
+  .form-field-input {
+    font-size: 16px; /* Stop iOS Safari zoom on focus */
+  }
+}
+

@@ -231,14 +231,6 @@ window.initApp = function () {
     });
   }
 
-  // Close modals on Escape key
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      closeProfileZoomModal();
-      closeAdminAuthModal();
-    }
-  });
-
   if (authClose) authClose.addEventListener('click', closeAdminAuthModal);
   if (authOverlay) authOverlay.addEventListener('click', closeAdminAuthModal);
 
@@ -506,7 +498,7 @@ window.initApp = function () {
 
   /* ---------- Certificate Modal (Preview Only, No Download) ---------- */
   const certModal = document.getElementById('cert-modal');
-  const certModalClose = document.getElementById('modal-close');
+  const certModalClose = document.getElementById('cert-modal-close') || document.getElementById('modal-close') || (certModal ? certModal.querySelector('.modal-close') : null);
   const certModalOverlay = document.getElementById('cert-modal-overlay') || (certModal ? certModal.querySelector('.modal-overlay') : null);
   const certModalTitle = document.getElementById('modal-title');
   const certModalIssuerText = document.getElementById('modal-issuer-text');
@@ -603,10 +595,10 @@ window.initApp = function () {
   function closeCertModal() {
     if (!certModal) return;
     certModal.classList.add('hidden');
-    document.body.style.overflow = '';
     if (certModalImg) { certModalImg.src = ''; certModalImg.style.display = 'none'; }
     if (certModalIframe) { certModalIframe.src = ''; certModalIframe.style.display = 'none'; }
     if (certModalLoader) certModalLoader.style.display = 'none';
+    syncBodyScroll();
   }
 
   // Bind click anywhere on certificate card
@@ -620,18 +612,6 @@ window.initApp = function () {
 
   if (certModalClose) certModalClose.addEventListener('click', closeCertModal);
   if (certModalOverlay) certModalOverlay.addEventListener('click', closeCertModal);
-
-  // Close modals on Escape key
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      if (certModal && !certModal.classList.contains('hidden')) {
-        closeCertModal();
-      }
-      if (resumeModal && !resumeModal.classList.contains('hidden')) {
-        closeResumeModal();
-      }
-    }
-  });
 
   /* ---------- Resume PDF Preview & 1-Click Print Modal ---------- */
   const resumeModal = document.getElementById('resume-modal');
@@ -648,7 +628,7 @@ window.initApp = function () {
   function closeResumeModal() {
     if (!resumeModal) return;
     resumeModal.classList.add('hidden');
-    document.body.style.overflow = '';
+    syncBodyScroll();
   }
 
   // Open resume on hero button & contact card
@@ -690,13 +670,99 @@ window.initApp = function () {
   if (resumeModalClose) resumeModalClose.addEventListener('click', closeResumeModal);
   if (resumeModalOverlay) resumeModalOverlay.addEventListener('click', closeResumeModal);
 
-  // Global escape key to close any active modal
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      closeCertModal();
-      closeResumeModal();
+  /* ---------- Universal Modal Management System ---------- */
+  function isAnyModalOpen() {
+    const modals = [certModal, resumeModal, profileZoomModal, authModal];
+    return modals.some(m => m && !m.classList.contains('hidden'));
+  }
+
+  function syncBodyScroll() {
+    if (!isAnyModalOpen()) {
+      document.body.style.overflow = '';
+    }
+  }
+
+  function closeAllModals() {
+    if (typeof closeCertModal === 'function') closeCertModal();
+    if (typeof closeResumeModal === 'function') closeResumeModal();
+    if (typeof closeProfileZoomModal === 'function') closeProfileZoomModal();
+    if (typeof closeAdminAuthModal === 'function') closeAdminAuthModal();
+    document.body.style.overflow = '';
+  }
+
+  // Universal click delegation for all modal close buttons and overlays
+  document.addEventListener('click', (e) => {
+    // Check if a close button (or icon inside it) was clicked
+    const closeTrigger = e.target.closest('.modal-close, .modal-close-btn, .resume-modal-close, .cert-modal-close, #modal-close, #cert-modal-close, #resume-modal-close, #profile-zoom-close, #admin-auth-close');
+    if (closeTrigger) {
+      e.preventDefault();
+      e.stopPropagation();
+      const parentModal = closeTrigger.closest('.modal, .custom-modal-backdrop');
+      if (parentModal) {
+        if (parentModal.id === 'cert-modal') closeCertModal();
+        else if (parentModal.id === 'resume-modal') closeResumeModal();
+        else if (parentModal.id === 'profile-zoom-modal') closeProfileZoomModal();
+        else if (parentModal.id === 'admin-auth-modal') closeAdminAuthModal();
+        else {
+          parentModal.classList.add('hidden');
+          syncBodyScroll();
+        }
+      } else {
+        closeAllModals();
+      }
+      return;
+    }
+
+    // Check if background overlay was clicked
+    if (e.target.classList.contains('modal-overlay') || (e.target.classList.contains('modal') && !e.target.closest('.modal-content'))) {
+      e.preventDefault();
+      const parentModal = e.target.closest('.modal') || e.target;
+      if (parentModal.id === 'cert-modal') closeCertModal();
+      else if (parentModal.id === 'resume-modal') closeResumeModal();
+      else if (parentModal.id === 'profile-zoom-modal') closeProfileZoomModal();
+      else if (parentModal.id === 'admin-auth-modal') closeAdminAuthModal();
+      else {
+        parentModal.classList.add('hidden');
+        syncBodyScroll();
+      }
     }
   });
+
+  // Unified global Escape key listener
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeAllModals();
+    }
+  });
+
+  /* ---------- Contact Form Handler ---------- */
+  const contactForm = document.querySelector('.contact-form');
+  if (contactForm) {
+    contactForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = (contactForm.querySelector('input[name="name"]')?.value || '').trim();
+      const email = (contactForm.querySelector('input[name="email"]')?.value || '').trim();
+      const subject = (contactForm.querySelector('input[name="subject"]')?.value || 'New Portfolio Inquiry').trim();
+      const message = (contactForm.querySelector('textarea[name="message"]')?.value || '').trim();
+      const targetEmail = window.PORTFOLIO_DATA?.socials?.email || 'anupamyadav6477@gmail.com';
+
+      const bodyText = `Hi Anupam,\n\n${message}\n\nFrom: ${name}\nEmail: ${email}`;
+      const mailtoUrl = `mailto:${encodeURIComponent(targetEmail)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyText)}`;
+
+      const submitBtn = contactForm.querySelector('.contact-submit-btn');
+      if (submitBtn) {
+        const origHtml = submitBtn.innerHTML;
+        submitBtn.innerHTML = `<span>Opening Mail Client...</span> <i class="fa-solid fa-paper-plane"></i>`;
+        submitBtn.style.opacity = '0.85';
+        setTimeout(() => {
+          submitBtn.innerHTML = origHtml;
+          submitBtn.style.opacity = '1';
+        }, 3000);
+      }
+
+      window.location.href = mailtoUrl;
+    });
+  }
 
   /* ---------- Subtle Canvas Grain / Dot Grid ---------- */
   const canvas = document.getElementById('bg-canvas');

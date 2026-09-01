@@ -1471,46 +1471,6 @@ body.dark-mode .about-stats-chips .chip i {
   display: none !important;
 }
 
-/* ---- Responsive ---- */
-@media (max-width: 900px) {
-  .about-section {
-    min-height: auto;
-    height: auto;
-    padding-block: 40px;
-  }
-  .about-split {
-    grid-template-columns: 1fr;
-    gap: 32px;
-    min-height: auto;
-    height: auto;
-  }
-  .about-left { max-width: 100%; }
-  .about-right {
-    justify-content: center;
-    order: -1;
-    height: 280px;
-  }
-  .about-carousel-track-wrapper {
-    max-width: 100%;
-    height: 280px;
-  }
-  .about-carousel-track {
-    flex-direction: row;
-    gap: 12px;
-    margin-top: 0;
-    padding-left: 10px;
-  }
-  .about-carousel-card {
-    height: 240px;
-    min-width: 260px;
-    width: 260px;
-    transform: none;
-    opacity: 1;
-    filter: none;
-  }
-}
-
-
 /* Decorative Border Clouds */
 .section-cloud {
   position: absolute;
@@ -2465,83 +2425,6 @@ body.dark-mode .coming-soon {
   }
 }
 
-/* RESPONSIVE EXPERIENCE */
-@media (max-width: 1050px) {
-  .experience-card {
-    grid-template-columns: 1fr;
-  }
-  .experience-visual {
-    min-height: 200px;
-  }
-}
-
-@media (max-width: 760px) {
-  .experience-section {
-    padding: 50px 18px 70px;
-  }
-  .experience-title {
-    font-size: 42px;
-    letter-spacing: -2px;
-  }
-  .experience-timeline {
-    padding-left: 0;
-  }
-  .timeline-line, .timeline-node {
-    display: none;
-  }
-  .experience-card {
-    padding: 22px 18px;
-    border-radius: 18px;
-  }
-  .job-header {
-    padding-right: 65px;
-  }
-  .job-icon {
-    width: 50px;
-    height: 50px;
-  }
-  .job-title {
-    font-size: 21px;
-  }
-  .current-badge {
-    top: 20px;
-    right: 18px;
-  }
-  .metrics {
-    gap: 8px;
-  }
-  .metric {
-    padding: 0 8px;
-  }
-  .metric-number {
-    font-size: 19px;
-  }
-  .metric-label {
-    font-size: 9.5px;
-  }
-}
-
-@media (max-width: 500px) {
-  .experience-filters {
-    gap: 7px;
-  }
-  .filter-btn {
-    padding: 7px 13px;
-    font-size: 12px;
-  }
-  .metrics {
-    grid-template-columns: 1fr;
-  }
-  .metric, .metric:first-child {
-    padding: 8px 0;
-    border-right: none;
-    border-bottom: 1px solid rgba(96, 70, 255, 0.08);
-  }
-  .metric:last-child {
-    border-bottom: none;
-  }
-}
-
 /* ================================================================
    PROJECTS SECTION (REDESIGN)
    ================================================================ */
@@ -3002,46 +2885,6 @@ body.dark-mode .tech {
   to {
     opacity: 1;
     transform: translateY(0);
-  }
-}
-
-/* ---- RESPONSIVE ---- */
-@media (max-width: 1080px) {
-  .project-card {
-    flex: 0 1 calc(50% - 15px);
-    max-width: 400px;
-  }
-  .section-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 20px;
-  }
-}
-
-@media (max-width: 680px) {
-  .projects-section {
-    padding: 60px 16px 80px;
-  }
-  .project-card {
-    flex: 1 1 100%;
-    max-width: 100%;
-    min-width: 0;
-  }
-  .projects-section .section-title {
-    font-size: 32px;
-    letter-spacing: -1px;
-  }
-  .projects-section .cloud {
-    width: 220px;
-    right: -60px;
-    top: 100px;
-    opacity: .3;
-  }
-  .dot-grid {
-    transform: scale(.7);
-  }
-  .project-image {
-    height: 160px;
   }
 }
 
@@ -3759,33 +3602,6 @@ body.dark-mode .feature-icon {
   margin: 0;
 }
 
-/* Responsive Breakpoints */
-@media (max-width: 960px) {
-  .contact-wrapper {
-    grid-template-columns: 1fr;
-  }
-  .features {
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
-}
-
-@media (max-width: 600px) {
-  .contact-section {
-    padding: 50px 16px 70px;
-  }
-  .contact-main-title {
-    font-size: 30px;
-  }
-  .contact-grid,
-  .form-grid {
-    grid-template-columns: 1fr;
-  }
-  .connect-box, .form-box {
-    padding: 20px 16px;
-  }
-}
-
 /* ================================================================
    FOOTER
    ================================================================ */
@@ -3817,6 +3633,7 @@ body.dark-mode .feature-icon {
   inset: 0;
   background: rgba(14, 12, 27, 0.7);
   backdrop-filter: blur(10px);
+  cursor: pointer;
 }
 
 .modal-content {
@@ -3846,7 +3663,7 @@ body.dark-mode .modal-content {
 .modal-close {
   position: absolute;
   top: 16px; right: 16px;
-  width: 32px; height: 32px;
+  width: 36px; height: 36px;
   border-radius: 50%;
   border: 1px solid var(--border);
   background: var(--surface-callout);
@@ -3856,10 +3673,18 @@ body.dark-mode .modal-content {
   justify-content: center;
   cursor: pointer;
   transition: all .2s var(--ease);
+  z-index: 100;
+  pointer-events: auto;
+  user-select: none;
 }
 .modal-close:hover {
   background: var(--accent);
   color: var(--white);
+  border-color: var(--accent);
+  transform: scale(1.08);
+}
+.modal-close:active {
+  transform: scale(0.92);
 }
 
 .auth-modal-header {
@@ -4244,7 +4069,7 @@ body.dark-mode .auth-input-wrap input {
 }
 
 .cert-modal-header {
-  padding: 20px 24px 14px;
+  padding: 20px 56px 14px 24px;
   text-align: center;
   border-bottom: 1px solid var(--border);
   position: relative;
@@ -4609,6 +4434,7 @@ body.dark-mode .cert-preview-card {
 
 /* ================================================================
    RESPONSIVE DESIGN SYSTEM (TABLET, MOBILE & SMALL SCREENS)
+   Mastercrafted for flawless rendering across all viewport tiers
    ================================================================ */
 
 /* Global Mobile Overflow Safeguards */
@@ -4618,20 +4444,176 @@ html, body {
   width: 100%;
 }
 
-/* Tablet & Smaller (< 992px) */
+/* Touch Device Interaction Optimizations */
+@media (hover: none) and (pointer: coarse) {
+  button, a, input, select, textarea {
+    -webkit-tap-highlight-color: transparent;
+  }
+  .nav-link:hover::after {
+    width: 0;
+  }
+  .nav-link.active::after {
+    width: 32px;
+  }
+}
+
+/* ──────────────────────────────────────────────────────────────
+   1. LAPTOPS & LARGE TABLETS (max-width: 1180px)
+   ────────────────────────────────────────────────────────────── */
+@media (max-width: 1180px) {
+  :root {
+    --container-w: min(1120px, 94vw);
+    --nav-container-w: min(1180px, 95vw);
+    --section-py: clamp(70px, 8vw, 100px);
+  }
+
+  .nav-menu {
+    gap: 22px;
+  }
+
+  .nav-link {
+    font-size: 0.76rem;
+    letter-spacing: 0.05em;
+  }
+
+  .hero-bg-art {
+    width: min(54vw, 750px);
+    opacity: 0.45;
+  }
+
+  .hero-floating-card {
+    right: 3%;
+    bottom: 20%;
+    width: 175px;
+    padding: 16px 14px;
+  }
+
+  .about-split {
+    grid-template-columns: 1fr 1fr;
+    gap: 36px;
+  }
+
+  .about-carousel-track-wrapper {
+    height: 580px;
+  }
+
+  .about-carousel-card {
+    height: 360px;
+  }
+
+  .project-card {
+    flex: 0 1 calc(50% - 14px);
+    max-width: 440px;
+  }
+}
+
+/* ──────────────────────────────────────────────────────────────
+   2. TABLETS & IPADS IN PORTRAIT / SMALL LAPTOPS (max-width: 992px)
+   ────────────────────────────────────────────────────────────── */
 @media (max-width: 992px) {
   :root {
     --section-py: clamp(60px, 7vw, 90px);
   }
 
-  .hero-bg-art {
-    width: 85vw;
-    opacity: 0.35;
+  /* ---- HERO SECTION TABLET BLEND ---- */
+  .hero {
+    padding: 110px 0 50px;
   }
 
+  .hero-bg-art {
+    width: 65vw;
+    opacity: 0.28;
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,0.3) 15%, black 60%);
+    mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,0.3) 15%, black 60%);
+  }
+
+  .hero-floating-card {
+    opacity: 0.9;
+    transform: scale(0.9);
+    right: 2%;
+    bottom: 16%;
+  }
+
+  .hero-name {
+    font-size: clamp(2.8rem, 6.2vw, 4.4rem);
+  }
+
+  /* ---- ABOUT SECTION TABLET ---- */
+  .about-section {
+    min-height: auto;
+    height: auto;
+    padding: 70px 0;
+    overflow: visible;
+  }
+
+  .about-section > .container {
+    height: auto;
+    display: block;
+  }
+
+  .about-split {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    height: auto;
+    min-height: auto;
+  }
+
+  .about-left {
+    max-width: 100%;
+  }
+
+  .about-right {
+    order: 2;
+    height: 270px;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .about-carousel-track-wrapper {
+    max-width: 100%;
+    height: 270px;
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+  }
+
+  .about-carousel-track {
+    flex-direction: row;
+    gap: 16px;
+    margin-top: 0;
+    padding-left: 10px;
+  }
+
+  .about-carousel-card {
+    height: 230px;
+    min-width: 270px;
+    width: 270px;
+    border-radius: 20px;
+    transform: none;
+    opacity: 1;
+    filter: none;
+  }
+
+  /* ---- SKILLS TABLET ---- */
+  .skills-section .skill-category {
+    flex: 0 0 calc(50% - 16px) !important;
+    max-width: calc(50% - 16px) !important;
+  }
+
+  /* ---- EXPERIENCE TABLET ---- */
+  .experience-card {
+    grid-template-columns: 1fr;
+    gap: 22px;
+    padding: 28px 24px;
+  }
+
+  .experience-visual {
+    min-height: 190px;
+  }
+
+  /* ---- CONTACT TABLET ---- */
   .contact-wrapper {
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 22px;
   }
 
   .features {
@@ -4640,15 +4622,13 @@ html, body {
   }
 }
 
-/* Standard Mobile & Tablet Portrait (< 768px) */
-@media (max-width: 768px) {
-  :root {
-    --section-py: 55px;
-  }
-
-  /* ---- NAVBAR & MOBILE DRAWER ---- */
+/* ──────────────────────────────────────────────────────────────
+   3. MEDIUM TABLETS & COMPACT VIEWPORTS (max-width: 900px)
+   ────────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  /* ---- NAVBAR & HAMBURGER DRAWER ACTIVATION ---- */
   .navbar {
-    padding: 12px 0;
+    padding: 14px 0;
   }
 
   .navbar.scrolled {
@@ -4656,22 +4636,22 @@ html, body {
   }
 
   .nav-container {
-    padding: 0 16px;
+    padding: 0 clamp(16px, 3vw, 28px);
   }
 
   .nav-logo {
-    font-size: 1.25rem;
+    font-size: 1.3rem;
   }
 
   .nav-actions {
-    gap: 8px;
+    gap: 10px;
   }
 
   .nav-theme-btn,
   .nav-profile-btn,
   .hamburger {
-    width: 38px;
-    height: 38px;
+    width: 40px;
+    height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -4704,7 +4684,7 @@ html, body {
     transform: rotate(90deg);
   }
 
-  /* Frosted Glass Mobile Menu Drawer */
+  /* Frosted Glass Mobile Drawer */
   .nav-menu {
     display: flex;
     flex-direction: column;
@@ -4712,14 +4692,14 @@ html, body {
     top: calc(100% + 10px);
     left: 14px;
     right: 14px;
-    background: rgba(255, 255, 255, 0.94);
-    backdrop-filter: blur(24px) saturate(180%);
-    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(28px) saturate(190%);
+    -webkit-backdrop-filter: blur(28px) saturate(190%);
     border: 1.5px solid var(--border);
     border-radius: 20px;
     padding: 14px 10px;
     gap: 4px;
-    box-shadow: 0 20px 48px rgba(90, 69, 255, 0.16), 0 4px 16px rgba(22, 19, 42, 0.08);
+    box-shadow: 0 22px 50px rgba(90, 69, 255, 0.18), 0 4px 18px rgba(22, 19, 42, 0.08);
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
@@ -4731,8 +4711,8 @@ html, body {
   [data-theme="dark"] .nav-menu,
   body.dark-mode .nav-menu {
     background: rgba(20, 16, 42, 0.96);
-    border-color: rgba(98, 70, 255, 0.32);
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65);
+    border-color: rgba(98, 70, 255, 0.35);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7);
   }
 
   .nav-menu.open {
@@ -4775,13 +4755,23 @@ html, body {
     color: #A594FD;
   }
 
-  .profile-dropdown-menu {
-    right: 0;
-    max-width: calc(100vw - 28px);
-    width: 220px;
+  /* Section headers on medium screens */
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+}
+
+/* ──────────────────────────────────────────────────────────────
+   4. STANDARD MOBILE & SMALL TABLETS (max-width: 768px)
+   ────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  :root {
+    --section-py: 52px;
   }
 
-  /* ---- AMBIENT GLOWS CONTAINMENT ---- */
+  /* ---- AMBIENT LIGHTING CONTAINMENT ---- */
   .ambient-glow-wrapper {
     overflow: hidden;
     max-width: 100vw;
@@ -4794,7 +4784,7 @@ html, body {
   .glow-2 { width: 280px; height: 280px; bottom: 2%; right: -60px; }
   .glow-3 { width: 240px; height: 240px; }
 
-  /* ---- HERO SECTION ---- */
+  /* ---- HERO SECTION MOBILE ---- */
   .hero {
     padding: 92px 0 35px;
     min-height: calc(100svh - 10px);
@@ -4831,7 +4821,7 @@ html, body {
   }
 
   .hero-brush-stroke {
-    max-width: 110px;
+    max-width: 120px;
     height: 10px;
     bottom: -2px;
   }
@@ -4856,7 +4846,7 @@ html, body {
   }
 
   .hero-cta .btn {
-    flex: 1 1 135px;
+    flex: 1 1 140px;
     justify-content: center;
     padding: 12px 18px;
     font-size: 0.88rem;
@@ -4864,7 +4854,7 @@ html, body {
 
   .hero-bg-art {
     width: 100vw;
-    opacity: 0.22;
+    opacity: 0.16;
     -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%);
     mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%);
   }
@@ -4875,37 +4865,38 @@ html, body {
     display: none !important;
   }
 
-  /* ---- SECTION HEADERS ---- */
+  .social-links-hero {
+    gap: 12px;
+  }
+
+  .social-links-hero a {
+    width: 42px;
+    height: 42px;
+    font-size: 1rem;
+  }
+
+  /* ---- SECTION TITLE HEADERS ---- */
   .section-title {
     font-size: 0.78rem;
-    margin-bottom: 34px;
+    margin-bottom: 32px;
   }
+
   .section-title span {
     font-size: clamp(1.6rem, 5.5vw, 2.2rem);
     margin-top: 6px;
   }
 
-  /* ---- ABOUT ME SECTION ---- */
+  /* ---- ABOUT ME SECTION MOBILE ---- */
   .about-section {
-    min-height: auto;
-    height: auto;
-    padding: 50px 0;
+    padding: 48px 0;
   }
 
   .about-section > .container {
     padding: 0 18px;
-    height: auto;
   }
 
   .about-split {
-    grid-template-columns: 1fr;
     gap: 28px;
-    min-height: auto;
-    height: auto;
-  }
-
-  .about-left {
-    max-width: 100%;
   }
 
   .about-eyebrow-wrap {
@@ -4955,39 +4946,24 @@ html, body {
   }
 
   .about-right {
-    justify-content: center;
-    order: 2;
-    height: 250px;
+    height: 240px;
   }
 
   .about-carousel-track-wrapper {
-    max-width: 100%;
-    height: 250px;
-    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
-    mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
-  }
-
-  .about-carousel-track {
-    flex-direction: row;
-    gap: 14px;
-    margin-top: 0;
-    padding-left: 10px;
+    height: 240px;
   }
 
   .about-carousel-card {
-    height: 220px;
+    height: 210px;
     min-width: 250px;
     width: 250px;
     border-radius: 18px;
-    transform: none;
-    opacity: 1;
-    filter: none;
   }
 
-  /* ---- SKILLS SECTION ---- */
+  /* ---- SKILLS SECTION MOBILE ---- */
   .skills-section {
-    padding-top: 50px;
-    padding-bottom: 80px;
+    padding-top: 48px;
+    padding-bottom: 75px;
     overflow: hidden;
   }
 
@@ -4996,30 +4972,23 @@ html, body {
     opacity: 0.35;
   }
 
-  .section-cloud--left {
-    left: -25px;
-    top: 6%;
-  }
-
-  .section-cloud--right {
-    right: -25px;
-    bottom: 6%;
-  }
+  .section-cloud--left { left: -25px; top: 6%; }
+  .section-cloud--right { right: -25px; bottom: 6%; }
 
   .skills-transition-wrapper {
-    height: 110px;
+    height: 100px;
   }
 
   .transition-cloud--left-back,
   .transition-cloud--right-back {
-    width: 170px;
-    opacity: 0.4;
+    width: 160px;
+    opacity: 0.35;
   }
 
   .transition-cloud--left-front,
   .transition-cloud--right-front {
-    width: 140px;
-    opacity: 0.6;
+    width: 130px;
+    opacity: 0.55;
   }
 
   .skills-grid {
@@ -5052,9 +5021,9 @@ html, body {
     height: 5px;
   }
 
-  /* ---- EXPERIENCE SECTION ---- */
+  /* ---- EXPERIENCE SECTION MOBILE ---- */
   .experience-section {
-    padding: 50px 16px 65px;
+    padding: 48px 16px 65px;
     min-height: auto;
     overflow: hidden;
   }
@@ -5064,14 +5033,14 @@ html, body {
   }
 
   .experience-section .cloud {
-    width: 190px;
-    right: -45px;
+    width: 180px;
+    right: -40px;
     top: 25px;
-    opacity: 0.3;
+    opacity: 0.28;
   }
 
   .experience-header {
-    margin-bottom: 24px;
+    margin-bottom: 22px;
   }
 
   .experience-section .section-number {
@@ -5113,10 +5082,9 @@ html, body {
   }
 
   .experience-card {
-    grid-template-columns: 1fr;
-    gap: 16px;
     padding: 18px 16px;
     border-radius: 18px;
+    gap: 16px;
   }
 
   .job-header {
@@ -5156,35 +5124,6 @@ html, body {
     font-size: 11px;
   }
 
-  .metrics {
-    grid-template-columns: 1fr;
-    gap: 0;
-    margin: 12px 0;
-  }
-
-  .metric {
-    padding: 8px 0;
-    border-right: none;
-    border-bottom: 1px solid rgba(96, 70, 255, 0.08);
-  }
-
-  .metric:first-child {
-    padding-top: 0;
-  }
-
-  .metric:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
-  }
-
-  .metric-number {
-    font-size: 18px;
-  }
-
-  .metric-label {
-    font-size: 10.5px;
-  }
-
   .contributions {
     padding-top: 12px;
     gap: 8px 14px;
@@ -5203,8 +5142,8 @@ html, body {
     transform: scale(0.8) perspective(500px) rotateX(12deg);
   }
 
-  .security-visual {
-    transform: scale(0.8);
+  .model-cube {
+    transform: scale(0.8) perspective(600px) rotateX(25deg) rotateY(-25deg);
   }
 
   .coming-soon {
@@ -5217,25 +5156,18 @@ html, body {
     width: 30px;
   }
 
-  /* ---- PROJECTS SECTION ---- */
+  /* ---- PROJECTS SECTION MOBILE ---- */
   .projects-section {
-    padding: 50px 16px 65px;
+    padding: 48px 16px 65px;
     min-height: auto;
     overflow: hidden;
   }
 
   .projects-section .cloud {
-    width: 170px;
-    right: -45px;
-    top: 35px;
-    opacity: 0.22;
-  }
-
-  .section-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-    margin-bottom: 18px;
+    width: 160px;
+    right: -40px;
+    top: 30px;
+    opacity: 0.2;
   }
 
   .projects-section .section-title {
@@ -5321,10 +5253,10 @@ html, body {
     height: 28px;
   }
 
-  /* ---- ACHIEVEMENTS & CERTIFICATIONS ---- */
+  /* ---- ACHIEVEMENTS & CERTIFICATIONS MOBILE ---- */
   .stats-grid {
     gap: 10px;
-    margin-bottom: 32px;
+    margin-bottom: 28px;
   }
 
   .stat-card {
@@ -5349,7 +5281,7 @@ html, body {
 
   .cert-controls {
     gap: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 18px;
   }
 
   .cert-search {
@@ -5359,7 +5291,7 @@ html, body {
   }
 
   .cert-search input {
-    font-size: 16px; /* Stop iOS Safari zoom on input focus */
+    font-size: 16px; /* Prevents iOS Safari auto-zoom */
   }
 
   .cert-filters {
@@ -5401,9 +5333,9 @@ html, body {
     font-size: 0.78rem;
   }
 
-  /* ---- CONTACT SECTION ---- */
+  /* ---- CONTACT SECTION MOBILE ---- */
   .contact-section {
-    padding: 50px 16px 65px;
+    padding: 48px 16px 65px;
     overflow: hidden;
   }
 
@@ -5456,7 +5388,7 @@ html, body {
   }
 
   .contact-card .card-val {
-    max-width: 170px;
+    max-width: 180px;
   }
 
   .form-grid {
@@ -5472,7 +5404,7 @@ html, body {
 
   .input-box input,
   .input-box textarea {
-    font-size: 16px; /* Stop iOS Safari zoom on typing */
+    font-size: 16px; /* Prevents iOS auto-zoom */
   }
 
   .input-box textarea {
@@ -5516,13 +5448,13 @@ html, body {
     font-size: 11px;
   }
 
-  /* ---- FOOTER ---- */
+  /* ---- FOOTER MOBILE ---- */
   .footer {
-    padding: 30px 16px;
+    padding: 28px 16px;
     font-size: 0.82rem;
   }
 
-  /* ---- MODALS ---- */
+  /* ---- MODALS MOBILE ---- */
   .modal {
     padding: 12px;
   }
@@ -5532,6 +5464,26 @@ html, body {
     max-height: 92vh;
     display: flex;
     flex-direction: column;
+  }
+
+  .profile-zoom-card {
+    padding: 26px 18px 22px;
+    max-width: 360px;
+  }
+
+  .profile-zoom-media-wrapper {
+    width: 130px;
+    height: 130px;
+    margin: 2px auto 14px;
+  }
+
+  .profile-zoom-name {
+    font-size: 1.2rem;
+  }
+
+  .profile-zoom-role {
+    font-size: 0.8rem;
+    margin-bottom: 16px;
   }
 
   .resume-modal-box {
@@ -5576,7 +5528,7 @@ html, body {
   }
 
   .cert-modal-header {
-    padding: 18px 16px 12px;
+    padding: 18px 48px 12px 16px;
   }
 
   .cert-modal-header h3 {
@@ -5617,12 +5569,48 @@ html, body {
   }
 
   .auth-input-wrap input {
-    font-size: 16px; /* Stop iOS zoom */
+    font-size: 16px; /* Prevents iOS Safari auto-zoom */
     padding: 11px 12px 11px 36px;
   }
 }
 
-/* Extra Small Phones (< 380px) */
+/* ──────────────────────────────────────────────────────────────
+   5. NARROW MOBILE (max-width: 540px)
+   ────────────────────────────────────────────────────────────── */
+@media (max-width: 540px) {
+  .metrics {
+    grid-template-columns: 1fr;
+    gap: 0;
+    margin: 12px 0;
+  }
+
+  .metric {
+    padding: 8px 0;
+    border-right: none;
+    border-bottom: 1px solid rgba(96, 70, 255, 0.08);
+  }
+
+  .metric:first-child {
+    padding-top: 0;
+  }
+
+  .metric:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .metric-number {
+    font-size: 18px;
+  }
+
+  .metric-label {
+    font-size: 10.5px;
+  }
+}
+
+/* ──────────────────────────────────────────────────────────────
+   6. EXTRA SMALL PHONES (max-width: 380px)
+   ────────────────────────────────────────────────────────────── */
 @media (max-width: 380px) {
   .nav-container {
     padding: 0 12px;
@@ -5633,7 +5621,7 @@ html, body {
   }
 
   .hero-name {
-    font-size: 2.1rem;
+    font-size: 2.05rem;
   }
 
   .hero-cta .btn {
@@ -5646,11 +5634,41 @@ html, body {
   }
 
   .about-carousel-card {
-    min-width: 215px;
-    width: 215px;
-    height: 200px;
+    min-width: 220px;
+    width: 220px;
+    height: 195px;
+  }
+
+  .contact-card .card-val {
+    max-width: 140px;
   }
 }
+
+/* ──────────────────────────────────────────────────────────────
+   7. ULTRA-COMPACT PHONES (max-width: 340px)
+   ────────────────────────────────────────────────────────────── */
+@media (max-width: 340px) {
+  .hero-name {
+    font-size: 1.85rem;
+  }
+
+  .hero-greeting {
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+  }
+
+  .btn {
+    padding: 10px 14px;
+    font-size: 0.82rem;
+  }
+
+  .about-carousel-card {
+    min-width: 200px;
+    width: 200px;
+    height: 180px;
+  }
+}
+
 
 
 
