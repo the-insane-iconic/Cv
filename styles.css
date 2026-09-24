@@ -5897,32 +5897,36 @@ body.dark-mode a.company-link:hover {
 
 /* =======================================================
    EDUCATION & ACADEMIC JOURNEY (HORIZONTAL SNAKE PATH)
-   Smartphone-style Sticky Scroll-Driven Horizontal Showcase
 ======================================================== */
 .education-journey-section {
   position: relative;
-  height: 280vh; /* Provides vertical scroll distance for smooth horizontal runway travel */
+  height: 100vh;
+  height: 100dvh;
+  min-height: 580px;
+  max-height: 100vh;
+  max-height: 100dvh;
   background: var(--bg);
   padding: 0;
   margin: 0;
-}
-
-.journey-pin-wrapper {
-  position: sticky;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  height: 100dvh;
-  max-height: 100vh;
-  max-height: 100dvh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   box-sizing: border-box;
-  padding: 16px 0 12px 0;
+}
+
+.journey-pin-wrapper {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 24px 0 16px 0;
+  position: relative;
   z-index: 5;
 }
 
@@ -5959,7 +5963,7 @@ body.dark-mode a.company-link:hover {
 .journey-header-container {
   position: relative;
   z-index: 2;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   flex-shrink: 0;
   width: 100%;
 }
@@ -6039,12 +6043,18 @@ body.dark-mode a.company-link:hover {
   width: 100%;
   flex: 1;
   min-height: 0;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
   position: relative;
   z-index: 2;
   display: flex;
   align-items: center;
   cursor: grab;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.journey-runway-container::-webkit-scrollbar {
+  display: none;
 }
 .journey-runway-container:active {
   cursor: grabbing;
@@ -6058,7 +6068,6 @@ body.dark-mode a.company-link:hover {
   padding-left: max(32px, calc((100vw - 1280px) / 2));
   padding-right: 320px; /* Extends past screen right edge depicting continuous journey */
   height: 420px;
-  will-change: transform;
 }
 
 /* Continuous Snake SVG (Compact 360-fit) */

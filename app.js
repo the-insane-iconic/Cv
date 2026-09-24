@@ -877,96 +877,93 @@ window.initApp = function () {
     });
   });
 
-  /* ---------- Academic Journey Scroll-Driven Horizontal Pin ---------- */
+  /* ---------- Academic Journey Pure Horizontal Wheel & Runway Controls ---------- */
   const eduSection = document.getElementById('education');
-  const snakeTrack = document.getElementById('journeySnakeTrack');
   const runway = document.getElementById('journeyRunway');
   const prevBtn = document.getElementById('journeyPrevBtn');
   const nextBtn = document.getElementById('journeyNextBtn');
 
-  if (eduSection && snakeTrack && runway) {
-    let ticking = false;
+  if (eduSection && runway) {
+    let targetScrollLeft = runway.scrollLeft;
+    let isWheeling = false;
+    let animFrame = null;
 
-    function updateSnakeScroll() {
-      // On mobile screens, disable scroll-jacking pin and allow native touch swiping
-      if (window.innerWidth <= 768) {
-        snakeTrack.style.transform = '';
-        ticking = false;
-        return;
-      }
-
-      const rect = eduSection.getBoundingClientRect();
-      const viewportHeight = window.innerHeight;
-      const totalScrollableDistance = eduSection.offsetHeight - viewportHeight;
-
-      if (totalScrollableDistance <= 0) {
-        ticking = false;
-        return;
-      }
-
-      // Progress along the pinned section (0 when top enters, 1 when bottom reached)
-      const scrolled = -rect.top;
-      const progress = Math.max(0, Math.min(1, scrolled / totalScrollableDistance));
-
-      // Max horizontal translation distance (track width minus visible runway width)
-      const maxTranslate = Math.max(0, snakeTrack.scrollWidth - runway.clientWidth);
-      
-      // Hardware-accelerated GPU translation
-      snakeTrack.style.transform = `translate3d(-${progress * maxTranslate}px, 0, 0)`;
-      ticking = false;
-    }
-
-    function requestSnakeTick() {
-      if (!ticking) {
-        requestAnimationFrame(updateSnakeScroll);
-        ticking = true;
+    function lerpScroll() {
+      const current = runway.scrollLeft;
+      const diff = targetScrollLeft - current;
+      if (Math.abs(diff) > 0.8) {
+        runway.scrollLeft = current + diff * 0.22;
+        animFrame = requestAnimationFrame(lerpScroll);
+      } else {
+        runway.scrollLeft = targetScrollLeft;
+        isWheeling = false;
+        animFrame = null;
       }
     }
 
-    if (lenisInstance) {
-      lenisInstance.on('scroll', requestSnakeTick);
-    }
-    window.addEventListener('scroll', requestSnakeTick, { passive: true });
-    window.addEventListener('resize', requestSnakeTick);
+    // Intercept wheel events when mouse is over Academic Journey section
+    eduSection.addEventListener('wheel', (e) => {
+      if (window.innerWidth <= 768) return; // Native swipe behavior on mobile
 
-    // Initial positioning
-    requestSnakeTick();
+      const maxScroll = runway.scrollWidth - runway.clientWidth;
+      if (maxScroll <= 5) return;
 
-    // Next / Prev buttons smoothly scroll the page vertically to step through the horizontal path
+      const delta = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+      if (!delta) return;
+
+      const atStart = targetScrollLeft <= 5 && delta < 0;
+      const atEnd = targetScrollLeft >= maxScroll - 5 && delta > 0;
+
+      // Inside horizontal path: convert vertical wheel directly into smooth horizontal scroll
+      if (!atStart && !atEnd) {
+        e.preventDefault();
+        if (e.stopPropagation) e.stopPropagation();
+
+        targetScrollLeft = Math.max(0, Math.min(maxScroll, targetScrollLeft + delta * 1.35));
+
+        if (!isWheeling) {
+          isWheeling = true;
+          animFrame = requestAnimationFrame(lerpScroll);
+        }
+      } else {
+        // At the start or end bounds: let page scroll vertically to previous/next section
+        targetScrollLeft = runway.scrollLeft;
+        if (animFrame) {
+          cancelAnimationFrame(animFrame);
+          animFrame = null;
+          isWheeling = false;
+        }
+      }
+    }, { passive: false });
+
+    // Next / Prev buttons scroll horizontally
     if (prevBtn) {
       prevBtn.addEventListener('click', (e) => {
         e.preventDefault();
-        const stepDist = window.innerHeight * 0.6;
-        if (window.lenis) {
-          window.lenis.scrollTo(window.scrollY - stepDist);
-        } else {
-          window.scrollBy({ top: -stepDist, behavior: 'smooth' });
-        }
+        targetScrollLeft = Math.max(0, runway.scrollLeft - 320);
+        runway.scrollTo({ left: targetScrollLeft, behavior: 'smooth' });
       });
     }
 
     if (nextBtn) {
       nextBtn.addEventListener('click', (e) => {
         e.preventDefault();
-        const stepDist = window.innerHeight * 0.6;
-        if (window.lenis) {
-          window.lenis.scrollTo(window.scrollY + stepDist);
-        } else {
-          window.scrollBy({ top: stepDist, behavior: 'smooth' });
-        }
+        const maxScroll = runway.scrollWidth - runway.clientWidth;
+        targetScrollLeft = Math.min(maxScroll, runway.scrollLeft + 320);
+        runway.scrollTo({ left: targetScrollLeft, behavior: 'smooth' });
       });
     }
 
-    // Drag-to-scroll interaction on desktop trackpad/mouse
+    // Drag-to-scroll interaction on runway
     let isDown = false;
     let startX = 0;
-    let initialScrollY = 0;
+    let startScrollLeft = 0;
 
     runway.addEventListener('mousedown', (e) => {
-      if (window.innerWidth <= 768) return;
       isDown = true;
-      startX = e.pageX;
-      initialScrollY = window.scrollY;
+      startX = e.pageX - runway.offsetLeft;
+      startScrollLeft = runway.scrollLeft;
+      targetScrollLeft = runway.scrollLeft;
     });
 
     window.addEventListener('mouseup', () => {
@@ -974,19 +971,12 @@ window.initApp = function () {
     });
 
     runway.addEventListener('mousemove', (e) => {
-      if (!isDown || window.innerWidth <= 768) return;
+      if (!isDown) return;
       e.preventDefault();
-      const deltaX = e.pageX - startX;
-      const totalScrollableDistance = eduSection.offsetHeight - window.innerHeight;
-      const maxTranslate = Math.max(0, snakeTrack.scrollWidth - runway.clientWidth);
-      if (maxTranslate > 0) {
-        const targetY = initialScrollY - (deltaX * (totalScrollableDistance / maxTranslate));
-        if (window.lenis) {
-          window.lenis.scrollTo(targetY, { immediate: true });
-        } else {
-          window.scrollTo({ top: targetY });
-        }
-      }
+      const x = e.pageX - runway.offsetLeft;
+      const walk = (x - startX) * 1.4;
+      runway.scrollLeft = startScrollLeft - walk;
+      targetScrollLeft = runway.scrollLeft;
     });
   }
 };
