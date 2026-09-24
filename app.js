@@ -877,32 +877,96 @@ window.initApp = function () {
     });
   });
 
-  /* ---------- Academic Journey Snake Runway Controls ---------- */
+  /* ---------- Academic Journey Scroll-Driven Horizontal Pin ---------- */
+  const eduSection = document.getElementById('education');
+  const snakeTrack = document.getElementById('journeySnakeTrack');
   const runway = document.getElementById('journeyRunway');
   const prevBtn = document.getElementById('journeyPrevBtn');
   const nextBtn = document.getElementById('journeyNextBtn');
 
-  if (runway) {
-    if (prevBtn) {
-      prevBtn.addEventListener('click', () => {
-        runway.scrollBy({ left: -380, behavior: 'smooth' });
-      });
+  if (eduSection && snakeTrack && runway) {
+    let ticking = false;
+
+    function updateSnakeScroll() {
+      // On mobile screens, disable scroll-jacking pin and allow native touch swiping
+      if (window.innerWidth <= 768) {
+        snakeTrack.style.transform = '';
+        ticking = false;
+        return;
+      }
+
+      const rect = eduSection.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      const totalScrollableDistance = eduSection.offsetHeight - viewportHeight;
+
+      if (totalScrollableDistance <= 0) {
+        ticking = false;
+        return;
+      }
+
+      // Progress along the pinned section (0 when top enters, 1 when bottom reached)
+      const scrolled = -rect.top;
+      const progress = Math.max(0, Math.min(1, scrolled / totalScrollableDistance));
+
+      // Max horizontal translation distance (track width minus visible runway width)
+      const maxTranslate = Math.max(0, snakeTrack.scrollWidth - runway.clientWidth);
+      
+      // Hardware-accelerated GPU translation
+      snakeTrack.style.transform = `translate3d(-${progress * maxTranslate}px, 0, 0)`;
+      ticking = false;
     }
-    if (nextBtn) {
-      nextBtn.addEventListener('click', () => {
-        runway.scrollBy({ left: 380, behavior: 'smooth' });
+
+    function requestSnakeTick() {
+      if (!ticking) {
+        requestAnimationFrame(updateSnakeScroll);
+        ticking = true;
+      }
+    }
+
+    if (lenisInstance) {
+      lenisInstance.on('scroll', requestSnakeTick);
+    }
+    window.addEventListener('scroll', requestSnakeTick, { passive: true });
+    window.addEventListener('resize', requestSnakeTick);
+
+    // Initial positioning
+    requestSnakeTick();
+
+    // Next / Prev buttons smoothly scroll the page vertically to step through the horizontal path
+    if (prevBtn) {
+      prevBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const stepDist = window.innerHeight * 0.6;
+        if (window.lenis) {
+          window.lenis.scrollTo(window.scrollY - stepDist);
+        } else {
+          window.scrollBy({ top: -stepDist, behavior: 'smooth' });
+        }
       });
     }
 
-    // Drag-to-scroll interaction for smooth mouse/trackpad panning
+    if (nextBtn) {
+      nextBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const stepDist = window.innerHeight * 0.6;
+        if (window.lenis) {
+          window.lenis.scrollTo(window.scrollY + stepDist);
+        } else {
+          window.scrollBy({ top: stepDist, behavior: 'smooth' });
+        }
+      });
+    }
+
+    // Drag-to-scroll interaction on desktop trackpad/mouse
     let isDown = false;
     let startX = 0;
-    let scrollLeft = 0;
+    let initialScrollY = 0;
 
     runway.addEventListener('mousedown', (e) => {
+      if (window.innerWidth <= 768) return;
       isDown = true;
-      startX = e.pageX - runway.offsetLeft;
-      scrollLeft = runway.scrollLeft;
+      startX = e.pageX;
+      initialScrollY = window.scrollY;
     });
 
     window.addEventListener('mouseup', () => {
@@ -910,11 +974,19 @@ window.initApp = function () {
     });
 
     runway.addEventListener('mousemove', (e) => {
-      if (!isDown) return;
+      if (!isDown || window.innerWidth <= 768) return;
       e.preventDefault();
-      const x = e.pageX - runway.offsetLeft;
-      const walk = (x - startX) * 1.5;
-      runway.scrollLeft = scrollLeft - walk;
+      const deltaX = e.pageX - startX;
+      const totalScrollableDistance = eduSection.offsetHeight - window.innerHeight;
+      const maxTranslate = Math.max(0, snakeTrack.scrollWidth - runway.clientWidth);
+      if (maxTranslate > 0) {
+        const targetY = initialScrollY - (deltaX * (totalScrollableDistance / maxTranslate));
+        if (window.lenis) {
+          window.lenis.scrollTo(targetY, { immediate: true });
+        } else {
+          window.scrollTo({ top: targetY });
+        }
+      }
     });
   }
 };
