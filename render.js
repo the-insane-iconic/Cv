@@ -70,6 +70,14 @@
                 dbData[key] = fileData[key];
               }
             }
+            if (Array.isArray(dbData.projects) && Array.isArray(fileData.projects)) {
+              dbData.projects.forEach((proj, idx) => {
+                const fileProj = fileData.projects[idx];
+                if (fileProj && (!proj.video || proj.video === '')) {
+                  if (fileProj.video) proj.video = fileProj.video;
+                }
+              });
+            }
           }
           sanitizeLegacyData(dbData);
           localStorage.setItem(STORAGE_KEY, JSON.stringify(dbData));
@@ -86,6 +94,14 @@
           if (currentData[key] === undefined) {
             currentData[key] = fileData[key];
           }
+        }
+        if (Array.isArray(currentData.projects) && Array.isArray(fileData.projects)) {
+          currentData.projects.forEach((proj, idx) => {
+            const fileProj = fileData.projects[idx];
+            if (fileProj && (!proj.video || proj.video === '')) {
+              if (fileProj.video) proj.video = fileProj.video;
+            }
+          });
         }
       }
       sanitizeLegacyData(currentData);
@@ -104,11 +120,19 @@
   /* ---- 2. Helpers ---------------------------------------------- */
   function optimizeImageUrl(url, width = 1200, quality = 82) {
     if (!url || typeof url !== 'string') return url;
+    const clean = url.trim();
+    // Map relative local filenames to high-speed Cloudflare edge WebP CDN
+    if (/^(1st|2nd|03|4th|pfp)\.png$/i.test(clean)) {
+      const filename = clean === 'pfp.png' ? '1st.png' : clean;
+      const target = `https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/${filename}`;
+      const w = width ? `&w=${width}` : '';
+      return `https://wsrv.nl/?url=${encodeURIComponent(target)}${w}&output=webp&q=${quality}`;
+    }
     // Route raw Supabase images to high-speed Cloudflare edge WebP CDN
-    if (url.includes('supabase.co/storage/v1/object/public/')) {
-      if (/\.(png|jpe?g|webp)/i.test(url)) {
+    if (clean.includes('supabase.co/storage/v1/object/public/')) {
+      if (/\.(png|jpe?g|webp)/i.test(clean)) {
         const w = width ? `&w=${width}` : '';
-        return `https://wsrv.nl/?url=${encodeURIComponent(url)}${w}&output=webp&q=${quality}`;
+        return `https://wsrv.nl/?url=${encodeURIComponent(clean)}${w}&output=webp&q=${quality}`;
       }
     }
     return url;

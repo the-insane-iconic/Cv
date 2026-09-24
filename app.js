@@ -13,10 +13,8 @@ window.initApp = function () {
 
   /* ---------- Lenis Ultra-Smooth Inertia Engine ---------- */
   let lenisInstance = window.lenis;
-  if (typeof Lenis !== 'undefined') {
-    if (lenisInstance && typeof lenisInstance.destroy === 'function') {
-      lenisInstance.destroy();
-    }
+  if (typeof Lenis !== 'undefined' && !window._lenisStarted) {
+    window._lenisStarted = true;
     lenisInstance = new Lenis({
       lerp: 0.085,
       duration: 1.1,
@@ -31,7 +29,7 @@ window.initApp = function () {
     window.lenis = lenisInstance;
 
     function raf(time) {
-      lenisInstance.raf(time);
+      if (window.lenis) window.lenis.raf(time);
       requestAnimationFrame(raf);
     }
     requestAnimationFrame(raf);
@@ -314,6 +312,11 @@ window.initApp = function () {
   }
 
   /* ---------- Typing Effect ---------- */
+  if (window._typeTimeout) {
+    clearTimeout(window._typeTimeout);
+    window._typeTimeout = null;
+  }
+
   // Roles come from render.js via window.PORTFOLIO_ROLES, with fallback
   const roles = (window.PORTFOLIO_ROLES && window.PORTFOLIO_ROLES.length)
     ? window.PORTFOLIO_ROLES
@@ -338,26 +341,29 @@ window.initApp = function () {
       charIndex++;
       if (charIndex === current.length) {
         isDeleting = true;
-        setTimeout(typeEffect, pauseEnd);
+        window._typeTimeout = setTimeout(typeEffect, pauseEnd);
         return;
       }
-      setTimeout(typeEffect, typeSpeed);
+      window._typeTimeout = setTimeout(typeEffect, typeSpeed);
     } else {
       typingEl.textContent = current.substring(0, charIndex - 1);
       charIndex--;
       if (charIndex === 0) {
         isDeleting = false;
         roleIndex = (roleIndex + 1) % roles.length;
-        setTimeout(typeEffect, pauseStart);
+        window._typeTimeout = setTimeout(typeEffect, pauseStart);
         return;
       }
-      setTimeout(typeEffect, deleteSpeed);
+      window._typeTimeout = setTimeout(typeEffect, deleteSpeed);
     }
   }
 
-  setTimeout(typeEffect, 800);
+  window._typeTimeout = setTimeout(typeEffect, 600);
 
   /* ---------- Intersection Observer – Scroll-Reveal Animations ---------- */
+  if (window._fadeObserver) {
+    window._fadeObserver.disconnect();
+  }
   const observerOptions = {
     threshold: 0.12,
     rootMargin: '0px 0px -60px 0px',
@@ -380,6 +386,7 @@ window.initApp = function () {
       }
     });
   }, observerOptions);
+  window._fadeObserver = fadeObserver;
 
   // Observe all animatable elements
   document
@@ -417,6 +424,9 @@ window.initApp = function () {
   }
 
   /* ---------- Stats Counter Animation ---------- */
+  if (window._countObserver) {
+    window._countObserver.disconnect();
+  }
   const statNumbers = document.querySelectorAll('.stat-number span[data-target]');
 
   const countObserver = new IntersectionObserver(
@@ -432,6 +442,7 @@ window.initApp = function () {
     },
     { threshold: 0.5 }
   );
+  window._countObserver = countObserver;
 
   statNumbers.forEach((el) => countObserver.observe(el));
 
