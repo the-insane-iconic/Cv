@@ -91,7 +91,8 @@ window.initApp = function () {
     darkImg.src = 'https://wsrv.nl/?url=https%3A%2F%2Feikxrpaakhhmpgtjrlhq.supabase.co%2Fstorage%2Fv1%2Fobject%2Fpublic%2Fprojeect%2520images%2Fdarkgate.png&output=webp&q=82';
   } catch (e) {}
 
-  if (themeBtn) {
+  if (themeBtn && !themeBtn._themeBound) {
+    themeBtn._themeBound = true;
     themeBtn.addEventListener('click', (e) => {
       const isDark = document.body.classList.contains('dark-mode');
       const nextIsDark = !isDark;
@@ -112,35 +113,41 @@ window.initApp = function () {
 
       // Circular ripple reveal originating from the theme button
       if (document.startViewTransition && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        const rect = themeBtn.getBoundingClientRect();
-        const x = e.clientX || (rect.left + rect.width / 2);
-        const y = e.clientY || (rect.top + rect.height / 2);
+        try {
+          const rect = themeBtn.getBoundingClientRect();
+          const x = e.clientX || (rect.left + rect.width / 2);
+          const y = e.clientY || (rect.top + rect.height / 2);
 
-        const endRadius = Math.hypot(
-          Math.max(x, window.innerWidth - x),
-          Math.max(y, window.innerHeight - y)
-        );
-
-        const transition = document.startViewTransition(() => {
-          applyTheme();
-        });
-
-        transition.ready.then(() => {
-          const clipPath = [
-            `circle(0px at ${x}px ${y}px)`,
-            `circle(${endRadius}px at ${x}px ${y}px)`
-          ];
-          document.documentElement.animate(
-            {
-              clipPath: clipPath
-            },
-            {
-              duration: 550,
-              easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
-              pseudoElement: '::view-transition-new(root)'
-            }
+          const endRadius = Math.hypot(
+            Math.max(x, window.innerWidth - x),
+            Math.max(y, window.innerHeight - y)
           );
-        });
+
+          const transition = document.startViewTransition(() => {
+            applyTheme();
+          });
+
+          transition.ready.then(() => {
+            const clipPath = [
+              `circle(0px at ${x}px ${y}px)`,
+              `circle(${endRadius}px at ${x}px ${y}px)`
+            ];
+            document.documentElement.animate(
+              {
+                clipPath: clipPath
+              },
+              {
+                duration: 550,
+                easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
+                pseudoElement: '::view-transition-new(root)'
+              }
+            );
+          }).catch(() => {
+            applyTheme();
+          });
+        } catch (err) {
+          applyTheme();
+        }
       } else {
         applyTheme();
       }
@@ -827,3 +834,13 @@ window.initApp = function () {
     });
   });
 };
+
+/* Auto-run initApp on DOM ready in case render.js runs asynchronously */
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    if (typeof window.initApp === 'function') window.initApp();
+  });
+} else {
+  if (typeof window.initApp === 'function') window.initApp();
+}
+

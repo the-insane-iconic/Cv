@@ -31,10 +31,9 @@
   <!-- Stylesheet -->
   <link rel="stylesheet" href="styles.css">
 
-  <!-- Deferred Scripts (Non-blocking DOM construction) -->
-  <script src="https://unpkg.com/lucide@latest" defer></script>
-  <script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js" defer></script>
-  <script src="app.js" defer></script>
+  <!-- External Libraries -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
 </head>
 
 <body>
@@ -1071,6 +1070,8 @@
   <!-- Supabase Cloud Engine -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-config.js"></script>
+  <!-- Application & Interactions Logic -->
+  <script src="app.js"></script>
   <!-- Content engine: reads Supabase / portfolio.json → populates DOM → calls initApp() -->
   <script src="render.js"></script>
 </body></html>

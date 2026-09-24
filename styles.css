@@ -1543,12 +1543,13 @@ body.dark-mode .about-stats-chips .chip i {
 }
 
 .skills-section .section-title {
-  color: var(--skills-text);
+  color: #FFFFFF !important;
 }
 .skills-section .section-title span {
-  color: var(--skills-text);
-  background: none;
-  -webkit-text-fill-color: initial;
+  color: #FFFFFF !important;
+  background: none !important;
+  -webkit-text-fill-color: #FFFFFF !important;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.4);
 }
 
 /* ---- Gamma-Style Horizon Cloud Transition ---- */
@@ -1730,6 +1731,12 @@ body.dark-mode .skills-section .skill-category:hover {
   align-items: center;
   gap: 10px;
 }
+
+[data-theme="dark"] .skill-category h3,
+body.dark-mode .skill-category h3 {
+  color: #FFFFFF !important;
+}
+
 .skill-category h3 i {
   font-size: 1rem;
   width: 34px; height: 34px;
@@ -1739,6 +1746,12 @@ body.dark-mode .skills-section .skill-category:hover {
   background: var(--surface-callout);
   border-radius: 10px;
   color: var(--accent);
+}
+
+[data-theme="dark"] .skill-category h3 i,
+body.dark-mode .skill-category h3 i {
+  background: rgba(111, 89, 255, 0.2);
+  color: #FFFFFF !important;
 }
 
 .skill-item {
@@ -1753,6 +1766,11 @@ body.dark-mode .skills-section .skill-category:hover {
   font-size: .88rem;
   font-weight: 600;
   color: var(--text-primary);
+}
+
+[data-theme="dark"] .skill-info,
+body.dark-mode .skill-info {
+  color: #FFFFFF !important;
 }
 .skill-info i {
   margin-right: 8px;
@@ -1864,9 +1882,9 @@ body.dark-mode .experience-top-fade {
 
 [data-theme="dark"] .experience-section .section-number,
 body.dark-mode .experience-section .section-number {
-  background: rgba(111, 91, 255, 0.18);
-  border-color: rgba(98, 70, 255, 0.3);
-  color: #B4A4FF;
+  background: rgba(111, 91, 255, 0.28);
+  border-color: rgba(140, 120, 255, 0.45);
+  color: #FFFFFF !important;
 }
 
 .experience-title {
@@ -1876,6 +1894,12 @@ body.dark-mode .experience-section .section-number {
   letter-spacing: -2.5px;
   color: var(--text-primary);
   margin: 0;
+}
+
+[data-theme="dark"] .experience-title,
+body.dark-mode .experience-title {
+  color: #FFFFFF !important;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.6);
 }
 
 .experience-title::after {
@@ -1894,6 +1918,11 @@ body.dark-mode .experience-section .section-number {
   line-height: 1.55;
   color: var(--text-secondary);
   max-width: 520px;
+}
+
+[data-theme="dark"] .experience-subtitle,
+body.dark-mode .experience-subtitle {
+  color: rgba(255, 255, 255, 0.9) !important;
 }
 
 /* FILTERS */
@@ -2085,6 +2114,15 @@ body.dark-mode .experience-card {
   margin: 0;
 }
 
+[data-theme="dark"] .job-title,
+body.dark-mode .job-title,
+[data-theme="dark"] .job-info h3,
+body.dark-mode .job-info h3,
+[data-theme="dark"] .experience-card .job-title,
+body.dark-mode .experience-card .job-title {
+  color: #FFFFFF !important;
+}
+
 .job-meta {
   display: flex;
   align-items: center;
@@ -2212,12 +2250,22 @@ body.dark-mode .metric-icon {
   color: var(--text-primary);
 }
 
+[data-theme="dark"] .metric-number,
+body.dark-mode .metric-number {
+  color: #FFFFFF !important;
+}
+
 .metric-label {
   display: block;
   margin-top: 4px;
   color: var(--text-secondary);
   font-size: 11px;
   line-height: 1.2;
+}
+
+[data-theme="dark"] .metric-label,
+body.dark-mode .metric-label {
+  color: rgba(240, 235, 255, 0.78) !important;
 }
 
 /* CONTRIBUTIONS */
@@ -2236,6 +2284,11 @@ body.dark-mode .metric-icon {
   color: var(--text-secondary);
   font-size: 13px;
   font-weight: 600;
+}
+
+[data-theme="dark"] .contribution,
+body.dark-mode .contribution {
+  color: rgba(245, 243, 255, 0.92) !important;
 }
 
 .contribution svg, .contribution i {
