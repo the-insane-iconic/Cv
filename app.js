@@ -85,12 +85,12 @@ window.initApp = function () {
     document.documentElement.setAttribute('data-theme', 'light');
   }
 
-  // Pre-decode opposite theme image into browser memory immediately
+  // Pre-decode opposite theme image into browser memory immediately (Ultra-fast WebP Edge CDN)
   try {
     const lightImg = new Image();
-    lightImg.src = 'https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/light%20gate.png';
+    lightImg.src = 'https://wsrv.nl/?url=https%3A%2F%2Feikxrpaakhhmpgtjrlhq.supabase.co%2Fstorage%2Fv1%2Fobject%2Fpublic%2Fprojeect%2520images%2Flight%2520gate.png&output=webp&q=82';
     const darkImg = new Image();
-    darkImg.src = 'https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/darkgate.png';
+    darkImg.src = 'https://wsrv.nl/?url=https%3A%2F%2Feikxrpaakhhmpgtjrlhq.supabase.co%2Fstorage%2Fv1%2Fobject%2Fpublic%2Fprojeect%2520images%2Fdarkgate.png&output=webp&q=82';
   } catch (e) {}
 
   if (themeBtn) {

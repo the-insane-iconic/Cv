@@ -12,9 +12,8 @@
   <script src="https://unpkg.com/lucide@latest"></script>
   <!-- Stylesheet -->
   <link rel="stylesheet" href="styles.css">
-  <!-- Preload Hero Arch Images for Instant Theme Switching -->
-  <link rel="preload" as="image" href="https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/light%20gate.png" fetchpriority="high">
-  <link rel="preload" as="image" href="https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/darkgate.png" fetchpriority="high">
+  <!-- Preload Hero Arch Image with Global WebP Edge CDN (13 KB instead of 1.5 MB) -->
+  <link rel="preload" as="image" href="https://wsrv.nl/?url=https%3A%2F%2Feikxrpaakhhmpgtjrlhq.supabase.co%2Fstorage%2Fv1%2Fobject%2Fpublic%2Fprojeect%2520images%2Fdarkgate.png&output=webp&q=82" fetchpriority="high">
   <!-- Lenis Ultra-Smooth Scrolling Engine -->
   <script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
   <!-- app.js exposes window.initApp(); render.js calls it after populating the DOM -->
@@ -65,8 +64,8 @@
     <section id="hero" class="hero">
       <!-- Background Art (Dual Theme Editorial Arch) -->
       <div class="hero-bg-art">
-        <img src="https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/light%20gate.png" alt="Editorial Arch Light Theme" class="hero-img-light" loading="eager" decoding="async" fetchpriority="high">
-        <img src="https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/darkgate.png" alt="Editorial Arch Dark Theme" class="hero-img-dark" loading="eager" decoding="async" fetchpriority="high">
+        <img src="https://wsrv.nl/?url=https%3A%2F%2Feikxrpaakhhmpgtjrlhq.supabase.co%2Fstorage%2Fv1%2Fobject%2Fpublic%2Fprojeect%2520images%2Flight%2520gate.png&output=webp&q=82" alt="Editorial Arch Light Theme" class="hero-img-light" loading="eager" decoding="async" fetchpriority="high" onerror="this.src='https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/light%20gate.png'">
+        <img src="https://wsrv.nl/?url=https%3A%2F%2Feikxrpaakhhmpgtjrlhq.supabase.co%2Fstorage%2Fv1%2Fobject%2Fpublic%2Fprojeect%2520images%2Fdarkgate.png&output=webp&q=82" alt="Editorial Arch Dark Theme" class="hero-img-dark" loading="eager" decoding="async" fetchpriority="high" onerror="this.src='https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/darkgate.png'">
         <!-- Floating Glass Card -->
         <div class="hero-floating-card">
           <div class="floating-code-icon">&lt;/&gt;</div>
@@ -135,17 +134,127 @@
               <span class="about-eyebrow">01 &mdash; ABOUT ME</span>
               <div class="about-eyebrow-line"></div>
             </div>
-            <!-- Populated by render.js -->
-            <div class="about-text"></div>
+            <!-- Static In-Repo Structure for Instant First-Time Loading -->
+            <div class="about-text">
+              <div class="about-manifesto">
+                <p class="about-manifesto-text">A curious <span class="text-accent">learner</span>.<br>A problem <span class="text-accent">solver</span>.<br>A <span class="text-accent">builder</span> of impactful solutions.</p>
+              </div>
+              <div class="about-narrative-list">
+                <div class="about-narrative-item">
+                  <div class="about-item-icon">
+                    <i class="fa-regular fa-user"></i>
+                  </div>
+                  <div class="about-item-content">
+                    <p>I'm a B.Tech CSE student at Lovely Professional University with a strong <strong class="about-hl">passion for technology</strong> and innovation. I build <strong class="about-hl">secure</strong>, <strong class="about-hl">scalable</strong>, and <strong class="about-hl">intelligent</strong> solutions that <strong class="about-hl">solve real-world problems</strong>.</p>
+                  </div>
+                </div>
+                <div class="about-narrative-item">
+                  <div class="about-item-icon">
+                    <i class="fa-solid fa-bullseye"></i>
+                  </div>
+                  <div class="about-item-content">
+                    <p>Driven by <strong class="about-hl">curiosity</strong> and a <strong class="about-hl">problem-solving</strong> mindset, I continuously <strong class="about-hl">learn</strong>, <strong class="about-hl">adapt</strong>, and <strong class="about-hl">apply</strong> my skills to create <strong class="about-hl">meaningful impact</strong>.</p>
+                  </div>
+                </div>
+                <div class="about-narrative-item">
+                  <div class="about-item-icon">
+                    <i class="fa-solid fa-rocket"></i>
+                  </div>
+                  <div class="about-item-content">
+                    <p><strong class="about-hl">I thrive</strong> in challenging environments and enjoy turning <strong class="about-hl">ideas into real-world solutions</strong> through <strong class="about-hl">clean code</strong>, <strong class="about-hl">strong systems</strong>, and <strong class="about-hl">thoughtful design</strong>.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="about-stats-chips">
+                <span class="chip"><i class="fa-solid fa-brain"></i> LLM Training &amp; RLHF</span>
+                <span class="chip"><i class="fa-solid fa-network-wired"></i> Deep Learning &amp; PyTorch</span>
+                <span class="chip"><i class="fa-solid fa-database"></i> RAG &amp; Vector Search</span>
+                <span class="chip"><i class="fa-solid fa-microchip"></i> Computer Vision &amp; NLP</span>
+                <span class="chip"><i class="fa-solid fa-code"></i> Scalable AI Pipelines</span>
+              </div>
+            </div>
           </div>
 
-          <!-- RIGHT: Vertical Auto-Scroll Carousel -->
+          <!-- RIGHT: Vertical Auto-Scroll Carousel with High-Speed Skeleton Shimmer -->
           <div class="about-right">
             <div class="about-carousel-track-wrapper" id="about-image-mount">
               <!-- Fade masks for depth -->
               <div class="about-carousel-fade about-carousel-fade--top"></div>
               <div class="about-carousel-fade about-carousel-fade--bottom"></div>
-              <!-- Populated by render.js -->
+              <div class="about-carousel-track" id="about-carousel-track">
+                <!-- Card 0 -->
+                <div class="about-carousel-card" data-index="0" style="background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                  <div class="about-card-skeleton"></div>
+                  <img src="https://wsrv.nl/?url=https%3A%2F%2Feikxrpaakhhmpgtjrlhq.supabase.co%2Fstorage%2Fv1%2Fobject%2Fpublic%2Fprojeect%2520images%2F1st.png&w=800&output=webp&q=82" alt="Portfolio Showcase" loading="eager" decoding="async" onload="this.classList.add('loaded')" onerror="if(!this._fallback){this._fallback=true;this.src='1st.png';}">
+                  <div class="about-card-bg-icon"><i class="fa-solid fa-brain"></i><span>AI &amp; LLMs</span></div>
+                </div>
+                <!-- Card 1 (In focus center) -->
+                <div class="about-carousel-card is-focused" data-index="1" style="background:linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                  <div class="about-card-skeleton"></div>
+                  <img src="https://wsrv.nl/?url=https%3A%2F%2Feikxrpaakhhmpgtjrlhq.supabase.co%2Fstorage%2Fv1%2Fobject%2Fpublic%2Fprojeect%2520images%2F2nd.png&w=800&output=webp&q=82" alt="Portfolio Showcase" loading="eager" decoding="async" onload="this.classList.add('loaded')" onerror="if(!this._fallback){this._fallback=true;this.src='2nd.png';}">
+                  <div class="about-card-bg-icon"><i class="fa-solid fa-microchip"></i><span>Deep Learning</span></div>
+                </div>
+                <!-- Card 2 -->
+                <div class="about-carousel-card" data-index="2" style="background:linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                  <div class="about-card-skeleton"></div>
+                  <img src="https://wsrv.nl/?url=https%3A%2F%2Feikxrpaakhhmpgtjrlhq.supabase.co%2Fstorage%2Fv1%2Fobject%2Fpublic%2Fprojeect%2520images%2F03.png&w=800&output=webp&q=82" alt="Portfolio Showcase" loading="eager" decoding="async" onload="this.classList.add('loaded')" onerror="if(!this._fallback){this._fallback=true;this.src='03.png';}">
+                  <div class="about-card-bg-icon"><i class="fa-solid fa-code"></i><span>Full-Stack Dev</span></div>
+                </div>
+                <!-- Card 3 -->
+                <div class="about-carousel-card" data-index="3" style="background:linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                  <div class="about-card-skeleton"></div>
+                  <img src="https://wsrv.nl/?url=https%3A%2F%2Feikxrpaakhhmpgtjrlhq.supabase.co%2Fstorage%2Fv1%2Fobject%2Fpublic%2Fprojeect%2520images%2F4th.png&w=800&output=webp&q=82" alt="Portfolio Showcase" loading="lazy" decoding="async" onload="this.classList.add('loaded')" onerror="if(!this._fallback){this._fallback=true;this.src='4th.png';}">
+                  <div class="about-card-bg-icon"><i class="fa-solid fa-database"></i><span>RAG &amp; Data</span></div>
+                </div>
+                <!-- Card 4 -->
+                <div class="about-carousel-card" data-index="4" style="background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                  <div class="about-card-skeleton"></div>
+                  <img src="https://wsrv.nl/?url=https%3A%2F%2Feikxrpaakhhmpgtjrlhq.supabase.co%2Fstorage%2Fv1%2Fobject%2Fpublic%2Fprojeect%2520images%2F1st.png&w=800&output=webp&q=82" alt="Portfolio Showcase" loading="lazy" decoding="async" onload="this.classList.add('loaded')" onerror="if(!this._fallback){this._fallback=true;this.src='1st.png';}">
+                  <div class="about-card-bg-icon"><i class="fa-solid fa-brain"></i><span>AI &amp; LLMs</span></div>
+                </div>
+                <!-- Card 5 -->
+                <div class="about-carousel-card" data-index="5" style="background:linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                  <div class="about-card-skeleton"></div>
+                  <img src="https://wsrv.nl/?url=https%3A%2F%2Feikxrpaakhhmpgtjrlhq.supabase.co%2Fstorage%2Fv1%2Fobject%2Fpublic%2Fprojeect%2520images%2F2nd.png&w=800&output=webp&q=82" alt="Portfolio Showcase" loading="lazy" decoding="async" onload="this.classList.add('loaded')" onerror="if(!this._fallback){this._fallback=true;this.src='2nd.png';}">
+                  <div class="about-card-bg-icon"><i class="fa-solid fa-microchip"></i><span>Deep Learning</span></div>
+                </div>
+                <!-- Card 6 -->
+                <div class="about-carousel-card" data-index="6" style="background:linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                  <div class="about-card-skeleton"></div>
+                  <img src="https://wsrv.nl/?url=https%3A%2F%2Feikxrpaakhhmpgtjrlhq.supabase.co%2Fstorage%2Fv1%2Fobject%2Fpublic%2Fprojeect%2520images%2F03.png&w=800&output=webp&q=82" alt="Portfolio Showcase" loading="lazy" decoding="async" onload="this.classList.add('loaded')" onerror="if(!this._fallback){this._fallback=true;this.src='03.png';}">
+                  <div class="about-card-bg-icon"><i class="fa-solid fa-code"></i><span>Full-Stack Dev</span></div>
+                </div>
+                <!-- Card 7 -->
+                <div class="about-carousel-card" data-index="7" style="background:linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                  <div class="about-card-skeleton"></div>
+                  <img src="https://wsrv.nl/?url=https%3A%2F%2Feikxrpaakhhmpgtjrlhq.supabase.co%2Fstorage%2Fv1%2Fobject%2Fpublic%2Fprojeect%2520images%2F4th.png&w=800&output=webp&q=82" alt="Portfolio Showcase" loading="lazy" decoding="async" onload="this.classList.add('loaded')" onerror="if(!this._fallback){this._fallback=true;this.src='4th.png';}">
+                  <div class="about-card-bg-icon"><i class="fa-solid fa-database"></i><span>RAG &amp; Data</span></div>
+                </div>
+                <!-- Card 8 -->
+                <div class="about-carousel-card" data-index="8" style="background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                  <div class="about-card-skeleton"></div>
+                  <img src="https://wsrv.nl/?url=https%3A%2F%2Feikxrpaakhhmpgtjrlhq.supabase.co%2Fstorage%2Fv1%2Fobject%2Fpublic%2Fprojeect%2520images%2F1st.png&w=800&output=webp&q=82" alt="Portfolio Showcase" loading="lazy" decoding="async" onload="this.classList.add('loaded')" onerror="if(!this._fallback){this._fallback=true;this.src='1st.png';}">
+                  <div class="about-card-bg-icon"><i class="fa-solid fa-brain"></i><span>AI &amp; LLMs</span></div>
+                </div>
+                <!-- Card 9 -->
+                <div class="about-carousel-card" data-index="9" style="background:linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                  <div class="about-card-skeleton"></div>
+                  <img src="https://wsrv.nl/?url=https%3A%2F%2Feikxrpaakhhmpgtjrlhq.supabase.co%2Fstorage%2Fv1%2Fobject%2Fpublic%2Fprojeect%2520images%2F2nd.png&w=800&output=webp&q=82" alt="Portfolio Showcase" loading="lazy" decoding="async" onload="this.classList.add('loaded')" onerror="if(!this._fallback){this._fallback=true;this.src='2nd.png';}">
+                  <div class="about-card-bg-icon"><i class="fa-solid fa-microchip"></i><span>Deep Learning</span></div>
+                </div>
+                <!-- Card 10 -->
+                <div class="about-carousel-card" data-index="10" style="background:linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                  <div class="about-card-skeleton"></div>
+                  <img src="https://wsrv.nl/?url=https%3A%2F%2Feikxrpaakhhmpgtjrlhq.supabase.co%2Fstorage%2Fv1%2Fobject%2Fpublic%2Fprojeect%2520images%2F03.png&w=800&output=webp&q=82" alt="Portfolio Showcase" loading="lazy" decoding="async" onload="this.classList.add('loaded')" onerror="if(!this._fallback){this._fallback=true;this.src='03.png';}">
+                  <div class="about-card-bg-icon"><i class="fa-solid fa-code"></i><span>Full-Stack Dev</span></div>
+                </div>
+                <!-- Card 11 -->
+                <div class="about-carousel-card" data-index="11" style="background:linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                  <div class="about-card-skeleton"></div>
+                  <img src="https://wsrv.nl/?url=https%3A%2F%2Feikxrpaakhhmpgtjrlhq.supabase.co%2Fstorage%2Fv1%2Fobject%2Fpublic%2Fprojeect%2520images%2F4th.png&w=800&output=webp&q=82" alt="Portfolio Showcase" loading="lazy" decoding="async" onload="this.classList.add('loaded')" onerror="if(!this._fallback){this._fallback=true;this.src='4th.png';}">
+                  <div class="about-card-bg-icon"><i class="fa-solid fa-database"></i><span>RAG &amp; Data</span></div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -156,8 +265,8 @@
     <!-- Skills Section -->
     <section id="skills" class="section skills-section">
       <!-- Decorative Border Clouds -->
-      <img src="https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/png%20cloud.png" alt="" class="section-cloud section-cloud--left" loading="lazy">
-      <img src="https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/png%20cloud.png" alt="" class="section-cloud section-cloud--right" loading="lazy">
+      <img src="https://wsrv.nl/?url=https%3A%2F%2Feikxrpaakhhmpgtjrlhq.supabase.co%2Fstorage%2Fv1%2Fobject%2Fpublic%2Fprojeect%2520images%2Fpng%2520cloud.png&output=webp&q=80" alt="" class="section-cloud section-cloud--left" loading="lazy" onerror="this.src='https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/png%20cloud.png'">
+      <img src="https://wsrv.nl/?url=https%3A%2F%2Feikxrpaakhhmpgtjrlhq.supabase.co%2Fstorage%2Fv1%2Fobject%2Fpublic%2Fprojeect%2520images%2Fpng%2520cloud.png&output=webp&q=80" alt="" class="section-cloud section-cloud--right" loading="lazy" onerror="this.src='https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/png%20cloud.png'">
 
       <div class="container fade-in-section is-visible">
         <h2 class="section-title">02. <span>Skills &amp; Proficiency</span></h2>
@@ -170,10 +279,10 @@
 
       <!-- Gamma-Style Horizon Cloud Transition -->
       <div class="skills-transition-wrapper">
-        <img src="https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/png%20cloud.png" alt="" class="transition-cloud transition-cloud--left-back" loading="lazy">
-        <img src="https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/png%20cloud.png" alt="" class="transition-cloud transition-cloud--left-front" loading="lazy">
-        <img src="https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/png%20cloud.png" alt="" class="transition-cloud transition-cloud--right-back" loading="lazy">
-        <img src="https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/png%20cloud.png" alt="" class="transition-cloud transition-cloud--right-front" loading="lazy">
+        <img src="https://wsrv.nl/?url=https%3A%2F%2Feikxrpaakhhmpgtjrlhq.supabase.co%2Fstorage%2Fv1%2Fobject%2Fpublic%2Fprojeect%2520images%2Fpng%2520cloud.png&output=webp&q=80" alt="" class="transition-cloud transition-cloud--left-back" loading="lazy" onerror="this.src='https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/png%20cloud.png'">
+        <img src="https://wsrv.nl/?url=https%3A%2F%2Feikxrpaakhhmpgtjrlhq.supabase.co%2Fstorage%2Fv1%2Fobject%2Fpublic%2Fprojeect%2520images%2Fpng%2520cloud.png&output=webp&q=80" alt="" class="transition-cloud transition-cloud--left-front" loading="lazy" onerror="this.src='https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/png%20cloud.png'">
+        <img src="https://wsrv.nl/?url=https%3A%2F%2Feikxrpaakhhmpgtjrlhq.supabase.co%2Fstorage%2Fv1%2Fobject%2Fpublic%2Fprojeect%2520images%2Fpng%2520cloud.png&output=webp&q=80" alt="" class="transition-cloud transition-cloud--right-back" loading="lazy" onerror="this.src='https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/png%20cloud.png'">
+        <img src="https://wsrv.nl/?url=https%3A%2F%2Feikxrpaakhhmpgtjrlhq.supabase.co%2Fstorage%2Fv1%2Fobject%2Fpublic%2Fprojeect%2520images%2Fpng%2520cloud.png&output=webp&q=80" alt="" class="transition-cloud transition-cloud--right-front" loading="lazy" onerror="this.src='https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/png%20cloud.png'">
         <div class="skills-bottom-fade"></div>
       </div>
     </section>
@@ -199,7 +308,7 @@
       <div class="decor dot-grid dot-grid-1"></div>
       <div class="decor dot-grid dot-grid-2"></div>
 
-      <img class="cloud" src="https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/png%20cloud.png" alt="" aria-hidden="true" loading="lazy" />
+      <img class="cloud" src="https://wsrv.nl/?url=https%3A%2F%2Feikxrpaakhhmpgtjrlhq.supabase.co%2Fstorage%2Fv1%2Fobject%2Fpublic%2Fprojeect%2520images%2Fpng%2520cloud.png&output=webp&q=80" alt="" aria-hidden="true" loading="lazy" onerror="this.src='https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/png%20cloud.png'" />
 
       <!-- MAIN -->
       <div class="experience-container">
@@ -544,7 +653,7 @@
       <div class="decor ring one"></div>
       <div class="decor ring two"></div>
 
-      <img class="cloud" src="https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/png%20cloud.png" alt="" loading="lazy">
+      <img class="cloud" src="https://wsrv.nl/?url=https%3A%2F%2Feikxrpaakhhmpgtjrlhq.supabase.co%2Fstorage%2Fv1%2Fobject%2Fpublic%2Fprojeect%2520images%2Fpng%2520cloud.png&output=webp&q=80" alt="" loading="lazy" onerror="this.src='https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/png%20cloud.png'">
 
       <div class="projects-container">
         <!-- HEADER & FILTERS -->

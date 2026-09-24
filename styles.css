@@ -1428,7 +1428,34 @@ body.dark-mode .about-stats-chips .chip i {
   transform: scale(1.03);
 }
 
-/* Image fills card, hidden if broken */
+/* Card Skeleton Shimmer Loader — Loads instantly with hardware acceleration */
+.about-card-skeleton {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.03) 0%,
+    rgba(255, 255, 255, 0.16) 50%,
+    rgba(255, 255, 255, 0.03) 100%
+  );
+  background-size: 200% 100%;
+  animation: cardSkeletonShimmer 1.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  pointer-events: none;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+  will-change: background-position;
+}
+
+@keyframes cardSkeletonShimmer {
+  0% {
+    background-position: 180% 0;
+  }
+  100% {
+    background-position: -180% 0;
+  }
+}
+
+/* Image fills card, hidden if broken, fades in over skeleton when loaded */
 .about-carousel-card img {
   position: absolute;
   inset: 0;
@@ -1437,7 +1464,16 @@ body.dark-mode .about-stats-chips .chip i {
   object-fit: cover;
   display: block;
   z-index: 2;
-  transition: transform 0.6s var(--ease);
+  opacity: 0;
+  transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s var(--ease);
+}
+.about-carousel-card img.loaded {
+  opacity: 1;
+}
+.about-carousel-card:has(img.loaded) .about-card-skeleton,
+.about-carousel-card.has-loaded-img .about-card-skeleton {
+  opacity: 0;
+  visibility: hidden;
 }
 .about-carousel-card:hover img { transform: scale(1.03); }
 

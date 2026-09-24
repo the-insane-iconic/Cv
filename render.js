@@ -10,17 +10,27 @@
 
   const STORAGE_KEY = 'portfolio_data';
 
-  /* ---- 1. Load data from Supabase / localStorage / portfolio.json ---- */
-  async function loadData() {
+  /* ---- 1. Fast Cache Read & Stale-While-Revalidate Engine ---- */
+  function getCachedData() {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      try { return JSON.parse(stored); } catch (e) {}
+    }
+    return null;
+  }
+
+  async function fetchFreshData(currentData) {
     let fileData = null;
     try {
-      const res = await fetch('./portfolio.json?t=' + Date.now(), { cache: 'no-store' });
+      const res = await fetch('./portfolio.json');
       if (res.ok) {
         fileData = await res.json();
       }
     } catch (e) {
       console.warn('[File Fetch Warning]', e);
-    }    function sanitizeLegacyData(target) {
+    }
+
+    function sanitizeLegacyData(target) {
       if (!target || !fileData) return;
       if (Array.isArray(target.skills)) {
         const hasLegacyCyber = target.skills.some(c => 
@@ -42,11 +52,7 @@
       }
     }
 
-    let localData = null;
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) {
-      try { localData = JSON.parse(stored); } catch (e) { /* continue */ }
-    }    // Attempt to fetch from Supabase if initialized
+    // Try Supabase in the background if initialized
     const sb = window.getSupabaseClient ? window.getSupabaseClient() : null;
     if (sb) {
       try {
@@ -58,7 +64,6 @@
 
         if (!error && data && data.content) {
           const dbData = data.content;
-          // Merge missing top-level schema keys only
           if (fileData) {
             for (const key of Object.keys(fileData)) {
               if (dbData[key] === undefined) {
@@ -71,22 +76,21 @@
           return dbData;
         }
       } catch (err) {
-        console.warn('[Supabase Fetch Warning]', err.message);
+        console.warn('[Supabase Sync Warning]', err.message);
       }
     }
 
-    // Merge file updates with localStorage if local cache is missing new keys
-    if (localData) {
+    if (currentData) {
       if (fileData) {
         for (const key of Object.keys(fileData)) {
-          if (localData[key] === undefined) {
-            localData[key] = fileData[key];
+          if (currentData[key] === undefined) {
+            currentData[key] = fileData[key];
           }
         }
       }
-      sanitizeLegacyData(localData);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(localData));
-      return localData;
+      sanitizeLegacyData(currentData);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(currentData));
+      return currentData;
     }
 
     if (fileData) {
@@ -94,10 +98,22 @@
       return fileData;
     }
 
-    return {};
+    return null;
   }
 
   /* ---- 2. Helpers ---------------------------------------------- */
+  function optimizeImageUrl(url, width = 1200, quality = 82) {
+    if (!url || typeof url !== 'string') return url;
+    // Route raw Supabase images to high-speed Cloudflare edge WebP CDN
+    if (url.includes('supabase.co/storage/v1/object/public/')) {
+      if (/\.(png|jpe?g|webp)/i.test(url)) {
+        const w = width ? `&w=${width}` : '';
+        return `https://wsrv.nl/?url=${encodeURIComponent(url)}${w}&output=webp&q=${quality}`;
+      }
+    }
+    return url;
+  }
+
   function esc(str) {
     const d = document.createElement('div');
     d.textContent = str || '';
@@ -141,11 +157,11 @@
     const profileImgSrc = d.identity?.profileImage || (d.identity?.profileImages && d.identity.profileImages[0]) || '1st.png';
     const navAvatar = document.getElementById('nav-profile-avatar');
     if (navAvatar && profileImgSrc) {
-      navAvatar.src = profileImgSrc;
+      navAvatar.src = optimizeImageUrl(profileImgSrc, 120, 85);
     }
     const zoomImg = document.getElementById('profile-zoom-img');
     if (zoomImg && profileImgSrc) {
-      zoomImg.src = profileImgSrc;
+      zoomImg.src = optimizeImageUrl(profileImgSrc, 800, 85);
     }
     const zoomName = document.getElementById('profile-zoom-name');
     if (zoomName && d.identity?.name) {
@@ -332,6 +348,18 @@
     ];
 
     const baseCount = images.length;
+    const existingTrack = mount.querySelector('#about-carousel-track');
+    const existingCards = existingTrack ? existingTrack.querySelectorAll('.about-carousel-card') : [];
+
+    // If static in-repo track already exists with matching card count, keep it running smoothly
+    if (existingTrack && existingCards.length === baseCount * 3) {
+      existingCards.forEach(c => {
+        const img = c.querySelector('img');
+        if (img && img.complete) img.classList.add('loaded');
+      });
+      initAboutCarousel(baseCount);
+      return;
+    }
 
     // Triple-duplicate for seamless infinite scroll
     const allCards = [...Array(baseCount), ...Array(baseCount), ...Array(baseCount)].map((_, idx) => {
@@ -341,17 +369,19 @@
       return { imgSrc, theme };
     });
 
-    // Eagerly preload all images so every upcoming card is already waiting in memory
+    // Eagerly preload all images via high-speed WebP CDN
     images.forEach(src => {
       if (src) {
         const pre = new Image();
-        pre.src = src;
+        pre.src = optimizeImageUrl(src, 800, 82);
       }
     });
 
     const cardsHtml = allCards.map(({ imgSrc, theme }, idx) => {
-      const imgTag = imgSrc
-        ? `<img src="${esc(imgSrc)}" alt="Portfolio Showcase" loading="eager" decoding="sync" onerror="this.remove();">` 
+      const optimizedSrc = imgSrc ? optimizeImageUrl(imgSrc, 800, 82) : '';
+      const fallbackSrc = imgSrc ? esc(imgSrc) : '';
+      const imgTag = optimizedSrc
+        ? `<div class="about-card-skeleton"></div><img src="${esc(optimizedSrc)}" alt="Portfolio Showcase" loading="${idx <= 2 ? 'eager' : 'lazy'}" decoding="async" onload="this.classList.add('loaded')" onerror="if(!this._fallback){this._fallback=true;this.src='${fallbackSrc}';}else{this.remove();}">` 
         : '';
       return `
         <div class="about-carousel-card" data-index="${idx}" style="background:${theme.gradient};">
@@ -389,6 +419,12 @@
 
     const cards = track.querySelectorAll('.about-carousel-card');
     if (!cards.length) return;
+
+    // Immediately mark already cached/loaded images
+    cards.forEach(c => {
+      const img = c.querySelector('img');
+      if (img && img.complete) img.classList.add('loaded');
+    });
 
     const GAP = 24;
     function isHorizontal() {
@@ -757,7 +793,7 @@
 
         card.innerHTML = `
           <div class="project-image">
-            <img src="${esc(project.image)}" alt="${esc(project.title)}" loading="lazy" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80';">
+            <img src="${esc(optimizeImageUrl(project.image, 800, 82))}" alt="${esc(project.title)}" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80';">
             <div class="project-type">
               <i data-lucide="${typeIcon(project.type)}"></i>
               ${esc(project.typeLabel || (project.type ? project.type.toUpperCase() : 'WEB APP'))}
@@ -1097,15 +1133,8 @@
   }
 
   /* ---- 4. Orchestrate ----------------------------------------- */
-  async function render() {
-    let data;
-    try {
-      data = await loadData();
-    } catch (err) {
-      console.error('[render.js] Failed to load portfolio data:', err);
-      return;
-    }
-
+  function renderAll(data) {
+    if (!data) return;
     window.PORTFOLIO_DATA = data;
     window.PORTFOLIO_ROLES = data.identity?.roles || [];
 
@@ -1124,6 +1153,26 @@
 
     if (typeof window.initApp === 'function') {
       window.initApp();
+    }
+  }
+
+  async function render() {
+    // 1. Instant 0ms render from localStorage cache
+    const cached = getCachedData();
+    if (cached) {
+      renderAll(cached);
+    }
+
+    // 2. Fetch fresh data in the background (stale-while-revalidate)
+    try {
+      const fresh = await fetchFreshData(cached);
+      if (fresh) {
+        if (!cached || JSON.stringify(cached) !== JSON.stringify(fresh)) {
+          renderAll(fresh);
+        }
+      }
+    } catch (err) {
+      console.warn('[render.js] Fresh sync warning:', err);
     }
   }
 
