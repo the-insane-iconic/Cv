@@ -665,6 +665,66 @@
       "url": ""
     }
   ],
+  "education": {
+    "heading": "06. Academic Journey",
+    "subtitle": "From foundational schooling in Prayagraj to engineering intelligent AI systems at university — and beyond.",
+    "class10": {
+      "badge": "High School Milestone",
+      "title": "Class 10th",
+      "school": "MPVM Ganga Gurukulam",
+      "location": "Prayagraj, Uttar Pradesh",
+      "score": "82%",
+      "footer": "Secondary School Board"
+    },
+    "timelineGap": {
+      "duration": "2 Years Timeline",
+      "desc": "Growth, Prep & Transition"
+    },
+    "class12": {
+      "badge": "Senior Secondary (PCM)",
+      "title": "Class 12th",
+      "school": "MPVM Ganga Gurukulam",
+      "location": "Prayagraj, Uttar Pradesh",
+      "score": "76%",
+      "footer": "2 Years Timeline from Class 10"
+    },
+    "dummy1": {
+      "badge": "Editable Milestone",
+      "title": "Competitive Prep & Coding",
+      "school": "Entrance Exams & Self-Taught Dev",
+      "location": "Foundations & Problem Solving",
+      "phase": "Milestone 03",
+      "footer": "Replace with coaching, rank, or early projects"
+    },
+    "college": {
+      "badge": "Undergrad Degree · Core Focus",
+      "title": "B.Tech — Computer Science",
+      "school": "Lovely Professional University (LPU)",
+      "location": "Phagwara, Punjab, India",
+      "cgpa": "7.0+",
+      "years": "2022 — 2026",
+      "tags": [
+        "AI & Machine Learning",
+        "Software Architecture",
+        "Deep Learning"
+      ],
+      "footer": "Active University Engineering Scholar"
+    },
+    "dummy2": {
+      "badge": "Editable Milestone",
+      "title": "Specialization / Internship",
+      "school": "Industry R&D / Enterprise Labs",
+      "location": "System Design & AI Deployment",
+      "phase": "Milestone 05",
+      "footer": "Replace with your internship, paper, or venture"
+    },
+    "continuation": {
+      "signal": "Infinite Trajectory",
+      "title": "The Journey Continues...",
+      "desc": "Engineering next-generation multimodal systems, autonomous AI agents, and production-grade architectures.",
+      "beam": "✦ Next Frontier"
+    }
+  },
   "socials": {
     "github": "https://github.com/the-insane-iconic",
     "linkedin": "https://www.linkedin.com/in/ansh-ydv",

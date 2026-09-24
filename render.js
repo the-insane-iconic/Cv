@@ -1146,6 +1146,148 @@
     `;
   }
 
+  function renderEducation(d) {
+    toggleSectionVisibility('education', d.sectionVisibility?.education !== false);
+    const edu = d.education;
+    if (!edu) return;
+
+    // Heading & Subtitle
+    const headingEl = document.querySelector('#education .section-title');
+    if (headingEl && edu.heading) {
+      const match = String(edu.heading).match(/^(\d+\.?)\s*(.*)$/);
+      if (match) {
+        headingEl.innerHTML = `${esc(match[1])} <span>${esc(match[2])}</span>`;
+      } else {
+        headingEl.textContent = edu.heading;
+      }
+    }
+    const subEl = document.querySelector('#education .journey-subtitle');
+    if (subEl && edu.subtitle) subEl.textContent = edu.subtitle;
+
+    // Card 1: Class 10th
+    const card10 = document.querySelector('.snake-step.step-top:first-of-type');
+    if (card10 && edu.class10) {
+      const c = edu.class10;
+      const badge = card10.querySelector('.step-badge-top');
+      if (badge && c.badge) badge.innerHTML = `<i class="fa-solid fa-school"></i> ${esc(c.badge)}`;
+      const title = card10.querySelector('.step-title');
+      if (title && c.title) title.textContent = c.title;
+      const school = card10.querySelector('.step-school');
+      if (school && c.school) school.textContent = c.school;
+      const loc = card10.querySelector('.step-location');
+      if (loc && c.location) loc.innerHTML = `<i class="fa-solid fa-location-dot"></i> ${esc(c.location)}`;
+      const score = card10.querySelector('.score-val');
+      if (score && c.score) score.textContent = c.score;
+      const footer = card10.querySelector('.step-footer-text');
+      if (footer && c.footer) footer.innerHTML = `<i class="fa-solid fa-circle-check"></i> ${esc(c.footer)}`;
+    }
+
+    // Timeline Gap
+    const gap = document.querySelector('.snake-timeline-gap');
+    if (gap && edu.timelineGap) {
+      const g = edu.timelineGap;
+      const dur = gap.querySelector('.span-duration');
+      if (dur && g.duration) dur.textContent = g.duration;
+      const desc = gap.querySelector('.span-desc');
+      if (desc && g.desc) desc.textContent = g.desc;
+    }
+
+    // Card 2: Class 12th
+    const card12 = document.querySelector('.snake-step.step-bottom:not(.step-dummy)');
+    if (card12 && edu.class12) {
+      const c = edu.class12;
+      const badge = card12.querySelector('.step-badge-top');
+      if (badge && c.badge) badge.innerHTML = `<i class="fa-solid fa-atom"></i> ${esc(c.badge)}`;
+      const title = card12.querySelector('.step-title');
+      if (title && c.title) title.textContent = c.title;
+      const school = card12.querySelector('.step-school');
+      if (school && c.school) school.textContent = c.school;
+      const loc = card12.querySelector('.step-location');
+      if (loc && c.location) loc.innerHTML = `<i class="fa-solid fa-location-dot"></i> ${esc(c.location)}`;
+      const score = card12.querySelector('.score-val');
+      if (score && c.score) score.textContent = c.score;
+      const footer = card12.querySelector('.step-footer-text');
+      if (footer && c.footer) footer.innerHTML = `<i class="fa-solid fa-clock-rotate-left"></i> ${esc(c.footer)}`;
+    }
+
+    // Card 3: Dummy 1
+    const dummy1 = document.querySelector('.snake-step.step-top.step-dummy');
+    if (dummy1 && edu.dummy1) {
+      const c = edu.dummy1;
+      const badge = dummy1.querySelector('.step-badge-top');
+      if (badge && c.badge) badge.innerHTML = `<i class="fa-solid fa-pen-to-square"></i> ${esc(c.badge)}`;
+      const title = dummy1.querySelector('.step-title');
+      if (title && c.title) title.textContent = c.title;
+      const school = dummy1.querySelector('.step-school');
+      if (school && c.school) school.textContent = c.school;
+      const loc = dummy1.querySelector('.step-location');
+      if (loc && c.location) loc.innerHTML = `<i class="fa-solid fa-laptop-code"></i> ${esc(c.location)}`;
+      const score = dummy1.querySelector('.score-val');
+      if (score && c.phase) score.textContent = c.phase;
+      const footer = dummy1.querySelector('.step-footer-text');
+      if (footer && c.footer) footer.innerHTML = `<i class="fa-solid fa-circle-info"></i> ${esc(c.footer)}`;
+    }
+
+    // Card 4: College
+    const college = document.querySelector('.snake-step.step-featured');
+    if (college && edu.college) {
+      const c = edu.college;
+      const badge = college.querySelector('.step-badge-top');
+      if (badge && c.badge) badge.innerHTML = `<i class="fa-solid fa-crown"></i> ${esc(c.badge)}`;
+      const title = college.querySelector('.step-title');
+      if (title && c.title) title.textContent = c.title;
+      const school = college.querySelector('.step-school');
+      if (school && c.school) school.textContent = c.school;
+      const loc = college.querySelector('.step-location');
+      if (loc && c.location) loc.innerHTML = `<i class="fa-solid fa-location-dot"></i> ${esc(c.location)}`;
+      const score = college.querySelector('.score-val');
+      if (score && c.cgpa) score.textContent = c.cgpa;
+      const yearPill = college.querySelector('.featured-year-pill');
+      if (yearPill && c.years) yearPill.innerHTML = `<i class="fa-regular fa-calendar"></i> ${esc(c.years)}`;
+      const footer = college.querySelector('.step-footer-text');
+      if (footer && c.footer) footer.innerHTML = `<span class="pulse-indicator"></span> ${esc(c.footer)}`;
+
+      if (Array.isArray(c.tags) && c.tags.length > 0) {
+        const tagsWrap = college.querySelector('.step-tags-wrap');
+        if (tagsWrap) {
+          tagsWrap.innerHTML = c.tags.map(t => `<span class="step-tag">${esc(t)}</span>`).join('');
+        }
+      }
+    }
+
+    // Card 5: Dummy 2
+    const dummy2 = document.querySelector('.snake-step.step-bottom.step-dummy');
+    if (dummy2 && edu.dummy2) {
+      const c = edu.dummy2;
+      const badge = dummy2.querySelector('.step-badge-top');
+      if (badge && c.badge) badge.innerHTML = `<i class="fa-solid fa-pen-to-square"></i> ${esc(c.badge)}`;
+      const title = dummy2.querySelector('.step-title');
+      if (title && c.title) title.textContent = c.title;
+      const school = dummy2.querySelector('.step-school');
+      if (school && c.school) school.textContent = c.school;
+      const loc = dummy2.querySelector('.step-location');
+      if (loc && c.location) loc.innerHTML = `<i class="fa-solid fa-microchip"></i> ${esc(c.location)}`;
+      const score = dummy2.querySelector('.score-val');
+      if (score && c.phase) score.textContent = c.phase;
+      const footer = dummy2.querySelector('.step-footer-text');
+      if (footer && c.footer) footer.innerHTML = `<i class="fa-solid fa-circle-info"></i> ${esc(c.footer)}`;
+    }
+
+    // Card 6: Continuation
+    const cont = document.querySelector('.snake-step.step-continuation');
+    if (cont && edu.continuation) {
+      const c = edu.continuation;
+      const sig = cont.querySelector('.signal-text');
+      if (sig && c.signal) sig.textContent = c.signal;
+      const title = cont.querySelector('.continuation-title');
+      if (title && c.title) title.textContent = c.title;
+      const desc = cont.querySelector('.continuation-desc');
+      if (desc && c.desc) desc.textContent = c.desc;
+      const beam = cont.querySelector('.beam-arrow');
+      if (beam && c.beam) beam.innerHTML = `${esc(c.beam)} &nbsp;<i class="fa-solid fa-arrow-right-long"></i>`;
+    }
+  }
+
   function renderContact(d) {
     const ct = d.contact || {};
     const socials = d.socials || {};
@@ -1262,6 +1404,7 @@
     renderProjects(data);
     renderStats(data);
     renderCertificates(data);
+    renderEducation(data);
     renderResume(data);
     renderContact(data);
     renderFooter(data);

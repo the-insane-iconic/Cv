@@ -315,7 +315,7 @@ window.moveItem = function(arrayPath, index, direction) {
    5. SECTION BUILDERS
    ================================================================ */
 
-const openSections = new Set(['site', 'sections', 'identity', 'projects', 'skills']);
+const openSections = new Set(['site', 'sections', 'identity', 'projects', 'skills', 'education']);
 
 function makeSection(id, icon, title, subtitle, countBadge, bodyHtml) {
   const isOpen = openSections.has(id);
@@ -437,12 +437,13 @@ function renderSectionManager() {
   const v = DATA.sectionVisibility;
 
   const sections = [
-    { key: 'about', label: 'About Me' },
-    { key: 'skills', label: 'Skills & Proficiency' },
-    { key: 'experience', label: 'Experience Timeline' },
-    { key: 'projects', label: 'Projects Grid' },
-    { key: 'achievements', label: 'Achievements & Certificates' },
-    { key: 'contact', label: 'Contact & Connect' }
+    { key: 'about', label: '01. About Me' },
+    { key: 'skills', label: '02. Skills & Proficiency' },
+    { key: 'experience', label: '03. Experience Timeline' },
+    { key: 'projects', label: '04. Projects Grid' },
+    { key: 'achievements', label: '05. Achievements & Certificates' },
+    { key: 'education', label: '06. Academic Journey' },
+    { key: 'contact', label: '07. Contact & Connect' }
   ];
 
   const toggles = sections.map(sec => `
@@ -907,6 +908,14 @@ function renderProjectsSection() {
         <div class="field-row single">
           ${field('Project Video URL (MP4 / WebM / Supabase link — autoplays in loop)', `
             <input type="url" class="field-input" value="${esc(proj.video || '')}" placeholder="https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/.../demo.mp4" oninput="DATA.projects[${i}].video=this.value.trim(); markDirty()">
+            ${proj.video ? `
+              <div style="margin-top:6px; display:flex; align-items:center; gap:10px; background:var(--bg-surface); padding:8px 12px; border-radius:var(--radius-sm); border:1px solid var(--border-subtle);">
+                <i class="fa-solid fa-circle-play" style="color:var(--accent); font-size:16px;"></i>
+                <span style="font-size:12px; color:var(--text-secondary); flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${esc(proj.video)}</span>
+                <a href="${esc(proj.video)}" target="_blank" rel="noopener noreferrer" class="btn-micro" style="text-decoration:none;"><i class="fa-solid fa-arrow-up-right-from-square"></i> Test Video</a>
+                <button class="btn-micro danger" onclick="DATA.projects[${i}].video=''; markDirty(); renderEditor();" title="Clear Video URL"><i class="fa-solid fa-xmark"></i> Clear</button>
+              </div>
+            ` : ''}
           `)}
         </div>
         <div class="field-row single">
@@ -1125,6 +1134,312 @@ window.addCertCat = function () {
   renderEditor();
 };
 
+/* ---- ACADEMIC JOURNEY & EDUCATION ---- */
+function renderEducationSection() {
+  if (!DATA) return '';
+  DATA.education = DATA.education || {
+    heading: '06. Academic Journey',
+    subtitle: 'From foundational schooling in Prayagraj to engineering intelligent AI systems at university — and beyond.',
+    class10: {
+      badge: 'High School Milestone',
+      title: 'Class 10th',
+      school: 'MPVM Ganga Gurukulam',
+      location: 'Prayagraj, Uttar Pradesh',
+      score: '82%',
+      footer: 'Secondary School Board'
+    },
+    timelineGap: {
+      duration: '2 Years Timeline',
+      desc: 'Growth, Prep & Transition'
+    },
+    class12: {
+      badge: 'Senior Secondary (PCM)',
+      title: 'Class 12th',
+      school: 'MPVM Ganga Gurukulam',
+      location: 'Prayagraj, Uttar Pradesh',
+      score: '76%',
+      footer: '2 Years Timeline from Class 10'
+    },
+    dummy1: {
+      badge: 'Editable Milestone',
+      title: 'Competitive Prep & Coding',
+      school: 'Entrance Exams & Self-Taught Dev',
+      location: 'Foundations & Problem Solving',
+      phase: 'Milestone 03',
+      footer: 'Replace with coaching, rank, or early projects'
+    },
+    college: {
+      badge: 'Undergrad Degree · Core Focus',
+      title: 'B.Tech — Computer Science',
+      school: 'Lovely Professional University (LPU)',
+      location: 'Phagwara, Punjab, India',
+      cgpa: '7.0+',
+      years: '2022 — 2026',
+      tags: ['AI & Machine Learning', 'Software Architecture', 'Deep Learning'],
+      footer: 'Active University Engineering Scholar'
+    },
+    dummy2: {
+      badge: 'Editable Milestone',
+      title: 'Specialization / Internship',
+      school: 'Industry R&D / Enterprise Labs',
+      location: 'System Design & AI Deployment',
+      phase: 'Milestone 05',
+      footer: 'Replace with your internship, paper, or venture'
+    },
+    continuation: {
+      signal: 'Infinite Trajectory',
+      title: 'The Journey Continues...',
+      desc: 'Engineering next-generation multimodal systems, autonomous AI agents, and production-grade architectures.',
+      beam: '✦ Next Frontier'
+    }
+  };
+
+  const edu = DATA.education;
+  const c10 = edu.class10 || {};
+  const gap = edu.timelineGap || {};
+  const c12 = edu.class12 || {};
+  const d1 = edu.dummy1 || {};
+  const col = edu.college || {};
+  const d2 = edu.dummy2 || {};
+  const cont = edu.continuation || {};
+
+  const colTags = (col.tags || []).map((t, ti) => `
+    <span class="tag-item">
+      ${esc(t)}
+      <span class="tag-remove" onclick="removeEducationCollegeTag(${ti})">✕</span>
+    </span>`).join('');
+
+  const bodyHtml = `
+    <!-- Section Header Settings -->
+    <div style="background:var(--bg-surface); padding:16px; border-radius:var(--radius-md); border:1px solid var(--border-subtle); margin-bottom:16px;">
+      <div style="font-weight:700; font-size:13px; color:var(--accent-light); margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+        <i class="fa-solid fa-heading"></i> Section Title &amp; Subtitle
+      </div>
+      <div class="field-row">
+        ${field('Section Heading', textInput('education.heading', edu.heading, '06. Academic Journey'))}
+      </div>
+      <div class="field-row single">
+        ${field('Journey Subtitle', textArea('education.subtitle', edu.subtitle, 2))}
+      </div>
+    </div>
+
+    <!-- Milestones List -->
+    <div class="list-items">
+
+      <!-- 01. CLASS 10TH -->
+      <div class="list-item open">
+        <div class="list-item-header" onclick="toggleListItem('edu-step-10')">
+          <i class="fa-solid fa-school" style="color:var(--accent);width:16px;text-align:center;"></i>
+          <span class="list-item-title">01. ${esc(c10.title || 'Class 10th')} — ${esc(c10.school || '')}</span>
+          <span class="list-item-meta">${esc(c10.score || '82%')} · ${esc(c10.badge || 'High School')}</span>
+          <div class="list-item-actions">
+            <span class="cert-attach-pill attached"><i class="fa-solid fa-award"></i> Schooling</span>
+          </div>
+        </div>
+        <div class="list-item-body" id="edu-step-10">
+          <div class="field-row">
+            ${field('Milestone Title', textInput('education.class10.title', c10.title, 'Class 10th'))}
+            ${field('Score / Percentage', textInput('education.class10.score', c10.score, '82%'))}
+          </div>
+          <div class="field-row">
+            ${field('School / Institution Name', textInput('education.class10.school', c10.school, 'MPVM Ganga Gurukulam'))}
+            ${field('Location', textInput('education.class10.location', c10.location, 'Prayagraj, Uttar Pradesh'))}
+          </div>
+          <div class="field-row">
+            ${field('Top Badge Label', textInput('education.class10.badge', c10.badge, 'High School Milestone'))}
+            ${field('Footer Note', textInput('education.class10.footer', c10.footer, 'Secondary School Board'))}
+          </div>
+        </div>
+      </div>
+
+      <!-- 2 YEARS TIMELINE GAP -->
+      <div class="list-item open" style="border-left: 3px solid var(--accent);">
+        <div class="list-item-header" onclick="toggleListItem('edu-step-gap')">
+          <i class="fa-solid fa-hourglass-half" style="color:var(--accent);width:16px;text-align:center;"></i>
+          <span class="list-item-title">Gap Connector: ${esc(gap.duration || '2 Years Timeline')}</span>
+          <span class="list-item-meta">${esc(gap.desc || 'Growth, Prep & Transition')}</span>
+          <div class="list-item-actions">
+            <span class="cert-attach-pill attached" style="background:rgba(99,102,241,0.15); color:#a5b4fc;"><i class="fa-solid fa-route"></i> Timeline Gap</span>
+          </div>
+        </div>
+        <div class="list-item-body" id="edu-step-gap">
+          <div class="field-row">
+            ${field('Span Duration', textInput('education.timelineGap.duration', gap.duration, '2 Years Timeline'))}
+            ${field('Span Description', textInput('education.timelineGap.desc', gap.desc, 'Growth, Prep & Transition'))}
+          </div>
+        </div>
+      </div>
+
+      <!-- 02. CLASS 12TH -->
+      <div class="list-item open">
+        <div class="list-item-header" onclick="toggleListItem('edu-step-12')">
+          <i class="fa-solid fa-atom" style="color:var(--accent);width:16px;text-align:center;"></i>
+          <span class="list-item-title">02. ${esc(c12.title || 'Class 12th')} — ${esc(c12.school || '')}</span>
+          <span class="list-item-meta">${esc(c12.score || '76%')} · ${esc(c12.badge || 'Senior Secondary')}</span>
+          <div class="list-item-actions">
+            <span class="cert-attach-pill attached"><i class="fa-solid fa-graduation-cap"></i> Schooling</span>
+          </div>
+        </div>
+        <div class="list-item-body" id="edu-step-12">
+          <div class="field-row">
+            ${field('Milestone Title', textInput('education.class12.title', c12.title, 'Class 12th'))}
+            ${field('Score / Percentage', textInput('education.class12.score', c12.score, '76%'))}
+          </div>
+          <div class="field-row">
+            ${field('School / Institution Name', textInput('education.class12.school', c12.school, 'MPVM Ganga Gurukulam'))}
+            ${field('Location', textInput('education.class12.location', c12.location, 'Prayagraj, Uttar Pradesh'))}
+          </div>
+          <div class="field-row">
+            ${field('Top Badge Label', textInput('education.class12.badge', c12.badge, 'Senior Secondary (PCM)'))}
+            ${field('Footer Note', textInput('education.class12.footer', c12.footer, '2 Years Timeline from Class 10'))}
+          </div>
+        </div>
+      </div>
+
+      <!-- 03. DUMMY 1 (Milestone 03) -->
+      <div class="list-item open">
+        <div class="list-item-header" onclick="toggleListItem('edu-step-d1')">
+          <i class="fa-solid fa-pen-to-square" style="color:var(--amber);width:16px;text-align:center;"></i>
+          <span class="list-item-title">03. ${esc(d1.title || 'Competitive Prep & Coding')}</span>
+          <span class="list-item-meta">${esc(d1.phase || 'Milestone 03')} · ${esc(d1.badge || 'Editable')}</span>
+          <div class="list-item-actions">
+            <span class="cert-attach-pill none"><i class="fa-solid fa-pen-ruler"></i> Placeholder Card</span>
+          </div>
+        </div>
+        <div class="list-item-body" id="edu-step-d1">
+          <div class="field-row">
+            ${field('Milestone Title', textInput('education.dummy1.title', d1.title, 'Competitive Prep & Coding'))}
+            ${field('Phase / Order Label', textInput('education.dummy1.phase', d1.phase, 'Milestone 03'))}
+          </div>
+          <div class="field-row">
+            ${field('Context / Coaching / Program', textInput('education.dummy1.school', d1.school, 'Entrance Exams & Self-Taught Dev'))}
+            ${field('Domain / Focus Area', textInput('education.dummy1.location', d1.location, 'Foundations & Problem Solving'))}
+          </div>
+          <div class="field-row">
+            ${field('Top Badge Label', textInput('education.dummy1.badge', d1.badge, 'Editable Milestone'))}
+            ${field('Footer Hint / Note', textInput('education.dummy1.footer', d1.footer, 'Replace with coaching, rank, or early projects'))}
+          </div>
+        </div>
+      </div>
+
+      <!-- 04. COLLEGE (FEATURED B.TECH CSE) -->
+      <div class="list-item open" style="border: 1px solid rgba(140, 124, 255, 0.35); box-shadow: 0 0 16px rgba(140,124,255,0.08);">
+        <div class="list-item-header" onclick="toggleListItem('edu-step-col')">
+          <i class="fa-solid fa-crown" style="color:var(--amber);width:16px;text-align:center;"></i>
+          <span class="list-item-title" style="color:var(--text-pure); font-weight:700;">04. ${esc(col.title || 'B.Tech — Computer Science')} (Featured College)</span>
+          <span class="list-item-meta">${esc(col.school || 'LPU')} · CGPA: ${esc(col.cgpa || '7.0+')}</span>
+          <div class="list-item-actions">
+            <span class="cert-attach-pill attached" style="background:rgba(245,158,11,0.15); color:var(--amber);"><i class="fa-solid fa-star"></i> Core Focus</span>
+          </div>
+        </div>
+        <div class="list-item-body" id="edu-step-col">
+          <div class="field-row">
+            ${field('Degree / Specialization Title', textInput('education.college.title', col.title, 'B.Tech — Computer Science'))}
+            ${field('CGPA / Academic Score', textInput('education.college.cgpa', col.cgpa, '7.0+'))}
+          </div>
+          <div class="field-row">
+            ${field('University / College Name', textInput('education.college.school', col.school, 'Lovely Professional University (LPU)'))}
+            ${field('Academic Years Span', textInput('education.college.years', col.years, '2022 — 2026'))}
+          </div>
+          <div class="field-row">
+            ${field('Campus Location', textInput('education.college.location', col.location, 'Phagwara, Punjab, India'))}
+            ${field('Top Badge Label', textInput('education.college.badge', col.badge, 'Undergrad Degree · Core Focus'))}
+          </div>
+          <div class="field-row single">
+            ${field('Status Footer Label', textInput('education.college.footer', col.footer, 'Active University Engineering Scholar'))}
+          </div>
+
+          <div class="field-label" style="margin-top:12px; margin-bottom:8px;">DEGREE FOCUS TAGS</div>
+          <div class="tag-list">${colTags}</div>
+          <div class="tag-add-row">
+            <input type="text" class="field-input" id="edu-col-tag-add" placeholder="Add degree focus tag (e.g. AI & Machine Learning)..." onkeydown="if(event.key==='Enter'){event.preventDefault(); addEducationCollegeTag();}">
+            <button class="btn-dock btn-dock-secondary" onclick="addEducationCollegeTag()"><i class="fa-solid fa-plus"></i> Add Tag</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 05. DUMMY 2 (Milestone 05) -->
+      <div class="list-item open">
+        <div class="list-item-header" onclick="toggleListItem('edu-step-d2')">
+          <i class="fa-solid fa-pen-to-square" style="color:var(--amber);width:16px;text-align:center;"></i>
+          <span class="list-item-title">05. ${esc(d2.title || 'Specialization / Internship')}</span>
+          <span class="list-item-meta">${esc(d2.phase || 'Milestone 05')} · ${esc(d2.badge || 'Editable')}</span>
+          <div class="list-item-actions">
+            <span class="cert-attach-pill none"><i class="fa-solid fa-pen-ruler"></i> Placeholder Card</span>
+          </div>
+        </div>
+        <div class="list-item-body" id="edu-step-d2">
+          <div class="field-row">
+            ${field('Milestone Title', textInput('education.dummy2.title', d2.title, 'Specialization / Internship'))}
+            ${field('Phase / Order Label', textInput('education.dummy2.phase', d2.phase, 'Milestone 05'))}
+          </div>
+          <div class="field-row">
+            ${field('Company / Lab / Institute', textInput('education.dummy2.school', d2.school, 'Industry R&D / Enterprise Labs'))}
+            ${field('Focus / Domain', textInput('education.dummy2.location', d2.location, 'System Design & AI Deployment'))}
+          </div>
+          <div class="field-row">
+            ${field('Top Badge Label', textInput('education.dummy2.badge', d2.badge, 'Editable Milestone'))}
+            ${field('Footer Hint / Note', textInput('education.dummy2.footer', d2.footer, 'Replace with your internship, paper, or venture'))}
+          </div>
+        </div>
+      </div>
+
+      <!-- 06. HORIZON / CONTINUATION -->
+      <div class="list-item open" style="border-right: 3px solid var(--emerald);">
+        <div class="list-item-header" onclick="toggleListItem('edu-step-cont')">
+          <i class="fa-solid fa-infinity" style="color:var(--emerald);width:16px;text-align:center;"></i>
+          <span class="list-item-title">06. ${esc(cont.title || 'The Journey Continues...')}</span>
+          <span class="list-item-meta">${esc(cont.beam || '✦ Next Frontier')}</span>
+          <div class="list-item-actions">
+            <span class="cert-attach-pill attached" style="background:rgba(16,185,129,0.15); color:var(--emerald);"><i class="fa-solid fa-arrow-right-long"></i> Future Trajectory</span>
+          </div>
+        </div>
+        <div class="list-item-body" id="edu-step-cont">
+          <div class="field-row">
+            ${field('Card Title', textInput('education.continuation.title', cont.title, 'The Journey Continues...'))}
+            ${field('Signal Tag', textInput('education.continuation.signal', cont.signal, 'Infinite Trajectory'))}
+          </div>
+          <div class="field-row">
+            ${field('Beacon / Arrow Text', textInput('education.continuation.beam', cont.beam, '✦ Next Frontier'))}
+          </div>
+          <div class="field-row single">
+            ${field('Forward Outlook / Vision Statement', textArea('education.continuation.desc', cont.desc, 2))}
+          </div>
+        </div>
+      </div>
+
+    </div>
+  `;
+
+  return makeSection('education',
+    'fa-solid fa-graduation-cap',
+    'Academic Journey',
+    'horizontal snake path milestones · schooling · college · next frontier',
+    '6 Milestones',
+    bodyHtml
+  );
+}
+
+window.addEducationCollegeTag = function() {
+  const input = document.getElementById('edu-col-tag-add');
+  if (!input || !input.value.trim()) return;
+  DATA.education = DATA.education || {};
+  DATA.education.college = DATA.education.college || {};
+  DATA.education.college.tags = DATA.education.college.tags || [];
+  DATA.education.college.tags.push(input.value.trim());
+  input.value = '';
+  markDirty();
+  renderEditor();
+};
+
+window.removeEducationCollegeTag = function(index) {
+  if (DATA.education && DATA.education.college && Array.isArray(DATA.education.college.tags)) {
+    DATA.education.college.tags.splice(index, 1);
+    markDirty();
+    renderEditor();
+  }
+};
+
 /* ---- SOCIALS ---- */
 function renderSocialsSection() {
   const s = DATA.socials || {};
@@ -1180,6 +1495,7 @@ function renderEditor() {
     renderProjectsSection(),
     renderStatsSection(),
     renderCertificatesSection(),
+    renderEducationSection(),
     renderSocialsSection(),
     renderContactSection(),
   ].join('');
@@ -1202,6 +1518,7 @@ function updateMetrics() {
     <div class="metric-badge"><span class="metric-val">${totalSkills}</span><span class="metric-lbl">Skills</span></div>
     <div class="metric-badge"><span class="metric-val">${totalCerts}</span><span class="metric-lbl">Certs</span></div>
     <div class="metric-badge"><span class="metric-val">${totalExps}</span><span class="metric-lbl">Experience</span></div>
+    <div class="metric-badge"><span class="metric-val">6</span><span class="metric-lbl">Milestones</span></div>
   `;
 }
 
@@ -1214,14 +1531,15 @@ function buildSidebar() {
     { section: 'site', icon: 'fa-globe', label: 'Site & Theme' },
     { section: 'sections', icon: 'fa-eye', label: 'Visibility' },
     { section: 'identity', icon: 'fa-id-card', label: 'Identity & Hero' },
-    { section: 'about', icon: 'fa-user', label: 'About Me' },
-    { section: 'skills', icon: 'fa-layer-group', label: 'Skills', count: (DATA.skills||[]).reduce((a,c)=>a+(c.items||[]).length,0) },
-    { section: 'experience', icon: 'fa-briefcase', label: 'Experience', count: (DATA.experience||[]).length },
-    { section: 'projects', icon: 'fa-folder', label: 'Projects', count: (DATA.projects||[]).length },
+    { section: 'about', icon: 'fa-user', label: '01. About Me' },
+    { section: 'skills', icon: 'fa-layer-group', label: '02. Skills', count: (DATA.skills||[]).reduce((a,c)=>a+(c.items||[]).length,0) },
+    { section: 'experience', icon: 'fa-briefcase', label: '03. Experience', count: (DATA.experience||[]).length },
+    { section: 'projects', icon: 'fa-folder', label: '04. Projects', count: (DATA.projects||[]).length },
     { section: 'stats', icon: 'fa-trophy', label: 'Stats Badges', count: (DATA.stats||[]).length },
-    { section: 'certificates', icon: 'fa-certificate', label: 'Certificates', count: (DATA.certificates||[]).length },
+    { section: 'certificates', icon: 'fa-certificate', label: '05. Certificates', count: (DATA.certificates||[]).length },
+    { section: 'education', icon: 'fa-graduation-cap', label: '06. Academic Journey', count: 6 },
     { section: 'socials', icon: 'fa-share-nodes', label: 'Socials' },
-    { section: 'contact', icon: 'fa-envelope', label: 'Contact' },
+    { section: 'contact', icon: 'fa-envelope', label: '07. Contact' },
   ];
 
   const nav = document.getElementById('sidebar-nav');
