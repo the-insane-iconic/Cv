@@ -5847,5 +5847,225 @@ html, body {
 }
 
 
+/* ================================================================
+   PORTFOLIO REFINEMENT — ADDED STYLES
+   ================================================================ */
 
+/* ---- Typing cursor blink ---- */
+.typing-cursor {
+  display: inline-block;
+  font-weight: 300;
+  opacity: 1;
+  animation: blink-cursor 0.85s step-end infinite;
+  margin-left: 1px;
+  color: var(--accent);
+}
+
+@keyframes blink-cursor {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* ---- Company links in experience cards ---- */
+a.company-link {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px dashed rgba(90, 69, 255, 0.45);
+  transition: color 0.2s, border-color 0.2s;
+}
+
+a.company-link:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+[data-theme="dark"] a.company-link,
+body.dark-mode a.company-link {
+  border-color: rgba(160, 140, 255, 0.4);
+}
+
+[data-theme="dark"] a.company-link:hover,
+body.dark-mode a.company-link:hover {
+  color: #a08fff;
+}
+
+/* ---- Footer bolt icon ---- */
+.footer-icon {
+  color: var(--accent);
+  margin: 0 3px;
+}
+
+/* ---- Education Section ---- */
+.education-section {
+  padding: var(--section-py) 0;
+  background: var(--bg);
+  position: relative;
+}
+
+.education-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+  margin-top: 40px;
+}
+
+.education-card {
+  background: var(--surface-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 28px 32px;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+  position: relative;
+  overflow: hidden;
+}
+
+.education-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--accent-gradient);
+  border-radius: 20px 20px 0 0;
+}
+
+.education-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+}
+
+.edu-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: var(--accent-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.edu-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.edu-degree {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+  line-height: 1.35;
+}
+
+.edu-institution {
+  font-size: 0.88rem;
+  color: var(--accent);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.edu-meta {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.edu-meta span {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.edu-meta span i {
+  font-size: 0.75rem;
+}
+
+.edu-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  background: rgba(90, 69, 255, 0.08);
+  border: 1px solid rgba(90, 69, 255, 0.18);
+  border-radius: 100px;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--accent);
+  margin-top: 10px;
+}
+
+[data-theme="dark"] .education-card,
+body.dark-mode .education-card {
+  background: var(--surface-card);
+  border-color: var(--border);
+}
+
+[data-theme="dark"] .edu-icon,
+body.dark-mode .edu-icon {
+  background: rgba(90, 69, 255, 0.18);
+}
+
+/* ---- Project actions — disabled/placeholder state ---- */
+.action-icon-link[href=""],
+.action-icon-link[href="#"],
+.action-icon-link:not([href]),
+.action-icon-link[href="https://github.com/"] {
+  opacity: 0.3;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+/* ---- Dark mode experience contributions text ---- */
+[data-theme="dark"] .contributions .contribution,
+body.dark-mode .contributions .contribution {
+  color: var(--text-secondary);
+}
+
+/* ---- Manifesto bar visual polish ---- */
+/* .manifesto-bar and .about-manifesto are already styled in the main CSS above */
+/* The JS-rendered .manifesto-bar div handles the accent left border via flex layout */
+
+/* ---- Improve dark mode stat card text ---- */
+[data-theme="dark"] .stat-number,
+body.dark-mode .stat-number {
+  color: #ffffff;
+}
+
+[data-theme="dark"] .stat-card p,
+body.dark-mode .stat-card p {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* ---- Smooth contact submit button ---- */
+.contact-submit-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* ---- Prevent FOUC on footer ---- */
+.footer p {
+  opacity: 1;
+  transition: opacity 0.3s;
+}
+
+/* ---- Scrollbar in dark mode ---- */
+[data-theme="dark"] html,
+body.dark-mode {
+  scrollbar-color: rgba(90, 69, 255, 0.45) rgba(16, 12, 34, 0.5);
+}
+
+/* ---- Project card disabled link clarity ---- */
+.project-actions .action-icon-link {
+  position: relative;
+}
 

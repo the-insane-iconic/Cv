@@ -109,6 +109,24 @@ window.initApp = function () {
           localStorage.setItem('portfolio_theme', 'light');
           themeBtn.innerHTML = '<i class="fa-solid fa-moon"></i>';
         }
+        // Redraw canvas grid with new theme's dot color
+        const canvas = document.getElementById('bg-canvas');
+        if (canvas) {
+          const ctx = canvas.getContext('2d');
+          const w = canvas.width;
+          const h = canvas.height;
+          const spacing = 40;
+          const dotSize = 0.8;
+          ctx.clearRect(0, 0, w, h);
+          ctx.fillStyle = nextIsDark ? 'rgba(180, 160, 255, 0.18)' : '#C4B9A8';
+          for (let x = spacing; x < w; x += spacing) {
+            for (let y = spacing; y < h; y += spacing) {
+              ctx.beginPath();
+              ctx.arc(x, y, dotSize, 0, Math.PI * 2);
+              ctx.fill();
+            }
+          }
+        }
       };
 
       // Circular ripple reveal originating from the theme button
@@ -325,9 +343,19 @@ window.initApp = function () {
   }
 
   // Roles come from render.js via window.PORTFOLIO_ROLES, with fallback
+  // Use short role strings suitable for the typing animation
   const roles = (window.PORTFOLIO_ROLES && window.PORTFOLIO_ROLES.length)
-    ? window.PORTFOLIO_ROLES
-    : ['Developer', 'Designer', 'Creator'];
+    ? window.PORTFOLIO_ROLES.filter(r => r && r.length < 45)
+    : ['an AI/ML Engineer', 'a Deep Learning Researcher', 'a Full-Stack Builder', 'an LLM Evaluator'];
+
+  // Map full role strings to typing-friendly short versions
+  const typingRoles = roles.map(r => {
+    if (/AI\/ML Engineer/i.test(r)) return 'an AI/ML Engineer';
+    if (/Computer Science/i.test(r)) return 'a CS Student at LPU';
+    if (/Full.Stack/i.test(r)) return 'a Full-Stack Builder';
+    if (/Freelance/i.test(r)) return 'a Freelance AI Trainer';
+    return r.length > 35 ? r.substring(0, 35) + '...' : r;
+  }).filter((v, i, a) => a.indexOf(v) === i); // dedupe
 
   const typingEl = document.querySelector('.typing-text');
   let roleIndex = 0;
@@ -341,7 +369,7 @@ window.initApp = function () {
   function typeEffect() {
     if (!typingEl) return;
 
-    const current = roles[roleIndex];
+    const current = typingRoles[roleIndex % typingRoles.length];
 
     if (!isDeleting) {
       typingEl.textContent = current.substring(0, charIndex + 1);
@@ -357,7 +385,7 @@ window.initApp = function () {
       charIndex--;
       if (charIndex === 0) {
         isDeleting = false;
-        roleIndex = (roleIndex + 1) % roles.length;
+        roleIndex = (roleIndex + 1) % typingRoles.length;
         window._typeTimeout = setTimeout(typeEffect, pauseStart);
         return;
       }
@@ -366,6 +394,18 @@ window.initApp = function () {
   }
 
   window._typeTimeout = setTimeout(typeEffect, 600);
+
+  // Expose restart function so render.js can call it after hero re-render
+  window._restartTyping = function() {
+    if (window._typeTimeout) {
+      clearTimeout(window._typeTimeout);
+      window._typeTimeout = null;
+    }
+    roleIndex = 0;
+    charIndex = 0;
+    isDeleting = false;
+    window._typeTimeout = setTimeout(typeEffect, 300);
+  };
 
   /* ---------- Intersection Observer – Scroll-Reveal Animations ---------- */
   if (window._fadeObserver) {
@@ -754,8 +794,9 @@ window.initApp = function () {
   });
 
   /* ---------- Contact Form Handler ---------- */
-  const contactForm = document.querySelector('.contact-form');
-  if (contactForm) {
+  const contactForm = document.getElementById('contact-form') || document.querySelector('.contact-form');
+  if (contactForm && !contactForm._bound) {
+    contactForm._bound = true;
     contactForm.addEventListener('submit', (e) => {
       e.preventDefault();
       const name = (contactForm.querySelector('input[name="name"]')?.value || '').trim();
@@ -764,18 +805,18 @@ window.initApp = function () {
       const message = (contactForm.querySelector('textarea[name="message"]')?.value || '').trim();
       const targetEmail = window.PORTFOLIO_DATA?.socials?.email || 'anupamyadav6477@gmail.com';
 
-      const bodyText = `Hi Anupam,\n\n${message}\n\nFrom: ${name}\nEmail: ${email}`;
+      const bodyText = `Hi Anupam,\n\n${message}\n\n---\nFrom: ${name}\nEmail: ${email}`;
       const mailtoUrl = `mailto:${encodeURIComponent(targetEmail)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyText)}`;
 
       const submitBtn = contactForm.querySelector('.contact-submit-btn');
       if (submitBtn) {
         const origHtml = submitBtn.innerHTML;
         submitBtn.innerHTML = `<span>Opening Mail Client...</span> <i class="fa-solid fa-paper-plane"></i>`;
-        submitBtn.style.opacity = '0.85';
+        submitBtn.disabled = true;
         setTimeout(() => {
           submitBtn.innerHTML = origHtml;
-          submitBtn.style.opacity = '1';
-        }, 3000);
+          submitBtn.disabled = false;
+        }, 3500);
       }
 
       window.location.href = mailtoUrl;
@@ -798,7 +839,9 @@ window.initApp = function () {
       ctx.clearRect(0, 0, w, h);
       const spacing = 40;
       const dotSize = 0.8;
-      ctx.fillStyle = '#C4B9A8';
+      // Adapt dot color to current theme
+      const isDarkMode = document.body.classList.contains('dark-mode') || document.documentElement.getAttribute('data-theme') === 'dark';
+      ctx.fillStyle = isDarkMode ? 'rgba(180, 160, 255, 0.18)' : '#C4B9A8';
 
       for (let x = spacing; x < w; x += spacing) {
         for (let y = spacing; y < h; y += spacing) {

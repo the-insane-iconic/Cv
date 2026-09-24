@@ -19,7 +19,7 @@
     "tagline": "I turn ambitious ideas into intelligent systems that solve meaningful, real-world problems.",
     "introParagraphs": [
       "I turn <span class=\"hero-hl\">ambitious</span> ideas into <span class=\"hero-hl\">intelligent</span> systems that solve <span class=\"hero-hl\">meaningful, real-world</span> problems.",
-      "With a <span class=\"hero-hl\">curious</span> and <span class=\"hero-hl\">experimental</span> mindset, I build, break, and refine AI/ML solutions until they’re not just impressive—but <span class=\"hero-hl\">genuinely useful</span>."
+      "Currently working as <span class=\"hero-hl\"><span class=\"typing-text\"></span><span class=\"typing-cursor\">|</span></span> — building, breaking, and refining AI/ML solutions until they're genuinely useful."
     ],
     "profileImage": "https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/projeect%20images/1st.png",
     "profileImages": [
@@ -48,11 +48,26 @@
       }
     ],
     "chips": [
-      { "icon": "fa-solid fa-brain", "label": "LLM Training & RLHF" },
-      { "icon": "fa-solid fa-network-wired", "label": "Deep Learning & PyTorch" },
-      { "icon": "fa-solid fa-database", "label": "RAG & Vector Search" },
-      { "icon": "fa-solid fa-microchip", "label": "Computer Vision & NLP" },
-      { "icon": "fa-solid fa-code", "label": "Scalable AI Pipelines" }
+      {
+        "icon": "fa-solid fa-brain",
+        "label": "LLM Training & RLHF"
+      },
+      {
+        "icon": "fa-solid fa-network-wired",
+        "label": "Deep Learning & PyTorch"
+      },
+      {
+        "icon": "fa-solid fa-database",
+        "label": "RAG & Vector Search"
+      },
+      {
+        "icon": "fa-solid fa-microchip",
+        "label": "Computer Vision & NLP"
+      },
+      {
+        "icon": "fa-solid fa-code",
+        "label": "Scalable AI Pipelines"
+      }
     ]
   },
   "skills": [
@@ -60,59 +75,161 @@
       "category": "Programming & Systems",
       "icon": "fa-solid fa-code",
       "items": [
-        { "name": "Python", "icon": "fa-brands fa-python", "level": 95, "active": true },
-        { "name": "C++", "icon": "fa-solid fa-c", "level": 90, "active": true },
-        { "name": "JavaScript / TypeScript", "icon": "fa-brands fa-js", "level": 85 },
-        { "name": "SQL & Vector DBs", "icon": "fa-solid fa-database", "level": 88 }
+        {
+          "name": "Python",
+          "icon": "fa-brands fa-python",
+          "level": 95,
+          "active": true
+        },
+        {
+          "name": "C++",
+          "icon": "fa-solid fa-c",
+          "level": 90,
+          "active": true
+        },
+        {
+          "name": "JavaScript / TypeScript",
+          "icon": "fa-brands fa-js",
+          "level": 85
+        },
+        {
+          "name": "SQL & Vector DBs",
+          "icon": "fa-solid fa-database",
+          "level": 88
+        }
       ]
     },
     {
       "category": "AI & Deep Learning",
       "icon": "fa-solid fa-brain",
       "items": [
-        { "name": "PyTorch", "icon": "fa-solid fa-fire", "level": 92, "active": true },
-        { "name": "TensorFlow / Keras", "icon": "fa-solid fa-cube", "level": 85 },
-        { "name": "Hugging Face & Transformers", "icon": "fa-solid fa-robot", "level": 90, "active": true },
-        { "name": "Scikit-Learn & OpenCV", "icon": "fa-solid fa-eye", "level": 86 }
+        {
+          "name": "PyTorch",
+          "icon": "fa-solid fa-fire",
+          "level": 92,
+          "active": true
+        },
+        {
+          "name": "TensorFlow / Keras",
+          "icon": "fa-solid fa-cube",
+          "level": 85
+        },
+        {
+          "name": "Hugging Face & Transformers",
+          "icon": "fa-solid fa-robot",
+          "level": 90,
+          "active": true
+        },
+        {
+          "name": "Scikit-Learn & OpenCV",
+          "icon": "fa-solid fa-eye",
+          "level": 86
+        }
       ]
     },
     {
       "category": "Generative AI & LLMs",
       "icon": "fa-solid fa-wand-magic-sparkles",
       "items": [
-        { "name": "LLM Fine-Tuning & RLHF", "icon": "fa-solid fa-brain", "level": 90, "active": true },
-        { "name": "RAG & Vector Search", "icon": "fa-solid fa-database", "level": 88 },
-        { "name": "Prompt Engineering & Agents", "icon": "fa-solid fa-microchip", "level": 92 },
-        { "name": "ONNX Runtime & TensorRT", "icon": "fa-solid fa-bolt", "level": 82 }
+        {
+          "name": "LLM Fine-Tuning & RLHF",
+          "icon": "fa-solid fa-brain",
+          "level": 90,
+          "active": true
+        },
+        {
+          "name": "RAG & Vector Search",
+          "icon": "fa-solid fa-database",
+          "level": 88
+        },
+        {
+          "name": "Prompt Engineering & Agents",
+          "icon": "fa-solid fa-microchip",
+          "level": 92
+        },
+        {
+          "name": "ONNX Runtime & TensorRT",
+          "icon": "fa-solid fa-bolt",
+          "level": 82
+        }
       ]
     },
     {
       "category": "Full-Stack & Cloud MLOps",
       "icon": "fa-solid fa-layer-group",
       "items": [
-        { "name": "FastAPI & Flask APIs", "icon": "fa-solid fa-bolt", "level": 90, "active": true },
-        { "name": "React & Next.js", "icon": "fa-brands fa-react", "level": 85 },
-        { "name": "Docker & Git / GitHub", "icon": "fa-brands fa-docker", "level": 88, "active": true },
-        { "name": "Linux & Cloud Pipelines", "icon": "fa-brands fa-linux", "level": 90 }
+        {
+          "name": "FastAPI & Flask APIs",
+          "icon": "fa-solid fa-bolt",
+          "level": 90,
+          "active": true
+        },
+        {
+          "name": "React & Next.js",
+          "icon": "fa-brands fa-react",
+          "level": 85
+        },
+        {
+          "name": "Docker & Git / GitHub",
+          "icon": "fa-brands fa-docker",
+          "level": 88,
+          "active": true
+        },
+        {
+          "name": "Linux & Cloud Pipelines",
+          "icon": "fa-brands fa-linux",
+          "level": 90
+        }
       ]
     },
     {
       "category": "Core Competencies",
       "icon": "fa-solid fa-users",
       "items": [
-        { "name": "Problem Solving & DSA", "icon": "fa-solid fa-lightbulb", "level": 95 },
-        { "name": "Neural Model Architecture", "icon": "fa-solid fa-network-wired", "level": 90 },
-        { "name": "Data Pipeline Engineering", "icon": "fa-solid fa-diagram-project", "level": 88 },
-        { "name": "Research & Experimentation", "icon": "fa-solid fa-flask", "level": 85 }
+        {
+          "name": "Problem Solving & DSA",
+          "icon": "fa-solid fa-lightbulb",
+          "level": 95
+        },
+        {
+          "name": "Neural Model Architecture",
+          "icon": "fa-solid fa-network-wired",
+          "level": 90
+        },
+        {
+          "name": "Data Pipeline Engineering",
+          "icon": "fa-solid fa-diagram-project",
+          "level": 88
+        },
+        {
+          "name": "Research & Experimentation",
+          "icon": "fa-solid fa-flask",
+          "level": 85
+        }
       ]
     }
   ],
   "floatingIcons": [
-    { "icon": "fa-brands fa-react", "class": "float-icon-1" },
-    { "icon": "fa-brands fa-python", "class": "float-icon-2" },
-    { "icon": "fa-solid fa-brain", "class": "float-icon-3" },
-    { "icon": "fa-brands fa-linux", "class": "float-icon-4" },
-    { "icon": "fa-brands fa-html5", "class": "float-icon-5" }
+    {
+      "icon": "fa-brands fa-react",
+      "class": "float-icon-1"
+    },
+    {
+      "icon": "fa-brands fa-python",
+      "class": "float-icon-2"
+    },
+    {
+      "icon": "fa-solid fa-brain",
+      "class": "float-icon-3"
+    },
+    {
+      "icon": "fa-brands fa-linux",
+      "class": "float-icon-4"
+    },
+    {
+      "icon": "fa-brands fa-html5",
+      "class": "float-icon-5"
+    }
   ],
   "experience": [
     {
@@ -124,9 +241,21 @@
       "icon": "brain",
       "jobIcon": "brain-circuit",
       "metrics": [
-        { "val": "1.2K+", "lbl": "AI Responses Analyzed", "icon": "chart-no-axes-combined" },
-        { "val": "1K+", "lbl": "Datasets Created", "icon": "database" },
-        { "val": "300+", "lbl": "Outputs Reviewed", "icon": "badge-check" }
+        {
+          "val": "1.2K+",
+          "lbl": "AI Responses Analyzed",
+          "icon": "chart-no-axes-combined"
+        },
+        {
+          "val": "1K+",
+          "lbl": "Datasets Created",
+          "icon": "database"
+        },
+        {
+          "val": "300+",
+          "lbl": "Outputs Reviewed",
+          "icon": "badge-check"
+        }
       ],
       "contributions": [
         "Improved LLM accuracy & reasoning capabilities through RLHF",
@@ -144,9 +273,21 @@
       "icon": "cpu",
       "jobIcon": "cpu",
       "metrics": [
-        { "val": "94.8%", "lbl": "Model Accuracy", "icon": "target" },
-        { "val": "15+", "lbl": "Pipelines Deployed", "icon": "rocket" },
-        { "val": "4.2x", "lbl": "Inference Speedup", "icon": "gauge" }
+        {
+          "val": "94.8%",
+          "lbl": "Model Accuracy",
+          "icon": "target"
+        },
+        {
+          "val": "15+",
+          "lbl": "Pipelines Deployed",
+          "icon": "rocket"
+        },
+        {
+          "val": "4.2x",
+          "lbl": "Inference Speedup",
+          "icon": "gauge"
+        }
       ],
       "contributions": [
         "Architected deep learning vision & NLP pipelines in PyTorch",
@@ -164,9 +305,21 @@
       "icon": "sparkles",
       "jobIcon": "sparkles",
       "metrics": [
-        { "val": "50K+", "lbl": "Data Points Processed", "icon": "database" },
-        { "val": "8+", "lbl": "Custom AI Models Built", "icon": "boxes" },
-        { "val": "99.2%", "lbl": "System Reliability", "icon": "activity" }
+        {
+          "val": "50K+",
+          "lbl": "Data Points Processed",
+          "icon": "database"
+        },
+        {
+          "val": "8+",
+          "lbl": "Custom AI Models Built",
+          "icon": "boxes"
+        },
+        {
+          "val": "99.2%",
+          "lbl": "System Reliability",
+          "icon": "activity"
+        }
       ],
       "contributions": [
         "Built production RAG pipelines with ChromaDB vector search",
@@ -179,19 +332,36 @@
   "projects": [
     {
       "title": "Real-Time Process Monitoring Dashboard",
-      "type": "web",
-      "typeLabel": "WEB APP",
+      "type": "tool",
+      "typeLabel": "TOOL",
       "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80",
       "video": "",
-      "description": "Live system monitoring with anomaly detection and visual analytics for CPU and memory processes.",
+      "description": "A Python-based live system monitoring tool with visual analytics, anomaly detection algorithms, and interactive dashboards for CPU, memory, and process tracking.",
       "stats": [
-        { "icon": "gauge", "val": "100+", "lbl": "Processes" },
-        { "icon": "zap", "val": "40%", "lbl": "Faster Alerts" },
-        { "icon": "activity", "val": "Real-time", "lbl": "Monitoring" }
+        {
+          "icon": "gauge",
+          "val": "100+",
+          "lbl": "Processes Tracked"
+        },
+        {
+          "icon": "zap",
+          "val": "40%",
+          "lbl": "Faster Alert Response"
+        },
+        {
+          "icon": "activity",
+          "val": "Real-time",
+          "lbl": "Monitoring"
+        }
       ],
-      "tech": ["Python", "Psutil", "Tkinter", "Matplotlib"],
-      "github": "https://github.com/",
-      "demo": "https://github.com/"
+      "tech": [
+        "Python",
+        "Psutil",
+        "Tkinter",
+        "Matplotlib"
+      ],
+      "github": "https://github.com/the-insane-iconic",
+      "demo": ""
     },
     {
       "title": "Daily Challenge Bot",
@@ -199,15 +369,32 @@
       "typeLabel": "WEB APP",
       "image": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80",
       "video": "",
-      "description": "Personalized daily challenges delivered through an interactive AI chatbot across multiple domains.",
+      "description": "An AI-powered challenge bot that delivers personalized daily tasks across coding, aptitude, and general knowledge. Uses LLM chains to adapt difficulty based on user history.",
       "stats": [
-        { "icon": "layers", "val": "Multi-domain", "lbl": "Challenges" },
-        { "icon": "book-open", "val": "Personalized", "lbl": "Learning" },
-        { "icon": "bot", "val": "Interactive", "lbl": "AI Chat" }
+        {
+          "icon": "layers",
+          "val": "Multi-domain",
+          "lbl": "Challenge Sets"
+        },
+        {
+          "icon": "book-open",
+          "val": "Adaptive",
+          "lbl": "Learning Path"
+        },
+        {
+          "icon": "bot",
+          "val": "LLM-Powered",
+          "lbl": "AI Engine"
+        }
       ],
-      "tech": ["React", "TypeScript", "MongoDB"],
-      "github": "https://github.com/",
-      "demo": "https://github.com/"
+      "tech": [
+        "React",
+        "TypeScript",
+        "MongoDB",
+        "LangChain"
+      ],
+      "github": "https://github.com/the-insane-iconic",
+      "demo": ""
     },
     {
       "title": "NoteSync",
@@ -215,15 +402,32 @@
       "typeLabel": "WEB APP",
       "image": "https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fit=crop&w=800&q=80",
       "video": "",
-      "description": "Cloud-synced notes with end-to-end encryption and seamless offline synchronization.",
+      "description": "A cross-platform note-taking app with end-to-end AES-256 encryption, real-time cloud synchronization, and offline-first architecture using service workers.",
       "stats": [
-        { "icon": "cloud", "val": "Cloud", "lbl": "Sync" },
-        { "icon": "shield-check", "val": "End-to-end", "lbl": "Encryption" },
-        { "icon": "wifi-off", "val": "Offline", "lbl": "Access" }
+        {
+          "icon": "cloud",
+          "val": "E2E",
+          "lbl": "Encrypted Sync"
+        },
+        {
+          "icon": "shield-check",
+          "val": "AES-256",
+          "lbl": "Encryption"
+        },
+        {
+          "icon": "wifi-off",
+          "val": "Offline",
+          "lbl": "First Access"
+        }
       ],
-      "tech": ["Next.js", "Tailwind CSS", "Firebase"],
-      "github": "https://github.com/",
-      "demo": "https://github.com/"
+      "tech": [
+        "Next.js",
+        "Firebase",
+        "CryptoJS",
+        "PWA"
+      ],
+      "github": "https://github.com/the-insane-iconic",
+      "demo": ""
     },
     {
       "title": "Smart Obstacle Avoidance Robot",
@@ -231,15 +435,32 @@
       "typeLabel": "HARDWARE",
       "image": "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=800&q=80",
       "video": "",
-      "description": "Autonomous robot capable of real-time obstacle detection and dynamic path navigation.",
+      "description": "An autonomous robot using ultrasonic sensors and a custom pathfinding algorithm built in C++. Achieves real-time obstacle detection with sub-50ms reaction time.",
       "stats": [
-        { "icon": "radar", "val": "Real-time", "lbl": "Detection" },
-        { "icon": "navigation", "val": "Autonomous", "lbl": "Navigation" },
-        { "icon": "battery-charging", "val": "Low Power", "lbl": "Design" }
+        {
+          "icon": "radar",
+          "val": "<50ms",
+          "lbl": "Reaction Time"
+        },
+        {
+          "icon": "navigation",
+          "val": "Autonomous",
+          "lbl": "Navigation"
+        },
+        {
+          "icon": "battery-charging",
+          "val": "Low Power",
+          "lbl": "Optimized"
+        }
       ],
-      "tech": ["Arduino", "C++", "Ultrasonic", "Motors"],
-      "github": "https://github.com/",
-      "demo": "https://github.com/"
+      "tech": [
+        "Arduino",
+        "C++",
+        "Ultrasonic Sensors",
+        "L298N"
+      ],
+      "github": "https://github.com/the-insane-iconic",
+      "demo": ""
     },
     {
       "title": "IoT Weather Monitoring System",
@@ -247,15 +468,33 @@
       "typeLabel": "HARDWARE",
       "image": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80",
       "video": "",
-      "description": "Connected environmental monitoring system with telemetry streaming and remote alerts.",
+      "description": "Connected environmental monitoring system using ESP32 and BME280 sensor. Streams live telemetry via MQTT to a cloud dashboard with threshold-based SMS alerts.",
       "stats": [
-        { "icon": "trending-up", "val": "Live Data", "lbl": "Tracking" },
-        { "icon": "wifi", "val": "Remote", "lbl": "Access" },
-        { "icon": "bell", "val": "Alert", "lbl": "System" }
+        {
+          "icon": "trending-up",
+          "val": "Live",
+          "lbl": "Data Streaming"
+        },
+        {
+          "icon": "wifi",
+          "val": "MQTT",
+          "lbl": "Protocol"
+        },
+        {
+          "icon": "bell",
+          "val": "SMS",
+          "lbl": "Alert System"
+        }
       ],
-      "tech": ["ESP32", "C++", "MQTT", "BME280"],
-      "github": "https://github.com/",
-      "demo": "https://github.com/"
+      "tech": [
+        "ESP32",
+        "C++",
+        "MQTT",
+        "BME280",
+        "ThingSpeak"
+      ],
+      "github": "https://github.com/the-insane-iconic",
+      "demo": ""
     },
     {
       "title": "Portfolio Analytics Dashboard",
@@ -263,37 +502,168 @@
       "typeLabel": "WEB APP",
       "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80",
       "video": "",
-      "description": "Analytics dashboard for understanding portfolio traffic, visitor demographics, and performance.",
+      "description": "Full-stack analytics dashboard for this portfolio — tracking visitor sessions, device breakdowns, and engagement metrics with Chart.js visualizations and PostgreSQL backend.",
       "stats": [
-        { "icon": "users", "val": "Visitor", "lbl": "Insights" },
-        { "icon": "bar-chart-3", "val": "Data", "lbl": "Visualization" },
-        { "icon": "target", "val": "Performance", "lbl": "Metrics" }
+        {
+          "icon": "users",
+          "val": "Visitor",
+          "lbl": "Session Tracking"
+        },
+        {
+          "icon": "bar-chart-3",
+          "val": "Chart.js",
+          "lbl": "Visualization"
+        },
+        {
+          "icon": "target",
+          "val": "Real-time",
+          "lbl": "Metrics"
+        }
       ],
-      "tech": ["Next.js", "TypeScript", "Chart.js", "PostgreSQL"],
-      "github": "https://github.com/",
-      "demo": "https://github.com/"
+      "tech": [
+        "Next.js",
+        "TypeScript",
+        "Chart.js",
+        "PostgreSQL"
+      ],
+      "github": "https://github.com/the-insane-iconic",
+      "demo": ""
     }
   ],
   "stats": [
-    { "value": 15, "suffix": "+", "label": "Days LeetCode Streak", "icon": "fa-solid fa-fire", "iconClass": "text-orange", "featured": true },
-    { "value": 50, "suffix": "+", "label": "Problems Solved", "icon": "fa-solid fa-code" },
-    { "value": 20, "suffix": "+", "label": "GitHub Repositories", "icon": "fa-brands fa-github" },
-    { "value": null, "suffix": "2nd", "label": "Hackathon Runner-Up", "icon": "fa-solid fa-trophy", "isText": true }
+    {
+      "value": 15,
+      "suffix": "+",
+      "label": "Days LeetCode Streak",
+      "icon": "fa-solid fa-fire",
+      "iconClass": "text-orange",
+      "featured": true
+    },
+    {
+      "value": 50,
+      "suffix": "+",
+      "label": "Problems Solved",
+      "icon": "fa-solid fa-code"
+    },
+    {
+      "value": 20,
+      "suffix": "+",
+      "label": "GitHub Repositories",
+      "icon": "fa-brands fa-github"
+    },
+    {
+      "value": null,
+      "suffix": "2nd",
+      "label": "Hackathon Runner-Up",
+      "icon": "fa-solid fa-trophy",
+      "isText": true
+    }
   ],
-  "certCategories": ["All", "AI", "Cybersecurity", "Networking", "Programming", "Others"],
+  "certCategories": [
+    "All",
+    "AI",
+    "Cybersecurity",
+    "Networking",
+    "Programming",
+    "Others"
+  ],
   "certificates": [
-    { "title": "Build Generative AI Apps and Solutions with No-Code Tools", "issuer": "Coursera", "category": "AI", "icon": "fa-solid fa-robot", "featured": false, "url": "" },
-    { "title": "C Programming Certificate", "issuer": "iamneo", "category": "Programming", "icon": "fa-solid fa-code", "featured": false, "url": "" },
-    { "title": "Entrepreneurship Learning Pathway", "issuer": "Wadhwani Foundation", "category": "Others", "icon": "fa-solid fa-lightbulb", "featured": false, "url": "" },
-    { "title": "ChatGPT-4 Prompt Engineering", "issuer": "Udemy", "category": "AI", "icon": "fa-solid fa-brain", "featured": false, "url": "" },
-    { "title": "Computational Theory – Finite Automata", "issuer": "Coursera", "category": "Programming", "icon": "fa-solid fa-gears", "featured": false, "url": "" },
-    { "title": "Computational Theory – Turing Machines", "issuer": "Coursera", "category": "Programming", "icon": "fa-solid fa-microchip", "featured": false, "url": "" },
-    { "title": "Computer Communication", "issuer": "Coursera", "category": "Networking", "icon": "fa-solid fa-network-wired", "featured": false, "url": "" },
-    { "title": "Deloitte Cybersecurity Internship", "issuer": "Deloitte", "category": "Cybersecurity", "icon": "fa-solid fa-shield-halved", "featured": true, "url": "" },
-    { "title": "Digital Systems – Logic to Processors", "issuer": "Coursera", "category": "Others", "icon": "fa-solid fa-memory", "featured": false, "url": "" },
-    { "title": "DSA Certificate", "issuer": "iamneo", "category": "Programming", "icon": "fa-solid fa-diagram-project", "featured": false, "url": "" },
-    { "title": "Fundamentals of Network Communication", "issuer": "Coursera", "category": "Networking", "icon": "fa-solid fa-wifi", "featured": false, "url": "" },
-    { "title": "Hackathon Certificate", "issuer": "Tech Fest", "category": "Programming", "icon": "fa-solid fa-trophy", "featured": false, "url": "" }
+    {
+      "title": "Build Generative AI Apps and Solutions with No-Code Tools",
+      "issuer": "Coursera",
+      "category": "AI",
+      "icon": "fa-solid fa-robot",
+      "featured": false,
+      "url": ""
+    },
+    {
+      "title": "C Programming Certificate",
+      "issuer": "iamneo",
+      "category": "Programming",
+      "icon": "fa-solid fa-code",
+      "featured": false,
+      "url": ""
+    },
+    {
+      "title": "Entrepreneurship Learning Pathway",
+      "issuer": "Wadhwani Foundation",
+      "category": "Others",
+      "icon": "fa-solid fa-lightbulb",
+      "featured": false,
+      "url": ""
+    },
+    {
+      "title": "ChatGPT-4 Prompt Engineering",
+      "issuer": "Udemy",
+      "category": "AI",
+      "icon": "fa-solid fa-brain",
+      "featured": false,
+      "url": ""
+    },
+    {
+      "title": "Computational Theory – Finite Automata",
+      "issuer": "Coursera",
+      "category": "Programming",
+      "icon": "fa-solid fa-gears",
+      "featured": false,
+      "url": ""
+    },
+    {
+      "title": "Computational Theory – Turing Machines",
+      "issuer": "Coursera",
+      "category": "Programming",
+      "icon": "fa-solid fa-microchip",
+      "featured": false,
+      "url": ""
+    },
+    {
+      "title": "Computer Communication",
+      "issuer": "Coursera",
+      "category": "Networking",
+      "icon": "fa-solid fa-network-wired",
+      "featured": false,
+      "url": ""
+    },
+    {
+      "title": "Deloitte Cybersecurity Internship",
+      "issuer": "Deloitte",
+      "category": "Cybersecurity",
+      "icon": "fa-solid fa-shield-halved",
+      "featured": true,
+      "url": ""
+    },
+    {
+      "title": "Digital Systems – Logic to Processors",
+      "issuer": "Coursera",
+      "category": "Others",
+      "icon": "fa-solid fa-memory",
+      "featured": false,
+      "url": ""
+    },
+    {
+      "title": "DSA Certificate",
+      "issuer": "iamneo",
+      "category": "Programming",
+      "icon": "fa-solid fa-diagram-project",
+      "featured": false,
+      "url": ""
+    },
+    {
+      "title": "Fundamentals of Network Communication",
+      "issuer": "Coursera",
+      "category": "Networking",
+      "icon": "fa-solid fa-wifi",
+      "featured": false,
+      "url": ""
+    },
+    {
+      "title": "Hackathon Certificate",
+      "issuer": "Tech Fest",
+      "category": "Programming",
+      "icon": "fa-solid fa-trophy",
+      "featured": false,
+      "url": ""
+    }
   ],
   "socials": {
     "github": "https://github.com/the-insane-iconic",

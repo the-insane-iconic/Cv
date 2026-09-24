@@ -238,6 +238,18 @@
       } else if (id.tagline) {
         descEl.innerHTML = `<p class="hero-intro-p">${id.tagline}</p>`;
       }
+      // Restart typing animation on the freshly-rendered element
+      if (window._typeTimeout) {
+        clearTimeout(window._typeTimeout);
+        window._typeTimeout = null;
+      }
+      // Re-trigger with a small delay so the new DOM element is in place
+      setTimeout(() => {
+        const typingEl = document.querySelector('.typing-text');
+        if (typingEl && window._restartTyping) {
+          window._restartTyping();
+        }
+      }, 100);
     }
 
     const resumeBtn = document.querySelector('.btn-hero-resume') || document.querySelector('.hero-cta .btn-outline');
