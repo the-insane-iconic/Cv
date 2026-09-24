@@ -5895,124 +5895,742 @@ body.dark-mode a.company-link:hover {
   margin: 0 3px;
 }
 
-/* ---- Education Section ---- */
-.education-section {
-  padding: var(--section-py) 0;
-  background: var(--bg);
+/* =======================================================
+   EDUCATION & ACADEMIC JOURNEY (HORIZONTAL SNAKE PATH)
+======================================================== */
+.education-journey-section {
   position: relative;
+  padding: 100px 0 130px 0;
+  overflow: hidden;
+  background: var(--bg);
 }
 
-.education-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+.journey-ambient-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(130px);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.45;
+}
+.journey-ambient-glow.glow-left {
+  top: 15%;
+  left: -5%;
+  width: 480px;
+  height: 480px;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.28) 0%, transparent 70%);
+}
+.journey-ambient-glow.glow-center {
+  top: 40%;
+  left: 45%;
+  width: 520px;
+  height: 520px;
+  background: radial-gradient(circle, rgba(236, 72, 153, 0.22) 0%, transparent 70%);
+}
+.journey-ambient-glow.glow-right {
+  top: 20%;
+  right: -5%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.3) 0%, transparent 70%);
+}
+
+.journey-header-container {
+  position: relative;
+  z-index: 2;
+  margin-bottom: 30px;
+}
+.journey-badge-wrap {
+  margin-bottom: 12px;
+}
+.journey-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 100px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  background: rgba(99, 102, 241, 0.12);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  color: var(--accent);
+}
+.journey-title-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
   gap: 24px;
-  margin-top: 40px;
+  flex-wrap: wrap;
+}
+.journey-subtitle {
+  color: var(--text-secondary);
+  font-size: 1.05rem;
+  max-width: 650px;
+  margin-top: 8px;
+  line-height: 1.6;
+}
+.journey-nav-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.journey-nav-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--surface-card);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.25s var(--ease);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+.journey-nav-btn:hover {
+  background: var(--accent);
+  color: #ffffff;
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.35);
+}
+.journey-scroll-indicator {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  user-select: none;
 }
 
-.education-card {
+/* Runway & snake track */
+.journey-runway-container {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: visible;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  padding: 45px 0 65px 0;
+  cursor: grab;
+  position: relative;
+  z-index: 2;
+}
+.journey-runway-container:active {
+  cursor: grabbing;
+}
+.journey-runway-container::-webkit-scrollbar {
+  height: 6px;
+}
+.journey-runway-container::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  margin: 0 40px;
+}
+.journey-runway-container::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, #6366f1, #ec4899, #06b6d4);
+  border-radius: 8px;
+}
+
+.journey-snake-track {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: max-content;
+  padding-left: max(32px, calc((100vw - 1280px) / 2));
+  padding-right: 320px; /* Extends past screen right edge depicting continuous journey */
+  height: 600px;
+}
+
+/* Continuous Snake SVG */
+.journey-snake-svg {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 100%;
+  height: 500px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.snake-path-pulse {
+  animation: snakeFlowPulse 20s linear infinite;
+}
+@keyframes snakeFlowPulse {
+  to {
+    stroke-dashoffset: -1000;
+  }
+}
+
+/* Steps along snake path */
+.snake-step {
+  position: relative;
+  z-index: 3;
+  width: 320px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Top step (Class 10, Dummy 1) sits above the SVG wave */
+.snake-step.step-top {
+  align-self: flex-start;
+  margin-top: 15px;
+  align-items: center;
+}
+.snake-step.step-top .snake-node-connector {
+  margin-top: 14px;
+}
+
+/* Bottom step (Class 12, Dummy 2) sits below the SVG wave */
+.snake-step.step-bottom {
+  align-self: flex-end;
+  margin-bottom: 15px;
+  align-items: center;
+}
+.snake-step.step-bottom .snake-node-connector {
+  margin-bottom: 14px;
+}
+
+/* Featured Step (College LPU) sits centered with prestige styling */
+.snake-step.step-featured {
+  width: 380px;
+  align-self: center;
+  margin: 0 30px;
+}
+
+/* Continuation step heads off the right screen edge */
+.snake-step.step-continuation {
+  width: 340px;
+  align-self: center;
+  margin-left: 20px;
+}
+
+/* Connector pin linking card to the snake path */
+.snake-node-connector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.step-bottom .snake-node-connector {
+  flex-direction: column-reverse;
+}
+.snake-pin {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--surface-card);
+  border: 2px solid #6366f1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: 0 0 12px rgba(99, 102, 241, 0.4);
+}
+.snake-pin .pin-core {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #6366f1;
+}
+.snake-pin.pin-featured {
+  border-color: #ec4899;
+  width: 28px;
+  height: 28px;
+  box-shadow: 0 0 20px rgba(236, 72, 153, 0.6);
+}
+.snake-pin.pin-featured .pin-core {
+  background: #ec4899;
+  width: 10px;
+  height: 10px;
+}
+.pulse-ring {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 2px solid rgba(236, 72, 153, 0.5);
+  animation: pinPulseRing 2s infinite ease-out;
+}
+@keyframes pinPulseRing {
+  0% { transform: scale(0.8); opacity: 1; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+
+.node-year-label {
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  background: rgba(99, 102, 241, 0.08);
+  padding: 2px 10px;
+  border-radius: 100px;
+  border: 1px solid rgba(99, 102, 241, 0.16);
+}
+.node-year-label.featured-label {
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.15), rgba(99, 102, 241, 0.15));
+  border-color: rgba(236, 72, 153, 0.35);
+  color: var(--text-primary);
+}
+
+/* 2 Years Timeline Gap Segment */
+.snake-timeline-gap {
+  width: 240px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  z-index: 3;
+  margin: 0 10px;
+}
+.timeline-span-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--surface-card);
+  border: 1px dashed rgba(99, 102, 241, 0.4);
+  padding: 10px 18px;
+  border-radius: 50px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transform: translateY(-8px);
+  transition: all 0.3s var(--ease);
+}
+.timeline-span-badge:hover {
+  border-color: #6366f1;
+  transform: translateY(-11px) scale(1.02);
+  box-shadow: 0 10px 25px rgba(99, 102, 241, 0.2);
+}
+.timeline-span-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(99, 102, 241, 0.12);
+  color: #6366f1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+}
+.timeline-span-info {
+  display: flex;
+  flex-direction: column;
+}
+.span-duration {
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+.span-desc {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+.timeline-span-track {
+  display: flex;
+  gap: 14px;
+  margin-top: 10px;
+}
+.track-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(99, 102, 241, 0.35);
+}
+.track-dot.pulse {
+  background: #6366f1;
+  box-shadow: 0 0 8px #6366f1;
+  animation: trackDotPulse 1.5s infinite;
+}
+@keyframes trackDotPulse {
+  0%, 100% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.6); opacity: 1; }
+}
+
+/* Card Core */
+.step-card.education-card-snake {
   background: var(--surface-card);
   border: 1px solid var(--border);
   border-radius: 20px;
-  padding: 28px 32px;
-  box-shadow: var(--shadow-card);
-  display: flex;
-  align-items: flex-start;
-  gap: 20px;
-  transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+  padding: 24px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
   position: relative;
   overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 }
-
-.education-card::before {
+.step-card.education-card-snake::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   height: 3px;
-  background: var(--accent-gradient);
-  border-radius: 20px 20px 0 0;
+  background: linear-gradient(90deg, #6366f1, #8b5cf6);
+}
+.step-card.education-card-snake:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(99, 102, 241, 0.22);
+  border-color: rgba(99, 102, 241, 0.4);
 }
 
-.education-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-hover);
-}
-
-.edu-icon {
-  width: 52px;
-  height: 52px;
-  border-radius: 14px;
-  background: var(--accent-light);
-  display: flex;
+/* Badge Top */
+.step-badge-top {
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  font-size: 1.4rem;
+  gap: 6px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
   color: var(--accent);
-  flex-shrink: 0;
+  margin-bottom: 10px;
 }
-
-.edu-content {
-  flex: 1;
-  min-width: 0;
-}
-
-.edu-degree {
-  font-size: 1rem;
+.step-title {
+  font-size: 1.15rem;
   font-weight: 700;
   color: var(--text-primary);
   margin-bottom: 4px;
-  line-height: 1.35;
+  line-height: 1.3;
 }
-
-.edu-institution {
-  font-size: 0.88rem;
-  color: var(--accent);
+.step-school {
+  font-size: 0.92rem;
   font-weight: 600;
+  color: var(--text-secondary);
   margin-bottom: 6px;
 }
-
-.edu-meta {
-  display: flex;
-  gap: 14px;
-  flex-wrap: wrap;
-}
-
-.edu-meta span {
+.step-location {
   font-size: 0.8rem;
   color: var(--text-muted);
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
+  margin-bottom: 14px;
 }
-
-.edu-meta span i {
-  font-size: 0.75rem;
-}
-
-.edu-badge {
+.step-score-pill {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 3px 10px;
-  background: rgba(90, 69, 255, 0.08);
-  border: 1px solid rgba(90, 69, 255, 0.18);
+  gap: 8px;
+  background: rgba(99, 102, 241, 0.08);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  padding: 5px 14px;
   border-radius: 100px;
-  font-size: 0.74rem;
+  margin-bottom: 12px;
+}
+.step-score-pill .score-label {
+  font-size: 0.72rem;
   font-weight: 600;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.step-score-pill .score-val {
+  font-size: 0.95rem;
+  font-weight: 800;
   color: var(--accent);
-  margin-top: 10px;
+}
+.step-footer-text {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-top: 1px solid var(--border);
+  padding-top: 10px;
 }
 
-[data-theme="dark"] .education-card,
-body.dark-mode .education-card {
+/* Featured College Card */
+.step-card.card-featured {
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.06), rgba(99, 102, 241, 0.08)), var(--surface-card);
+  border: 1.5px solid rgba(236, 72, 153, 0.35);
+  box-shadow: 0 16px 45px rgba(236, 72, 153, 0.18);
+  padding: 28px;
+}
+.step-card.card-featured::before {
+  height: 4px;
+  background: linear-gradient(90deg, #ec4899, #8b5cf6, #3b82f6);
+}
+.step-card.card-featured:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 24px 50px rgba(236, 72, 153, 0.3);
+  border-color: #ec4899;
+}
+.featured-badge {
+  color: #ec4899;
+}
+.featured-stats-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+.step-score-pill.featured-pill {
+  background: rgba(236, 72, 153, 0.12);
+  border-color: rgba(236, 72, 153, 0.35);
+}
+.step-score-pill.featured-pill .score-val {
+  color: #ec4899;
+}
+.featured-year-pill {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.step-tags-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+.step-tag {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 6px;
+  background: rgba(99, 102, 241, 0.1);
+  color: var(--text-secondary);
+  border: 1px solid rgba(99, 102, 241, 0.18);
+}
+.pulse-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 10px #10b981;
+  animation: livePulse 1.8s infinite;
+  display: inline-block;
+}
+@keyframes livePulse {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.5); opacity: 1; }
+}
+
+/* Dummy Placeholder Cards (User will replace later) */
+.step-card.card-dummy {
+  border-style: dashed;
+  border-color: rgba(99, 102, 241, 0.35);
+  background: rgba(255, 255, 255, 0.02);
+}
+.dummy-badge {
+  color: #f59e0b;
+}
+.step-score-pill.dummy-pill {
+  background: rgba(245, 158, 11, 0.1);
+  border-color: rgba(245, 158, 11, 0.25);
+}
+.step-score-pill.dummy-pill .score-val {
+  color: #f59e0b;
+  font-size: 0.82rem;
+}
+.dummy-hint {
+  font-style: italic;
+  color: rgba(245, 158, 11, 0.85);
+}
+.snake-pin.dummy-pin {
+  border-style: dashed;
+  border-color: #f59e0b;
+}
+.snake-pin.dummy-pin .pin-core {
+  background: #f59e0b;
+}
+
+/* Continuation Card (Continues off screen right edge) */
+.step-card.card-continuation {
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(99, 102, 241, 0.1)), var(--surface-card);
+  border: 1.5px solid rgba(6, 182, 212, 0.4);
+  box-shadow: 0 16px 45px rgba(6, 182, 212, 0.2);
+  padding: 26px;
+}
+.step-card.card-continuation::before {
+  background: linear-gradient(90deg, #06b6d4, #3b82f6);
+}
+.continuation-signal {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.signal-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #06b6d4;
+  box-shadow: 0 0 10px #06b6d4;
+}
+.signal-ping {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid #06b6d4;
+  animation: pingRing 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+@keyframes pingRing {
+  0% { transform: scale(0.6); opacity: 1; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+.signal-text {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #06b6d4;
+  margin-left: 6px;
+}
+.continuation-title {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+.continuation-desc {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 14px;
+}
+.continuation-track-beam {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.beam-arrow {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #06b6d4;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Infinite tail extending past the card toward right edge */
+.snake-infinite-tail {
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 0;
+  width: 240px;
+}
+.tail-line {
+  height: 4px;
+  width: 180px;
+  background: linear-gradient(90deg, #06b6d4, rgba(6, 182, 212, 0.2));
+  border-radius: 4px;
+  box-shadow: 0 0 14px #06b6d4;
+  position: relative;
+}
+.tail-pulse {
+  position: absolute;
+  width: 40px;
+  height: 4px;
+  background: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 0 16px #ffffff;
+  animation: tailPulseSlide 2s linear infinite;
+}
+@keyframes tailPulseSlide {
+  0% { left: 0; opacity: 0; }
+  40% { opacity: 1; }
+  100% { left: 160px; opacity: 0; }
+}
+.tail-beacon {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
   background: var(--surface-card);
-  border-color: var(--border);
+  border: 2px solid #06b6d4;
+  color: #06b6d4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  box-shadow: 0 0 20px rgba(6, 182, 212, 0.5);
+  animation: beaconFloat 3s ease-in-out infinite;
+  margin-left: 10px;
+}
+@keyframes beaconFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
 }
 
-[data-theme="dark"] .edu-icon,
-body.dark-mode .edu-icon {
-  background: rgba(90, 69, 255, 0.18);
+/* Dark mode harmonized overrides */
+[data-theme="dark"] .education-journey-section,
+body.dark-mode .education-journey-section {
+  background: var(--bg);
+}
+[data-theme="dark"] .step-card.education-card-snake,
+body.dark-mode .step-card.education-card-snake {
+  background: rgba(18, 15, 38, 0.85);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+}
+[data-theme="dark"] .step-card.card-featured,
+body.dark-mode .step-card.card-featured {
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.12), rgba(99, 102, 241, 0.15)), rgba(18, 15, 38, 0.95);
+  border-color: rgba(236, 72, 153, 0.5);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+[data-theme="dark"] .timeline-span-badge,
+body.dark-mode .timeline-span-badge {
+  background: rgba(18, 15, 38, 0.9);
+  border-color: rgba(99, 102, 241, 0.4);
+}
+
+/* Responsive adjust */
+@media (max-width: 768px) {
+  .education-journey-section {
+    padding: 70px 0 80px 0;
+  }
+  .journey-runway-container {
+    padding: 20px 0;
+  }
+  .journey-snake-track {
+    height: auto;
+    flex-direction: column;
+    align-items: stretch;
+    padding-left: 20px;
+    padding-right: 20px;
+    gap: 30px;
+    min-width: 100%;
+  }
+  .journey-snake-svg {
+    display: none;
+  }
+  .snake-step {
+    width: 100%;
+    margin: 0 !important;
+  }
+  .snake-step.step-featured {
+    width: 100%;
+  }
+  .snake-step.step-continuation {
+    width: 100%;
+  }
+  .snake-timeline-gap {
+    width: 100%;
+  }
+  .snake-infinite-tail {
+    display: none;
+  }
+  .journey-nav-controls {
+    display: none;
+  }
 }
 
 /* ---- Project actions — disabled/placeholder state ---- */

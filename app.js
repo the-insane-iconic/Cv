@@ -876,6 +876,47 @@ window.initApp = function () {
       }
     });
   });
+
+  /* ---------- Academic Journey Snake Runway Controls ---------- */
+  const runway = document.getElementById('journeyRunway');
+  const prevBtn = document.getElementById('journeyPrevBtn');
+  const nextBtn = document.getElementById('journeyNextBtn');
+
+  if (runway) {
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => {
+        runway.scrollBy({ left: -380, behavior: 'smooth' });
+      });
+    }
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => {
+        runway.scrollBy({ left: 380, behavior: 'smooth' });
+      });
+    }
+
+    // Drag-to-scroll interaction for smooth mouse/trackpad panning
+    let isDown = false;
+    let startX = 0;
+    let scrollLeft = 0;
+
+    runway.addEventListener('mousedown', (e) => {
+      isDown = true;
+      startX = e.pageX - runway.offsetLeft;
+      scrollLeft = runway.scrollLeft;
+    });
+
+    window.addEventListener('mouseup', () => {
+      isDown = false;
+    });
+
+    runway.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - runway.offsetLeft;
+      const walk = (x - startX) * 1.5;
+      runway.scrollLeft = scrollLeft - walk;
+    });
+  }
 };
 
 /* Auto-run initApp on DOM ready in case render.js runs asynchronously */
