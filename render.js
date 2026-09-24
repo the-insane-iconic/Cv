@@ -791,15 +791,48 @@
           ? `<a class="action-icon-link" href="${esc(project.demo)}" target="_blank" rel="noopener noreferrer" aria-label="Live Demo"><i data-lucide="external-link"></i></a>`
           : '';
 
-        card.innerHTML = `
-          <div class="project-image">
-            <img src="${esc(optimizeImageUrl(project.image, 800, 82))}" alt="${esc(project.title)}" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80';">
-            <div class="project-type">
-              <i data-lucide="${typeIcon(project.type)}"></i>
-              ${esc(project.typeLabel || (project.type ? project.type.toUpperCase() : 'WEB APP'))}
-            </div>
-          </div>
+        const isVideoUrl = (url) => typeof url === 'string' && (/\.(mp4|webm|mov|m4v)($|\?)/i.test(url) || url.includes('/video'));
+        const videoSrc = project.video || (isVideoUrl(project.image) ? project.image : '');
+        const posterSrc = project.image && !isVideoUrl(project.image)
+          ? optimizeImageUrl(project.image, 800, 82)
+          : '';
 
+        let mediaHtml = '';
+        if (videoSrc) {
+          mediaHtml = `
+            <div class="project-image project-video-wrapper">
+              <video class="project-video"
+                     src="${esc(videoSrc)}"
+                     ${posterSrc ? `poster="${esc(posterSrc)}"` : ''}
+                     autoplay loop muted playsinline
+                     preload="metadata"
+                     disablepictureinpicture
+                     disableremoteplayback>
+              </video>
+              <div class="project-video-loader" title="Buffering...">
+                <div class="project-spinner-circle"></div>
+              </div>
+              <button type="button" class="project-video-replay-btn" title="Replay Video" aria-label="Replay Video">
+                <i class="fa-solid fa-rotate-left"></i>
+              </button>
+              <div class="project-type">
+                <i data-lucide="${typeIcon(project.type)}"></i>
+                ${esc(project.typeLabel || (project.type ? project.type.toUpperCase() : 'WEB APP'))}
+              </div>
+            </div>`;
+        } else {
+          mediaHtml = `
+            <div class="project-image">
+              <img src="${esc(optimizeImageUrl(project.image, 800, 82))}" alt="${esc(project.title)}" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80';">
+              <div class="project-type">
+                <i data-lucide="${typeIcon(project.type)}"></i>
+                ${esc(project.typeLabel || (project.type ? project.type.toUpperCase() : 'WEB APP'))}
+              </div>
+            </div>`;
+        }
+
+        card.innerHTML = `
+          ${mediaHtml}
           <div class="project-body">
             <h3 class="project-title">${esc(project.title)}</h3>
             <p class="project-description">${esc(project.description)}</p>
@@ -817,6 +850,52 @@
             </div>
           </div>
         `;
+
+        // Wire video buffering spinner, replay restart button, and autoplay observer
+        const video = card.querySelector('.project-video');
+        const loader = card.querySelector('.project-video-loader');
+        const replayBtn = card.querySelector('.project-video-replay-btn');
+
+        if (video) {
+          const hideLoader = () => { if (loader) loader.classList.remove('is-buffering'); };
+          const showLoader = () => { if (loader) loader.classList.add('is-buffering'); };
+
+          video.addEventListener('playing', hideLoader);
+          video.addEventListener('canplay', hideLoader);
+          video.addEventListener('waiting', showLoader);
+          video.addEventListener('loadstart', showLoader);
+          video.addEventListener('seeking', showLoader);
+          video.addEventListener('seeked', hideLoader);
+          video.addEventListener('stalled', showLoader);
+
+          if (replayBtn) {
+            replayBtn.addEventListener('click', (e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              replayBtn.classList.add('clicked');
+              setTimeout(() => replayBtn.classList.remove('clicked'), 450);
+              try {
+                video.currentTime = 0;
+                const p = video.play();
+                if (p && typeof p.catch === 'function') p.catch(() => {});
+              } catch (err) {}
+            });
+          }
+
+          if ('IntersectionObserver' in window) {
+            const obs = new IntersectionObserver((entries) => {
+              entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                  const p = video.play();
+                  if (p && typeof p.catch === 'function') p.catch(() => {});
+                } else {
+                  video.pause();
+                }
+              });
+            }, { threshold: 0.15 });
+            obs.observe(card);
+          }
+        }
 
         grid.appendChild(card);
       });

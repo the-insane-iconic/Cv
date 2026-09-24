@@ -905,6 +905,11 @@ function renderProjectsSection() {
           `)}
         </div>
         <div class="field-row single">
+          ${field('Project Video URL (MP4 / WebM / Supabase link — autoplays in loop)', `
+            <input type="url" class="field-input" value="${esc(proj.video || '')}" placeholder="https://eikxrpaakhhmpgtjrlhq.supabase.co/storage/v1/object/public/.../demo.mp4" oninput="DATA.projects[${i}].video=this.value.trim(); markDirty()">
+          `)}
+        </div>
+        <div class="field-row single">
           ${field('Short Summary', `<textarea class="field-textarea" rows="2" oninput="DATA.projects[${i}].description=this.value; markDirty()">${esc(proj.description)}</textarea>`)}
         </div>
         <div class="field-row">
@@ -931,7 +936,7 @@ function renderProjectsSection() {
     'featured project cards with filters, 3-metric stats & tech tags',
     `${projs.length} Projects`,
     `<div class="list-items">${html}</div>
-    <button class="add-item-btn" onclick="DATA.projects.push({title:'New Project',type:'web',typeLabel:'WEB APP',image:'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80',description:'Short project description here...',stats:[{icon:'gauge',val:'100+',lbl:'Users'},{icon:'zap',val:'Fast',lbl:'Performance'},{icon:'activity',val:'Live',lbl:'Status'}],tech:['React','TypeScript'],github:'https://github.com/',demo:'https://github.com/'}); markDirty(); renderEditor()"><i class="fa-solid fa-plus"></i> Add Project Card</button>`
+    <button class="add-item-btn" onclick="DATA.projects.push({title:'New Project',type:'web',typeLabel:'WEB APP',image:'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80',video:'',description:'Short project description here...',stats:[{icon:'gauge',val:'100+',lbl:'Users'},{icon:'zap',val:'Fast',lbl:'Performance'},{icon:'activity',val:'Live',lbl:'Status'}],tech:['React','TypeScript'],github:'https://github.com/',demo:'https://github.com/'}); markDirty(); renderEditor()"><i class="fa-solid fa-plus"></i> Add Project Card</button>`
   );
 }
 

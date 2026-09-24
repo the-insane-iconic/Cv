@@ -182,6 +182,7 @@
       "type": "web",
       "typeLabel": "WEB APP",
       "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80",
+      "video": "",
       "description": "Live system monitoring with anomaly detection and visual analytics for CPU and memory processes.",
       "stats": [
         { "icon": "gauge", "val": "100+", "lbl": "Processes" },
@@ -197,6 +198,7 @@
       "type": "web",
       "typeLabel": "WEB APP",
       "image": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80",
+      "video": "",
       "description": "Personalized daily challenges delivered through an interactive AI chatbot across multiple domains.",
       "stats": [
         { "icon": "layers", "val": "Multi-domain", "lbl": "Challenges" },
@@ -212,6 +214,7 @@
       "type": "web",
       "typeLabel": "WEB APP",
       "image": "https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fit=crop&w=800&q=80",
+      "video": "",
       "description": "Cloud-synced notes with end-to-end encryption and seamless offline synchronization.",
       "stats": [
         { "icon": "cloud", "val": "Cloud", "lbl": "Sync" },
@@ -227,6 +230,7 @@
       "type": "hardware",
       "typeLabel": "HARDWARE",
       "image": "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=800&q=80",
+      "video": "",
       "description": "Autonomous robot capable of real-time obstacle detection and dynamic path navigation.",
       "stats": [
         { "icon": "radar", "val": "Real-time", "lbl": "Detection" },
@@ -242,6 +246,7 @@
       "type": "hardware",
       "typeLabel": "HARDWARE",
       "image": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80",
+      "video": "",
       "description": "Connected environmental monitoring system with telemetry streaming and remote alerts.",
       "stats": [
         { "icon": "trending-up", "val": "Live Data", "lbl": "Tracking" },
@@ -257,6 +262,7 @@
       "type": "web",
       "typeLabel": "WEB APP",
       "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80",
+      "video": "",
       "description": "Analytics dashboard for understanding portfolio traffic, visitor demographics, and performance.",
       "stats": [
         { "icon": "users", "val": "Visitor", "lbl": "Insights" },
